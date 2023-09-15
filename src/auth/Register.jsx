@@ -57,7 +57,7 @@ const Register = () => {
 
                 <p className="text-white"> Already have an account <span className="text-violet-200 cursor-pointer"
                     onClick={() => {
-                        navigator("/register")
+                        navigator("/")
                     }}
                 >login</span> </p>
             </div>
