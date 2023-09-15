@@ -1,6 +1,6 @@
 import React from 'react'
 import Input from '../common/InputFields/Input'
-import { BsArrowRight, BsEyeFill, BsLockFill, BsPersonFill } from 'react-icons/bs'
+import { BsArrowRight, BsEnvelopeAtFill, BsEyeFill, BsLockFill, BsMailbox, BsMailbox2, BsPersonFill } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 const Register = () => {
     const navigator = useNavigate()
@@ -18,13 +18,20 @@ const Register = () => {
         }}>
             <div className='flex flex-col gap-5 border border-violet-950 p-8 rounded-md  backdrop-blur-sm shadow-md'>
                 <div className='flex flex-col gap-5 text-white'>
-                 Create New Connectify Account
+                    Create New Connectify Account
                 </div>
 
                 <Input
                     type="text"
                     placeholder="Enter you username"
                     prefix={<BsPersonFill />}
+                // sufix={<BsPersonFill/>}
+                />
+
+                <Input
+                    type="email"
+                    placeholder="Enter you email"
+                    prefix={<BsEnvelopeAtFill />}
                 // sufix={<BsPersonFill/>}
                 />
 
@@ -38,7 +45,7 @@ const Register = () => {
                 <div className='flex justify-between items-center'>
 
                     <span className="text-white">
-                        Sign In
+                        Sign Up
                     </span>
 
                     <button
@@ -48,11 +55,11 @@ const Register = () => {
                     </button>
                 </div>
 
-                <p className="text-white"> dont 0have an account? <span className="text-violet-200 cursor-pointer"
+                <p className="text-white"> Already have an account <span className="text-violet-200 cursor-pointer"
                     onClick={() => {
                         navigator("/register")
                     }}
-                >register</span> </p>
+                >login</span> </p>
             </div>
         </div>
     )
