@@ -1,24 +1,41 @@
-import React from 'react'
+import { useEffect , forwardRef } from "react";
 
-const Input = (props) => {
+const Input = (props, ref) => {
+  const {
+    type,
+    placeholder,
+    prefix = "",
+    sufix = "",
+    onChange,
+    value,
+    className,
+    error,
+  } = props;
 
+  useEffect(() => {
+    if (ref) {
+      if (error) {
+        ref.current.style = "border: 1px solid red";
+      } else {
+        ref.current.style = "";
+      }
+    }
+  }, [ref, error]);
 
-    const { type, placeholder, prefix = "", sufix = "" } = props;
-    return (
-        <div className='flex  items-center relative'
-        >
-            <span className='absolute px-2  text-white  '>
-                {prefix}
-            </span>
-            <input type={type} className={` border-2  bg-transparent text-white rounded-sm border-violet-500 focus:ring-1 focus:ring-violet-700 focus:shadow-md focus:outline-none focus:shadow-violet-900 px-8`} placeholder={placeholder} />
-            <span className='absolute right-0 px-3 text-white'>
-                {sufix}
-            </span>
+  return (
+    <div className="flex items-center relative w-full">
+      <span className="absolute px-2  text-white  ">{prefix}</span>
+      <input
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        type={type}
+        className={className}
+        placeholder={placeholder}
+      />
+      <span className="absolute right-0 px-3 text-white">{sufix}</span>
+    </div>
+  );
+};
 
-
-        </div>
-    )
-
-}
-
-export default Input
+export default forwardRef(Input);

@@ -1,0 +1,79 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  feed: {},
+  feeds: [],
+  loading: true,
+  error: null,
+};
+
+const feedSlice = createSlice({
+  name: "feed",
+  initialState,
+  reducers: {
+    setFeeds: (state, action) => {
+      state.loading = false;
+      state.feeds = action.payload;
+    },
+    setError: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    setFeed: (state, action) => {
+      state.feed = action.payload;
+    },
+    likePost: (state, action) => {
+      const postId = action.payload.postId;
+      const userId = action.payload.postId;
+
+      const likedPostIndex = state.feeds.findIndex(
+        (post) => post._id === postId
+      );
+      if (likedPostIndex !== -1) {
+        state.feeds[likedPostIndex].likeCount += 1;
+        state.feeds[likedPostIndex].likedBy.push(userId);
+        state.feeds[likedPostIndex].isLiked = true;
+        if (Object.entries(state.feed).length !== 0) {
+          state.feed.likeCount += 1;
+          state.feed.likedBy.push(userId);
+          state.feed.isLiked = true;
+        }
+      }
+    },
+    unlikePost: (state, action) => {
+      const { postId, userId } = action.payload;
+      const unlikedPostIndex = state.feeds.findIndex(
+        (post) => post._id === postId
+      );
+      if (unlikedPostIndex !== -1) {
+        state.feeds[unlikedPostIndex].likeCount -= 1;
+        state.feeds[unlikedPostIndex].likedBy.pop(userId);
+        state.feeds[unlikedPostIndex].isLiked = false;
+        if (Object.entries(state.feed).length !== 0) {
+          state.feed.likeCount -= 1;
+          state.feed.likedBy.pop(userId);
+          state.feed.isLiked = false;
+        }
+      }
+    },
+    resetFeedState: (state) => {
+      state.feeds = [];
+      state.feed = {};
+      state.loading = true;
+      state.error = null;
+    },
+  },
+});
+
+export const {
+  setFeeds,
+  setError,
+  likePost,
+  unlikePost,
+  resetFeedState,
+  setFeed,
+} = feedSlice.actions;
+
+export default feedSlice.reducer;
+
+export const state = (state) => state.auth;
