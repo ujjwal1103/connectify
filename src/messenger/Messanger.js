@@ -13,8 +13,10 @@ const NoSelectedChat = () => {
 }
 const Messanger = () => {
   const [searchTerm, setSearchTerm] = useState()
+  const [searchResults, setSearchResults] = useState([])
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const { chats, selectedChat } = useSelector((state) => state.chat);
+
   const dispatch = useDispatch();
 
   const fetchAllChats = useCallback(async () => {
@@ -25,13 +27,15 @@ const Messanger = () => {
   }, [dispatch]);
 
   const handleChange = (e) => {
-      setSearchTerm(e.target.value)
+    setSearchTerm(e.target.value)
 
-      const filteredChats = chats?.filter(chat=>chat.friend.username.includes(e.target.value))
-    if(filteredChats.length > 0){
-      dispatch(setChats(filteredChats));
-    }
+    const filteredChats = chats?.filter(chat=>chat.friend.username.includes(e.target.value))
+  if(e.target.value){
+    setSearchResults(filteredChats);
+  }else{
+    setSearchResults([]);
   }
+}
 
   useEffect(() => {
     fetchAllChats()
@@ -44,7 +48,10 @@ const Messanger = () => {
         <hr />
         <div className="bg-gray-950">
           <Search searchTerm={searchTerm} onChange={handleChange}/>
-          {chats.map((chat) => {
+          {!searchTerm && chats.map((chat) => {
+            return <SingleChat chat={chat}/>;
+          })}
+          {searchResults?.map((chat) => {
             return <SingleChat chat={chat}/>;
           })}
         </div>
