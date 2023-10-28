@@ -17,7 +17,7 @@ import {
 } from "react-icons/ai";
 import { MdDarkMode as DarkMode } from "react-icons/md";
 import { FaAngleLeft as AngleLeft } from "react-icons/fa";
-
+import {PiDotsNine as DotsNine} from 'react-icons/pi'
 export {
   Save,
   ArrowRight,
@@ -33,5 +33,6 @@ export {
   Search,
   Plus,
   AngleLeft,
-  Send
+  Send,
+  DotsNine
 };

@@ -2,9 +2,8 @@ import React from "react";
 import noDp from "../../assets/no_avatar.png";
 
 const CurrentUserInfo = ({ user }) => {
-  console.log(user);
   return (
-    <div className="w-full flex gap-4 p-2">
+    <div className="w-full flex gap-4 p-2 dark:text-gray-50">
       <div className="w-12 h-12 rounded-full overflow-clip">
         <img src={user?.profilePicture || noDp} alt="" />
       </div>

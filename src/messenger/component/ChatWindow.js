@@ -23,7 +23,7 @@ const ChatWindow = ({ currentUserId}) => {
   }, [getAllMessages]);
 
   return (
-    <div className="flex-1 bg-gray-500 h-screen overflow-hidden flex flex-col">
+    <div className="flex-1 bg-slate-900 h-screen overflow-hidden flex flex-col">
       <ChatHeader otherUser={selectedChat?.friend}/>
       <hr />
       <Messages />
