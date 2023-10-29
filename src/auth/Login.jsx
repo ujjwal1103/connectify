@@ -6,14 +6,15 @@ import {
   LockFill,
   PersonFill,
   OutlineLoading,
+  Google,
 } from "../icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo/logo.png";
-import axios from "axios";
 import ErrorPopup from "../common/errorPopup";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
 import { makeRequest } from "../config/api.config";
+import getGoogleUrl from "../config/getGoogleUri";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -47,6 +48,13 @@ const Login = () => {
       }, 2000);
     }
   };
+
+  
+
+
+  const googleLogin = () => {
+    console.log("google login")
+  }
 
   useEffect(() => {
     document.title = "connectify-Login";
@@ -113,6 +121,12 @@ const Login = () => {
             register
           </Link>
         </p>
+
+        <div className="flex justify-center ">
+          <a href={getGoogleUrl()} className="text-white  bg-white rounded-full p-1" >
+            <Google className={"text-xl"} />
+          </a>
+        </div>
       </div>
 
       {error && <ErrorPopup message={error} />}

@@ -11,6 +11,7 @@ import { useAuth } from "./hooks/useAuth";
 import UserProfile from "./profile/UserProfile";
 import Search from "./search/Search";
 import { Messanger } from "./messenger";
+import Auth from "./auth/Auth";
 
 function App() {
   useAuth();
@@ -19,6 +20,7 @@ function App() {
       <Route exact path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="*" element={<PageNotFound />} />
+      <Route path="/auth" element={<Auth />} />
       <Route exact path="" element={<ProtectedRoute />}>
         <Route path="/messenger" element={<Messanger />} />
         <Route path="" element={<Layout />}>

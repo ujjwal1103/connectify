@@ -45,6 +45,8 @@ const Messanger = () => {
     fetchAllChats()
   }, [fetchAllChats]);
 
+  
+
   return (
     <div className="bg-gray-100  dark:bg-slate-950 flex h-screen ">
       <div className="flex-[0.5]  bg-gray-950 overflow-auto hidden lg:block xl:block md:block">
@@ -52,7 +54,7 @@ const Messanger = () => {
         <hr />
         <div className="bg-gray-950">
           <Search searchTerm={searchTerm} onChange={handleChange}/>
-          {!searchTerm && chats.map((chat) => {
+          {!searchTerm && chats?.map((chat) => {
             return <SingleChat chat={chat}/>;
           })}
           {searchResults?.map((chat) => {

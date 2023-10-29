@@ -33,7 +33,7 @@ const Register = () => {
         password,
         email,
       });
-      setLoading(false);
+      setLoading(false); 
       setError(null);
       navigator("/");
     } catch (error) {

@@ -18,6 +18,7 @@ import {
 import { MdDarkMode as DarkMode } from "react-icons/md";
 import { FaAngleLeft as AngleLeft } from "react-icons/fa";
 import {PiDotsNine as DotsNine} from 'react-icons/pi'
+import Google from './Google';
 export {
   Save,
   ArrowRight,
@@ -34,5 +35,6 @@ export {
   Plus,
   AngleLeft,
   Send,
-  DotsNine
+  DotsNine,
+  Google,
 };
