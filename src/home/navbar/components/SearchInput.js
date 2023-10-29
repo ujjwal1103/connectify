@@ -22,7 +22,6 @@ const SearchInput = () => {
     }
   };
 
-  console.log(searchResults);
   return (
     <div className="w-96 relative  lg:block">
       <Input

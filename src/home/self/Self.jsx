@@ -7,9 +7,13 @@ const Self = () => {
   const [user, setUser] = useState();
 
   const getUser = async () => {
-    const response = await makeRequest("/user");
-    const data = response.data;
-    setUser(data.user);
+    try {
+      const response = await makeRequest("/user");
+      const data = response.data;
+      setUser(data.user);
+    } catch (error) {
+      console.log("error", error.message)
+    }
   };
 
   useEffect(() => {

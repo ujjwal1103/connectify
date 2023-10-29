@@ -20,9 +20,9 @@ const Posts = ({ userId }) => {
       dispatch(setError("something went wrong"));
     }
   }, [dispatch, userId]);
+  
   useEffect(() => {
     getPosts();
-
     return () => {
       dispatch(setPosts([]));
     };

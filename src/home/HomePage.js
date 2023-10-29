@@ -23,7 +23,7 @@ const HomePage = () => {
         dispatch(setFeeds(data.posts));
       }
     } catch (error) {
-      console.log(error);
+      console.log("error", error.message);
     }
   }, [dispatch]);
 

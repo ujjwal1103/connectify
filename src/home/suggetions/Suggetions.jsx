@@ -11,8 +11,12 @@ const Suggetions = () => {
   const { suggestedusers } = useSelector((state) => state.suggetions);
 
   const getSuggetions = useCallback(async () => {
-    const res = await makeRequest("users");
-    dispatch(setSuggetions(res.data.users));
+    try {
+      const res = await makeRequest("users");
+      dispatch(setSuggetions(res.data.users));
+    } catch (error) {
+      console.log("error", error.message);
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -27,7 +31,12 @@ const Suggetions = () => {
         <span>see all</span>
       </div>
       {suggestedusers?.map((u) => (
-        <Suggetion key={u?._id} user={u} username={user?.username} userId={user?._id}/>
+        <Suggetion
+          key={u?._id}
+          user={u}
+          username={user?.username}
+          userId={user?._id}
+        />
       ))}
     </div>
   );

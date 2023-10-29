@@ -38,18 +38,18 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
   const getUser = async () => {
-    const response = await makeRequest("/user");
-    const data = response.data;
-    dispatch(setUser(data.user));
+    try {
+      const response = await makeRequest("/user");
+      const data = response.data;
+      dispatch(setUser(data.user));
+    } catch (error) {
+      console.log("error", error.message);
+    }
   };
 
   useEffect(() => {
-    getUser(); 
+    getUser();
   }, [edit]);
 
   if (!user) {

@@ -3,7 +3,7 @@ import Message from "./Message";
 import { useSelector } from "react-redux";
 import { groupMessagesByDate } from "../../utils/groupMessagesByDate";
 
-const Messages = () => {
+const Messages = ({fetchAllChats}) => {
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const { messages } = useSelector((state) => state.chat);
   const [groupedMessages, setGroupedMessages] = useState([]);
@@ -13,7 +13,8 @@ const Messages = () => {
     console.log(groupMessagesByDate(messages));
     setGroupedMessages(groupMessagesByDate(messages));
     messagesRef && messagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    fetchAllChats();
+  }, [messages, fetchAllChats]);
 
   if (!messages || messages?.length === 0)
     return (
@@ -22,7 +23,7 @@ const Messages = () => {
       </div>
     );
 
-  return (
+  return ( 
     <div
       ref={messagesRef}
       className="h-full flex flex-col flex-1 gap-3  overflow-y-scroll mb-4 p-2 "

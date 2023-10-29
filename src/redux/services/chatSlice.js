@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  chats: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  chats: null,
   selectedChat: null,
   error: null,
   loading: true,

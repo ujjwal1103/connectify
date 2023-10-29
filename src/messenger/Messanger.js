@@ -20,10 +20,14 @@ const Messanger = () => {
   const dispatch = useDispatch();
 
   const fetchAllChats = useCallback(async () => {
-    const { data } = await makeRequest("chats");
-    if (data.isSuccess) {
-      dispatch(setChats(data.chats));
-    }
+  try {
+      const { data } = await makeRequest("chats");
+      if (data.isSuccess) {
+        dispatch(setChats(data.chats));
+      }
+  } catch (error) {
+    console.log(error)
+  }
   }, [dispatch]);
 
   const handleChange = (e) => {
@@ -56,7 +60,7 @@ const Messanger = () => {
           })}
         </div>
       </div>
-      {selectedChat ? <ChatWindow currentUserId={currentUser?._id} /> :<NoSelectedChat/> }
+      {selectedChat ? <ChatWindow currentUserId={currentUser?._id} fetchAllChats={fetchAllChats}/> :<NoSelectedChat/> }
     </div>
   );
 };
