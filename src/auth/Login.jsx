@@ -5,7 +5,7 @@ import {
   EyeFill,
   LockFill,
   PersonFill,
-  OutlineLoading
+  OutlineLoading,
 } from "../icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo/logo.png";
@@ -13,8 +13,7 @@ import axios from "axios";
 import ErrorPopup from "../common/errorPopup";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
-
-
+import { makeRequest } from "../config/api.config";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -30,7 +29,7 @@ const Login = () => {
   const userSignIn = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:3100/api/login", {
+      const res = await makeRequest.post("/login", {
         username,
         password,
       });
@@ -54,9 +53,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div
-      className="h-screen bg-hero-pattern bg-gray-50 flex justify-evenly items-center bg-cover bg-center bg-no-repeat"
-    >
+    <div className="h-screen bg-hero-pattern bg-gray-50 flex justify-evenly items-center bg-cover bg-center bg-no-repeat">
       <div className="text-white">
         <h1 className="text-4xl mb-3 text-bold">
           <img src={logo} width={300} alt={"logo"} />

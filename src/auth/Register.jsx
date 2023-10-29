@@ -10,8 +10,8 @@ import {
   OutlineLoading,
 } from "../icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import ErrorPopup from "../common/errorPopup";
+import { makeRequest } from "../config/api.config";
 
 const Register = () => {
   const navigator = useNavigate();
@@ -28,7 +28,7 @@ const Register = () => {
   const userSignUp = async () => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:3100/api/register", {
+      await makeRequest.post("/register", {
         username,
         password,
         email,
