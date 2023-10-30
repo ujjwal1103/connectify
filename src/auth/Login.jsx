@@ -7,6 +7,7 @@ import {
   PersonFill,
   OutlineLoading,
   Google,
+  FillEyeSlashFill,
 } from "../icons";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo/logo.png";
@@ -15,12 +16,14 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
 import { makeRequest } from "../config/api.config";
 import getGoogleUrl from "../config/getGoogleUri";
+import { FaLaptopHouse } from "react-icons/fa";
 
 const Login = () => {
   const navigator = useNavigate();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -49,24 +52,21 @@ const Login = () => {
     }
   };
 
-  
-
-
   const googleLogin = () => {
-    console.log("google login")
-  }
+    console.log("google login");
+  };
 
   useEffect(() => {
     document.title = "connectify-Login";
   }, []);
 
   return (
-    <div className="h-screen bg-hero-pattern bg-gray-50 flex justify-evenly items-center bg-cover bg-center bg-no-repeat">
+    <div className="h-screen bg-hero-pattern bg-gray-50 flex lg:flex-row flex-col justify-evenly items-center bg-cover bg-center bg-no-repeat">
       <div className="text-white">
-        <h1 className="text-4xl mb-3 text-bold">
-          <img src={logo} width={300} alt={"logo"} />
+        <h1 className=" mb-3 text-bold flex justify-center lg:justify-start">
+          <img src={logo} alt={"logo"} className="lg:w-80 w-52 " />
         </h1>
-        <h3 className="text-2xl tracking-wide">
+        <h3 className="lg:text-2xl text-justify tracking-wide">
           Connectify Redefining the Way You Connect <br />
           and Share by Offering a Seamless, Intuitive, <br />
           and Personalized Environment.
@@ -89,10 +89,10 @@ const Login = () => {
 
         <Input
           ref={passwordRef}
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter you password"
           prefix={<LockFill />}
-          sufix={<EyeFill />}
+          sufix={showPassword? <FillEyeSlashFill onClick={()=>setShowPassword(false)}/>:<EyeFill onClick={()=>setShowPassword(true)}/>}
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           className="authInput"
@@ -123,12 +123,14 @@ const Login = () => {
         </p>
 
         <div className="flex justify-center ">
-          <a href={getGoogleUrl()} className="text-white  bg-white rounded-full p-1" >
+          <a
+            href={getGoogleUrl()}
+            className="text-white  bg-white rounded-full p-1"
+          >
             <Google className={"text-xl"} />
           </a>
         </div>
       </div>
-
       {error && <ErrorPopup message={error} />}
     </div>
   );

@@ -9,6 +9,7 @@ import {
   BsSearch as Search,
   BsPlus as Plus,
   BsSend as Send,
+  BsFillEyeSlashFill as FillEyeSlashFill,
 } from "react-icons/bs";
 import {
   AiOutlineLoading as OutlineLoading,
@@ -17,13 +18,15 @@ import {
 } from "react-icons/ai";
 import { MdDarkMode as DarkMode } from "react-icons/md";
 import { FaAngleLeft as AngleLeft } from "react-icons/fa";
-import {PiDotsNine as DotsNine} from 'react-icons/pi'
-import Google from './Google';
+import { PiDotsNine as DotsNine } from "react-icons/pi";
+import Google from "./Google";
+import { IoMdList as MdList } from "react-icons/io";
 export {
   Save,
   ArrowRight,
   EnvelopeAtFill,
   EyeFill,
+  FillEyeSlashFill,
   LockFill,
   PersonFill,
   OutlineLoading,
@@ -37,4 +40,5 @@ export {
   Send,
   DotsNine,
   Google,
+  MdList,
 };

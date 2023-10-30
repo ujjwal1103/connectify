@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import Input from "../common/InputFields/Input";
-
+import logo from "../assets/logo/logo.png";
 import {
   ArrowRight,
   EyeFill,
@@ -8,6 +8,7 @@ import {
   LockFill,
   PersonFill,
   OutlineLoading,
+  FillEyeSlashFill,
 } from "../icons";
 import { useNavigate } from "react-router-dom";
 import ErrorPopup from "../common/errorPopup";
@@ -20,7 +21,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const [showPassword, setShowPassword] = useState(false);
   const emailRef = useRef();
   const passwordRef = useRef();
   const nameRef = useRef();
@@ -33,7 +34,7 @@ const Register = () => {
         password,
         email,
       });
-      setLoading(false); 
+      setLoading(false);
       setError(null);
       navigator("/");
     } catch (error) {
@@ -50,7 +51,17 @@ const Register = () => {
     document.title = "connectify-register";
   }, []);
   return (
-    <div className="h-screen bg-hero-pattern bg-gray-50 flex justify-evenly items-center bg-cover bg-center bg-no-repeat">
+    <div className="h-screen bg-hero-pattern lg:flex-row flex-col bg-gray-50 flex justify-evenly items-center bg-cover bg-center bg-no-repeat">
+      <div className="text-white">
+        <h1 className=" mb-3 text-bold flex justify-center lg:justify-start">
+          <img src={logo} alt={"logo"} className="lg:w-80 w-52 " />
+        </h1>
+        <h3 className="lg:text-2xl text-justify tracking-wide">
+          Connectify Redefining the Way You Connect <br />
+          and Share by Offering a Seamless, Intuitive, <br />
+          and Personalized Environment.
+        </h3>
+      </div>
       <div className="flex flex-col gap-5 border border-violet-950 p-8 rounded-md  backdrop-blur-sm shadow-md">
         <div className="flex flex-col gap-5 text-white">
           Create New Connectify Account
@@ -80,10 +91,10 @@ const Register = () => {
 
         <Input
           ref={passwordRef}
-          type="text"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter you password"
           prefix={<LockFill />}
-          sufix={<EyeFill />}
+          sufix={showPassword? <FillEyeSlashFill onClick={()=>setShowPassword(false)}/>:<EyeFill onClick={()=>setShowPassword(true)}/>}
           onChange={(e) => setPassword(e.target.value)}
           className="authInput"
           value={password}

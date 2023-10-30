@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import avatar from "../assets/man.png";
 import { BsPlus } from "react-icons/bs";
 import { formatNumberWithKAndM } from "../utils/number-formaters";
@@ -7,17 +6,20 @@ import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../redux/services/authSlice";
+import { logout, setUser } from "../redux/services/authSlice";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
-import { legacy_createStore } from "@reduxjs/toolkit";
+import Tabs from "./components/Tabs";
+import { resetState } from "../redux/services/postSlice";
+import { resetFeedState } from "../redux/services/feedSlice";
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   const toggleEdit = () => {
     setEdit((prev) => !prev);
     window.scrollTo({
@@ -38,7 +40,7 @@ const Profile = () => {
     }
   };
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
       const data = response.data;
@@ -46,14 +48,22 @@ const Profile = () => {
     } catch (error) {
       console.log("error", error.message);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getUser();
-  }, [edit]);
+  }, [edit, getUser]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(resetState());
+    dispatch(resetFeedState());
+    localStorage.clear();
+    navigate("/");
+  };
 
   if (!user) {
-    return <div>loading</div>;
+    return <div className="w-screen h-screen">loading</div>;
   }
 
   return (
@@ -61,6 +71,11 @@ const Profile = () => {
       className=" 
     bg-gray-100 h-full w-full  dark:text-gray-50 dark:bg-gradient-to-r p-2 dark:from-slate-900 dark:to-slate-950"
     >
+      <div className="p-2 lg:hidden  w-full bg-gray-950 mb-2 flex justify-end">
+        <div className="w-fit">
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      </div>
       <div className="lg:w-2/3 w-full flex-col lg:mx-auto flex justify-center lg:justify-start items-center lg:p-3">
         <div className="lg:mt-10 p-3 border-black flex flex-col lg:flex-row lg:gap-10 dark:bg-gray-800 rounded-lg lg:mb-2  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 shadow-lg">
           <div className="h-44 w-44 mx-auto">
@@ -137,7 +152,21 @@ const Profile = () => {
       )}
       {show && <Followers userId={user._id} setClose={toggleShow} />}
       {showFollowing && (
-        <Following userId={user._id} setClose={toggleShowFollowing} />
+        <>
+          <Following userId={user._id} setClose={toggleShowFollowing} />
+        </>
+      )}
+
+      {(showFollowing || show) && (
+        <Tabs
+          userId={user._id}
+          username={user.username}
+          setClose={() => {
+            setShowFollowing(false);
+            setShow(false);
+          }}
+          tab={showFollowing ? "Following" : "Followers"}
+        />
       )}
     </div>
   );
