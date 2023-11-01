@@ -1,20 +1,4 @@
 import { useEffect, useState } from "react";
-
-import {
-  BsChat,
-  BsHeart,
-  BsHouseDoor,
-  BsPersonCircle,
-  BsPlusSquare,
-  BsSearch,
-} from "react-icons/bs";
-import {
-  FaEllipsisV,
-  FaCog,
-  FaQuestionCircle,
-  FaPhone,
-  FaSignOutAlt,
-} from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +8,7 @@ import { resetFeedState } from "../../redux/services/feedSlice";
 import Notification from "../notification/Notification";
 import { socket } from "../../config/socket.io";
 import SearchInput from "./components/SearchInput";
-import { DarkMode } from "../../icons";
+import { Chat, Cog, DarkMode, EllipsisV, Heart, HouseDoor, PersonCircle, Phone, PlusSquare, QuestionCircle, Search, SignOutAlt } from "../../icons";
 import Logo from "../../icons/Logo";
 
 const Navbar = () => {
@@ -98,30 +82,30 @@ const Navbar = () => {
         <div className="text-white flex lg:w-60  items-center justify-between w-full">
           <div>
             <Link to={"/home"}>
-              <BsHouseDoor size={24} />
+              <HouseDoor size={24} />
             </Link>
           </div>
           <div className="lg:hidden">
             <Link to={"/search"}>
-              <BsSearch size={24} />
+              <Search size={24} />
             </Link>
           </div>
           <div>
             <Link to={"/messenger"}>
-              <BsChat size={24} />
+              <Chat size={24} />
             </Link>
           </div>
           <div className="h-6">
             <button onClick={toggleCreatePost}>
-              <BsPlusSquare size={24} />
+              <PlusSquare size={24} />
             </button>
           </div>
           <div onClick={toggleNotification}>
-            <BsHeart size={24} />
+            <Heart size={24} />
           </div>
           <div>
             <Link to={"/profile"}>
-              <BsPersonCircle size={24} />
+              <PersonCircle size={24} />
             </Link>
           </div>
 
@@ -130,7 +114,7 @@ const Navbar = () => {
               onClick={toggleDropdown}
               className={`p-2 focus:outline-none ${isOpen && "bg-gray-600"}`}
             >
-              <FaEllipsisV className="w-6 h-6" />
+              <EllipsisV className="w-6 h-6" />
             </button>
             {isOpen && (
               <div
@@ -140,34 +124,30 @@ const Navbar = () => {
                 <ul className="py-1">
                   <li>
                     <Link
-                      href="#"
                       className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
                     >
-                      <FaCog className="mr-2" />
+                      <Cog className="mr-2" />
                       Settings
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="#"
                       className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
                     >
-                      <FaQuestionCircle className="mr-2" />
+                      <QuestionCircle className="mr-2" />
                       Help
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="#"
                       className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
                     >
-                      <FaPhone className="mr-2" />
+                      <Phone className="mr-2" />
                       Contact Us
                     </Link>
                   </li>
                   <li>
                     <button
-                      href="#"
                       className="flex gap-3 items-center w-full dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
                       onClick={handleDarkMode}
                     >
@@ -181,7 +161,7 @@ const Navbar = () => {
                       onClick={handleLogout}
                       className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700"
                     >
-                      <FaSignOutAlt className="mr-2" />
+                      <SignOutAlt className="mr-2" />
                       Log Out
                     </button>
                   </li>

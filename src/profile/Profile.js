@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import avatar from "../assets/man.png";
-import { BsPlus } from "react-icons/bs";
 import { formatNumberWithKAndM } from "../utils/number-formaters";
 import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
@@ -95,7 +94,7 @@ const Profile = () => {
                 Edit profile
               </button>
               <button className="hidden lg:block border p-2  border-violet-950 text-violet-800 dark:bg-gray-900 font-semibold rounded-md">
-                <BsPlus size={32} />
+                <Plus size={32} />
               </button>
             </div>
             <div className="flex pt-6 justify-between w-80 lg:w-auto">

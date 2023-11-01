@@ -16,7 +16,6 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
 import { makeRequest } from "../config/api.config";
 import getGoogleUrl from "../config/getGoogleUri";
-import { FaLaptopHouse } from "react-icons/fa";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -52,9 +51,6 @@ const Login = () => {
     }
   };
 
-  const googleLogin = () => {
-    console.log("google login");
-  };
 
   useEffect(() => {
     document.title = "connectify-Login";

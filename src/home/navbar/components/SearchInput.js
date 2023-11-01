@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Input from "../../../common/InputFields/Input";
-import { BsSearch } from "react-icons/bs";
 import { makeRequest } from "../../../config/api.config";
 import { Link } from "react-router-dom";
-
 import blackUser from "../../../assets/no_avatar.png";
+import { Search } from "../../../icons";
 
 const SearchInput = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -30,7 +29,7 @@ const SearchInput = () => {
         placeholder="search your friends"
         className="w-full rounded-lg border-none outline-none focus:border-none dark:bg-slate-500 dark:placeholder:text-white dark:text-gray-50"
         sufix={
-          <BsSearch
+          <Search
             className="text-black dark:text-white"
             onClick={handleSearch}
           />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { BsEmojiSmile } from "react-icons/bs";
 import { makeRequest } from "../../../config/api.config";
+import { EmojiSmile } from "../../../icons";
 
 const PostInteraction = ({ user, post }) => {
   const [commentText, setCommentText] = useState(null);
@@ -56,7 +56,7 @@ const PostInteraction = ({ user, post }) => {
         />
         {commentText && <button onClick={sendComment}> post </button>}
         <button>
-          <BsEmojiSmile />
+          <EmojiSmile />
         </button>
       </div>
     </div>

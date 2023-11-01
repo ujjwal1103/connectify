@@ -1,7 +1,7 @@
 import avatar from "../../assets/man.png";
 import { useState } from "react";
 import { imageFileUpload } from "../../services/postServices";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { OutlineLoading3Quarters } from "../../icons";
 
 const UploadImage = ({ setProfilePic, profilePic }) => {
   const [loading, setIsLoading] = useState(false);
@@ -37,7 +37,7 @@ const UploadImage = ({ setProfilePic, profilePic }) => {
           />
           <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
             <div className="mx-3 text-violet-100 font-semibold ">
-              <AiOutlineLoading3Quarters className="animate-spin" size={23} />
+              <OutlineLoading3Quarters className="animate-spin" size={23} />
             </div>
           </div>
         </label>

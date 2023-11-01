@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { AiOutlineClose, AiOutlineLoading3Quarters } from "react-icons/ai";
-import avatar from "../../assets/man.png";
-import { BsImageFill } from "react-icons/bs";
 import { storage } from "../../config/firebase.config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { makeRequest } from "../../config/api.config";
+import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
 
 const CreateStory = ({ setClose }) => {
   const [imageUrl, setImageUrl] = useState();
@@ -57,7 +55,7 @@ const CreateStory = ({ setClose }) => {
             <h1>Create Story</h1>
             {loading ? (
               <div className="mx-3 text-violet-800 font-semibold animate-spin">
-                <AiOutlineLoading3Quarters />
+                <OutlineLoading3Quarters/>
               </div>
             ) : (
               <button
@@ -78,7 +76,7 @@ const CreateStory = ({ setClose }) => {
                   htmlFor="postImage"
                   className="flex justify-center items-center text-center"
                 >
-                  <BsImageFill />
+                  <ImageFill />
                 </label>
                 <input
                   type="file"
@@ -102,7 +100,7 @@ const CreateStory = ({ setClose }) => {
                 {loading && (
                   <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
                     <div className="mx-3 text-violet-100 font-semibold ">
-                      <AiOutlineLoading3Quarters
+                      <OutlineLoading3Quarters
                         className="animate-spin"
                         size={23}
                       />
@@ -118,7 +116,7 @@ const CreateStory = ({ setClose }) => {
         className="absolute right-10 top-10 text-white cursor-pointer"
         onClick={setClose}
       >
-        <AiOutlineClose size={46} />
+        <OutlineClose size={46} />
       </span>
     </div>
   );

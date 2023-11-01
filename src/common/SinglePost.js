@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BsEmojiWink, BsThreeDots } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import PostActions from "../home/post/components/PostActions";
 import moment from "moment";
 import { setPost } from "../redux/services/postSlice";
-import { Heart, OutlineClose } from "../icons";
+import { EmojiWink, Heart, OutlineClose, ThreeDots } from "../icons";
 import { makeRequest } from "../config/api.config";
 import avatar from "../assets/man.png";
 import { setFeed } from "../redux/services/feedSlice";
@@ -108,7 +107,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
               <h2 className="text-sky-600 cursor-pointer">Follow</h2>
             </div>
             <div>
-              <BsThreeDots className=" mx-4" size={24} />
+              <ThreeDots className=" mx-4" size={24} />
             </div>
           </div>
           <hr />
@@ -156,7 +155,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
           <hr />
           <div className="flex  items-center justify-between mx-4 mb-2  gap-4">
             <span>
-              <BsEmojiWink />
+              <EmojiWink />
             </span>
             <input
               type="text"

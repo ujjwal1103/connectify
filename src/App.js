@@ -12,15 +12,17 @@ import UserProfile from "./profile/UserProfile";
 import Search from "./search/Search";
 import { Messanger } from "./messenger";
 import Auth from "./auth/Auth";
+import AuthRoutes from "./protectedRoutes/AuthRoutes";
 
 function App() {
   useAuth();
   return (
     <Routes>
-      <Route exact path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<PageNotFound />} />
-      <Route path="/auth" element={<Auth />} />
+      <Route exact path="" element={<AuthRoutes />}>
+        <Route exact path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/auth" element={<Auth />} />
+      </Route>
       <Route exact path="" element={<ProtectedRoute />}>
         <Route path="/messenger" element={<Messanger />} />
         <Route path="" element={<Layout />}>
@@ -30,6 +32,7 @@ function App() {
           <Route path="/search" element={<Search />} />
         </Route>
       </Route>
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 }

@@ -1,4 +1,3 @@
-import { BsChat, BsHeart, BsHeartFill, BsSend } from "react-icons/bs";
 import Save from "../../../icons/Save";
 import { makeRequest } from "../../../config/api.config";
 import { useDispatch } from "react-redux";
@@ -7,6 +6,7 @@ import {
   unlikePost as dislikeCurrentPost,
 } from "../../../redux/services/feedSlice";
 import { sendNotification } from "../../services/notifications";
+import { Chat, Heart, HeartFill, Send } from "../../../icons";
 
 const PostActions = ({ post, userId, username, showCurrentPost }) => {
   const dispatch = useDispatch();
@@ -38,24 +38,24 @@ const PostActions = ({ post, userId, username, showCurrentPost }) => {
     <div className="flex justify-between items-center p-3">
       <div className="flex items-center gap-5">
         {post?.isLiked || post?.likedBy?.includes(userId) ? (
-          <BsHeartFill
+          <HeartFill
             size={24}
             className="text-red-600"
             onClick={dislikePost}
           />
         ) : (
-          <BsHeart
+          <Heart
             size={24}
             className="hover:text-gray-600 dark:text-gray-50"
             onClick={likePost}
           />
         )}
-        <BsChat
+        <Chat
           size={24}
           className="hover:text-gray-600 dark:text-gray-50"
           onClick={showCurrentPost}
         />
-        <BsSend size={24} className="hover:text-gray-600 dark:text-gray-50" />
+        <Send size={24} className="hover:text-gray-600 dark:text-gray-50" />
       </div>
       <Save
         size={24}

@@ -1,6 +1,6 @@
 import React from "react";
-import { BsThreeDots } from "react-icons/bs";
 import avatar from "../../../assets/man.png";
+import { ThreeDots } from "../../../icons";
 const PostHeader = ({ post }) => {
   return (
     <div className="w-full p-3 flex gap-6 items-center justify-between">
@@ -18,7 +18,7 @@ const PostHeader = ({ post }) => {
         </div>
       </div>
       <div className="">
-        <BsThreeDots className="dark:text-gray-50" />
+        <ThreeDots className="dark:text-gray-50" />
       </div>
     </div>
   );

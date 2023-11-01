@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { AiOutlineClose, AiOutlineLoading3Quarters } from "react-icons/ai";
 import avatar from "../../assets/man.png";
-import { BsImageFill } from "react-icons/bs";
 import { makeRequest } from "../../config/api.config";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
 import { useDispatch } from "react-redux";
 import { addPost } from "../../redux/services/postSlice";
-
 import { imageFileUpload } from "../../services/postServices";
 import { addPostToUser } from "../../redux/services/authSlice";
 import EditImage from "./EditImage/EditImage";
+import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
 
 const CreatePost = ({ setClose }) => {
   const [imageUrl, setImageUrl] = useState();
@@ -67,7 +65,7 @@ const CreatePost = ({ setClose }) => {
             <h1>Create Post</h1>
             {loading ? (
               <div className="mx-3 text-violet-800  dark:text-gray-50 font-semibold animate-spin">
-                <AiOutlineLoading3Quarters />
+                <OutlineLoading3Quarters />
               </div>
             ) : (
              <>
@@ -101,7 +99,7 @@ const CreatePost = ({ setClose }) => {
               <div className="mx-2 hover:text-violet-950 flex justify-center items-center">
                 <label htmlFor="postImage">
                   {" "}
-                  <BsImageFill className="dark:text-gray-50" />
+                  <ImageFill className="dark:text-gray-50" />
                 </label>
                 <input
                   type="file"
@@ -129,7 +127,7 @@ const CreatePost = ({ setClose }) => {
                   {loading && (
                     <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
                       <div className="mx-3 text-violet-100 font-semibold ">
-                        <AiOutlineLoading3Quarters
+                        <OutlineLoading3Quarters
                           className="animate-spin"
                           size={23}
                         />
@@ -146,7 +144,7 @@ const CreatePost = ({ setClose }) => {
         className="absolute right-10 top-10 text-white cursor-pointer"
         onClick={setClose}
       >
-        <AiOutlineClose size={46} />
+        <OutlineClose size={46} />
       </span>
      {editImage && <EditImage imageSrc={imageUrl}/>}
     </div>
