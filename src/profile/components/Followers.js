@@ -1,7 +1,7 @@
-import {useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import { makeRequest } from "../../config/api.config";
 import avatar from "../../assets/man.png";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
 
@@ -50,7 +50,7 @@ const Followers = ({ userId, setClose }) => {
           <div className="w-full p-2">
             <Input
               type="text"
-              className="w-full p-3 outline-none border-none ml-5 focus:outline-none focus:ring-0"
+              className="w-full p-3 outline-none border-none ml-5 focus:outline-none focus:ring-0 bg-transparent"
               placeholder="search"
               prefix={<Search className="text-gray-800" />}
             />

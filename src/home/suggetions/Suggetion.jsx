@@ -32,7 +32,7 @@ const Suggetion = ({ user, username, userId }) => {
             src={user?.profilePicture || avatar}
             alt={user?.username}
           />
-          <Link to={`/profile/${user?.username}`} className="flex flex-col">
+          <Link to={`/${user?.username}`} className="flex flex-col">
             <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
               {user?.name}
             </span>

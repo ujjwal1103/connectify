@@ -1,16 +1,20 @@
 import React, { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider';
 
-const AuthRoutes = (props) => {
+const AuthRoutes = () => {
   const navigate = useNavigate();
   
-  const user = localStorage.getItem('user');
+  const {user} = useAuth();
 
   useEffect(()=>{
     if(user){
        navigate('/home');
+    }else{
+      navigate('/');
     }
-  },[user])
+  },[user, navigate])
+  
   
   return <Outlet/>
 }

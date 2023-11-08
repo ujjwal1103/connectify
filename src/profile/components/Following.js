@@ -1,7 +1,7 @@
 import { makeRequest } from "../../config/api.config";
 import { useEffect, useState } from "react";
 import avatar from "../../assets/man.png";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
 
@@ -25,17 +25,16 @@ const Following = ({ userId, setClose }) => {
   }, [userId]);
 
   const navigateToUser = (username) => {
-    setClose()
+    setClose();
     if (username === currentUser?.username) {
       navigate(`/profile`);
+    } else {
+      navigate(`/${username}`);
     }
-else{
-  navigate(`/${username}`);
-}
   };
 
   return (
-    <div className="z-[999] fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+    <div className="z-[999] fixed inset-0 bg-black bg-opacity-70 flex h-full items-center justify-center">
       <div className="w-96 h-96 bg-white dark:bg-gray-950 rounded-lg ">
         <button
           className="absolute text-white top-10 right-10"
@@ -51,13 +50,13 @@ else{
           <div className="w-full p-2">
             <Input
               type="text"
-              className="w-full p-3 outline-none border-none ml-5 focus:outline-none focus:ring-0"
+              className="w-full p-3 outline-none border-none ml-5 focus:outline-none focus:ring-0 bg-transparent"
               placeholder="search"
               prefix={<Search className="text-gray-800" />}
             />
           </div>
         </div>
-        <div className="overflow-y-scroll">
+        <div className="overflow-y-scroll h-full">
           {followers?.map((user) => (
             <div className="m-3" key={user?._id}>
               <div className="flex items-center dark:bg-slate-600 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg  ">
@@ -79,12 +78,14 @@ else{
                     </span>
                   </span>
                 </div>
-                {user?.isFollowed  ? (
-                 <button className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1">
+                {user?.isFollowed ? (
+                  <button className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1">
                     Following
                   </button>
+                ) : user?.username === currentUser.username ? (
+                  ""
                 ) : (
-                  user?.username === currentUser.username ? "" : <button
+                  <button
                     className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
                     // onClick={}
                   >

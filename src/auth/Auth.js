@@ -4,6 +4,7 @@ import { makeRequest } from "../config/api.config";
 import { login } from "../redux/services/authSlice";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
 
 const Auth = () => {
   const location = useLocation();
@@ -13,6 +14,8 @@ const Auth = () => {
   const [usernamePopup, setUsernamePopup] = useState(false);
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
+  const { login: loginUser } = useAuth();
+
   const userSignIn = async (username, password) => {
     setLoading(true);
     try {
@@ -21,7 +24,7 @@ const Auth = () => {
         password,
       });
       res && localStorage.setItem("user", JSON.stringify(res.data));
-
+      loginUser(res?.data?.user);
       dispatch(login({ isAuthenticated: true, user: res?.data?.user }));
       navigator("/home");
     } catch (error) {

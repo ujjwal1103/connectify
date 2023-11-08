@@ -23,3 +23,6 @@ body {
   overflow: overlay
 }
 
+input{
+  padding : 10px
+}

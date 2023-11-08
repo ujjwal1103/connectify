@@ -1,7 +1,10 @@
 import React from "react";
 import avatar from "../../../assets/man.png";
 import { ThreeDots } from "../../../icons";
-const PostHeader = ({ post }) => {
+import { Link } from "react-router-dom";
+const PostHeader = ({ post, username }) => {
+  const path =  post?.userId.username === username ? "/profile" : `/${post?.userId?.username}`;
+
   return (
     <div className="w-full p-3 flex gap-6 items-center justify-between">
       <div className="flex gap-6 items-center">
@@ -13,7 +16,10 @@ const PostHeader = ({ post }) => {
           />
         </div>
         <div className="flex flex-col items-center dark:text-gray-50">
-          <span>{post?.userId?.username}</span>
+          <Link to={path}>
+            <span>{post?.userId?.username}</span>
+          </Link>
+
           <span>{post?.location}</span>
         </div>
       </div>

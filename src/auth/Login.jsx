@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
 import { makeRequest } from "../config/api.config";
 import getGoogleUrl from "../config/getGoogleUri";
+import { useAuth } from "../context/AuthProvider";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -25,6 +26,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { login: loginUser } = useAuth();
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -39,6 +41,7 @@ const Login = () => {
       res && localStorage.setItem("user", JSON.stringify(res.data));
       setLoading(false);
       setError(null);
+      loginUser(res?.data?.user);
       dispatch(login({ isAuthenticated: true, user: res?.data?.user }));
       navigator("/home");
     } catch (error) {
@@ -50,7 +53,6 @@ const Login = () => {
       }, 2000);
     }
   };
-
 
   useEffect(() => {
     document.title = "connectify-Login";
@@ -88,7 +90,13 @@ const Login = () => {
           type={showPassword ? "text" : "password"}
           placeholder="Enter you password"
           prefix={<LockFill />}
-          sufix={showPassword? <FillEyeSlashFill onClick={()=>setShowPassword(false)}/>:<EyeFill onClick={()=>setShowPassword(true)}/>}
+          sufix={
+            showPassword ? (
+              <FillEyeSlashFill onClick={() => setShowPassword(false)} />
+            ) : (
+              <EyeFill onClick={() => setShowPassword(true)} />
+            )
+          }
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           className="authInput"

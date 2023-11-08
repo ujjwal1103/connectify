@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { makeRequest } from "../../../config/api.config";
 import { EmojiSmile } from "../../../icons";
+import { Link } from "react-router-dom";
 
-const PostInteraction = ({ user, post }) => {
+const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
   const [commentText, setCommentText] = useState(null);
   const [comments, setComments] = useState([]);
+
+  const path =
+    userId.username === user.username ? "/profile" : `/${userId.username}`;
 
   const handleChange = (e) => {
     setCommentText(e.target.value);
@@ -13,7 +17,7 @@ const PostInteraction = ({ user, post }) => {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const { data } = await makeRequest(`/comments/${post?._id}`);
+        const { data } = await makeRequest(`/comments/${_id}`);
         if (data.isSuccess) {
           setComments(data.comments);
         }
@@ -22,12 +26,12 @@ const PostInteraction = ({ user, post }) => {
       }
     };
     getComments();
-  }, [post?._id]);
+  }, [_id]);
 
   const sendComment = async () => {
     try {
       const { data } = await makeRequest.post(`/comment`, {
-        post: post?._id,
+        post: _id,
         comment: commentText,
       });
       if (data.isSuccess) {
@@ -41,9 +45,9 @@ const PostInteraction = ({ user, post }) => {
 
   return (
     <div className="flex flex-col p-3 dark:text-gray-50">
-      <span>{post.likedBy.length} likes</span>
+      <span>{likedBy.length} likes</span>
       <span className="line-clamp-2 dark:text-gray-50">
-        {user.username} <span>{post.caption}</span>
+        <Link to={path}>{userId?.username}</Link> <span>{caption}</span>
       </span>
 
       <div className="flex justify-between gap-6 items-center">

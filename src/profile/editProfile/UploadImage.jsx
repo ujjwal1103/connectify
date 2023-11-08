@@ -1,34 +1,29 @@
 import avatar from "../../assets/man.png";
 import { useState } from "react";
-import { imageFileUpload } from "../../services/postServices";
 import { OutlineLoading3Quarters } from "../../icons";
+import { resizeFile } from "../../services/postServices";
 
 const UploadImage = ({ setProfilePic, profilePic }) => {
   const [loading, setIsLoading] = useState(false);
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
-    const file = e.target.files[0];
+    let file = e.target.files[0];
+    file = await resizeFile(file);
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       let dataURL = reader.result;
       setProfilePic(dataURL);
-    };
-    const url = await imageFileUpload(file, "profilepics");
-
-    if (url) {
-      setProfilePic(url);
       setIsLoading(false);
-    }
+    };
   };
   return (
     <div className="flex flex-col ">
-      {}
       {loading ? (
         <label
           htmlFor="profilePic"
-          className="flex justify-center items-center relative"
+          className="flex justify-center items-center relative overflow-clip"
         >
           <img
             src={profilePic || avatar}

@@ -29,13 +29,23 @@ const Post = ({ post }) => {
       className="border bg-gray-50 h-auto  dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
     >
       <div>
-        <PostHeader post={post} />
+        <PostHeader post={post} username={user?.username} />
         <PostContent contentUrl={post?.imageUrl} onClick={handleSetPost} />
-        <PostActions post={post} userId={user._id} username={user.username} showCurrentPost={handleSetPost}/>
+        <PostActions
+          post={post}
+          userId={user._id}
+          username={user.username}
+          showCurrentPost={handleSetPost}
+        />
         <PostInteraction user={user} post={post} />
       </div>
       {showPost && (
-        <SinglePost setClose={showCurrentPost} post={feed} posts={feeds} fromFeed={true}/>
+        <SinglePost
+          setClose={showCurrentPost}
+          post={feed}
+          posts={feeds}
+          fromFeed={true}
+        />
       )}
     </div>
   );

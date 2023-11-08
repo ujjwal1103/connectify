@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,22 @@ import { resetFeedState } from "../../redux/services/feedSlice";
 import Notification from "../notification/Notification";
 import { socket } from "../../config/socket.io";
 import SearchInput from "./components/SearchInput";
-import { Chat, Cog, DarkMode, EllipsisV, Heart, HouseDoor, PersonCircle, Phone, PlusSquare, QuestionCircle, Search, SignOutAlt } from "../../icons";
+import {
+  Chat,
+  Cog,
+  DarkMode,
+  EllipsisV,
+  Heart,
+  HouseDoor,
+  PersonCircle,
+  Phone,
+  PlusSquare,
+  QuestionCircle,
+  Search,
+  SignOutAlt,
+} from "../../icons";
 import Logo from "../../icons/Logo";
+import { useClickOutside } from "@react-hookz/web";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +31,9 @@ const Navbar = () => {
   const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const modelRef = useRef();
   const { user } = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (user) {
       socket.emit("addUser", { userId: user?._id, username: user?.username });
@@ -43,16 +58,11 @@ const Navbar = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  useClickOutside(modelRef, ()=>setIsOpen(false));
 
   const toggleNotification = () => {
     setIsOpenNotification((prev) => !prev);
     // document.body.classList.toggle("overflow-hidden");
-  };
-
-  const handleOutsideClick = (e) => {
-    if (!e.target.closest(".dropdown-menu-button")) {
-      setIsOpen(false);
-    }
   };
 
   const handleLogout = () => {
@@ -95,10 +105,10 @@ const Navbar = () => {
               <Chat size={24} />
             </Link>
           </div>
-          <div className="h-6">
-            <button onClick={toggleCreatePost}>
+          <div className="">
+            <Link onClick={toggleCreatePost}>
               <PlusSquare size={24} />
-            </button>
+            </Link>
           </div>
           <div onClick={toggleNotification}>
             <Heart size={24} />
@@ -112,36 +122,30 @@ const Navbar = () => {
           <div className="lg:relative hidden lg:inline-block text-left dropdown-menu-button">
             <button
               onClick={toggleDropdown}
-              className={`p-2 focus:outline-none ${isOpen && "bg-gray-600"}`}
+              className={`p-2 focus:outline-none ${isOpen && "text-gray-900"}`}
             >
               <EllipsisV className="w-6 h-6" />
             </button>
             {isOpen && (
               <div
-                onClick={handleOutsideClick}
+                ref={modelRef}
                 className="origin-top-right absolute lg:right-0 mt-2 lg:w-52 w-full  bg-white border dark:text-white dark:bg-slate-800 dark:border-slate-500/30 rounded-lg shadow-lg"
               >
                 <ul className="py-1">
                   <li>
-                    <Link
-                      className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
-                    >
+                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <Cog className="mr-2" />
                       Settings
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
-                    >
+                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <QuestionCircle className="mr-2" />
                       Help
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
-                    >
+                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <Phone className="mr-2" />
                       Contact Us
                     </Link>

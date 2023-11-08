@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-const MultiLineInput = ({ setText, value }, ref) => {
+const MultiLineInput = ({ setText, value, className }, ref) => {
   const handleChange = (e) => {
     const lines = e.target.value.split("\n").slice(0, 5);
     setText(lines.join("\n"));
@@ -9,11 +9,14 @@ const MultiLineInput = ({ setText, value }, ref) => {
   return (
     <div className="flex-1">
       <textarea
-        cols="1"
+        cols="3"
         value={value}
         onChange={handleChange}
         placeholder="write a caption... "
-        className="!ring-0 resize-none outline-none border-none w-full dark:bg-transparent"
+        className={
+          className 
+         
+        }
       />
     </div>
   );

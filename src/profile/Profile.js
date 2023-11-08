@@ -12,6 +12,7 @@ import Tabs from "./components/Tabs";
 import { resetState } from "../redux/services/postSlice";
 import { resetFeedState } from "../redux/services/feedSlice";
 import { useNavigate } from "react-router-dom";
+import { Plus } from "../icons";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
@@ -62,7 +63,7 @@ const Profile = () => {
   };
 
   if (!user) {
-    return <div className="w-screen h-screen">loading</div>;
+    return <div className="w-screen h-screen fixed inset-0">loading</div>;
   }
 
   return (
@@ -103,32 +104,40 @@ const Profile = () => {
                 <span>Posts</span>
               </div>
               <div
-                className="flex flex-col justify-center items-center cursor-pointer hover:font-semibold"
+                className="flex flex-col justify-center items-center cursor-pointer group"
                 onClick={toggleShow}
               >
-                <span className="text-2xl">{user?.followers?.length || 0}</span>
-                <span>Followers</span>
+                <span className="text-2xl group-hover:text-blue-500">
+                  {user?.followers?.length || 0}
+                </span>
+                <span class="group-hover:text-blue-500 transition-all">
+                  Followers
+                </span>
               </div>
               <div
-                className="flex flex-col justify-center items-center cursor-pointer hover:font-semibold"
+                className="flex flex-col justify-center items-center cursor-pointer group"
                 onClick={toggleShowFollowing}
               >
-                <span className="text-2xl">
+                <span className="text-2xl group-hover:text-blue-500">
                   {user && formatNumberWithKAndM(user?.following?.length || 0)}
                 </span>
-                <span>Following</span>
+                <span class="group-hover:text-blue-500 transition-all">
+                  Following
+                </span>
               </div>
             </div>
           </div>
         </div>
-        <div className="w-full p-4 overflow-hidden">
+        <div className="w-full px-14 py-4 overflow-hidden">
           <strong className="py-2">{user?.name}</strong>
-          <pre className="text-xs leading-8">{user?.bio}</pre>
+          <pre className="text-xs leading-8 lg:leading-10 lg:text-sm ">
+            {user?.bio}
+          </pre>
         </div>
       </div>
       {/* <hr className='h-1 bg-violet-700' /> */}
 
-      <div className="w-2/3 mx-auto p-4 lg:flex gap-10 justify-center hidden ">
+      {/* <div className="w-2/3 mx-auto p-4 lg:flex gap-10 justify-center hidden ">
         {[1, 2, 3, 4, 5, 6, 7].map((i) => (
           <div key={i} className="flex flex-col items-center gap-2">
             <img
@@ -141,7 +150,7 @@ const Profile = () => {
             <span>highlight</span>
           </div>
         ))}
-      </div>
+      </div> */}
       <hr className="h-1 bg-violet-100 dark:bg-gray-900 " />
 
       <Posts />

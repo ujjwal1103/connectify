@@ -8,6 +8,6 @@ export const useAuth = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user?.isSuccess) {
       dispatch(login({ isAuthenticated: user.isSuccess, user: user?.user }));
-    } 
+    }
   }, [dispatch]);
 };

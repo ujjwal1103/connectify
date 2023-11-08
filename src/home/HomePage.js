@@ -11,8 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  // const [story, setCreateStory] = useState(false);
-
   const dispatch = useDispatch();
   const { feeds } = useSelector((state) => state.feed);
 
@@ -30,10 +28,6 @@ const HomePage = () => {
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
-
-  // const createStory = () => {
-  //   setCreateStory((prev) => !prev);
-  // };
 
   return (
     <div className=" flex  w-full p-4 lg:gap-10">

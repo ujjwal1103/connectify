@@ -62,7 +62,7 @@ const UserProfile = () => {
   }, [getUser]);
 
   if (!user) {
-    return <div>loading</div>;
+    return <div >loading</div>;
   }
 
   return (

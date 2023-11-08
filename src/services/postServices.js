@@ -14,7 +14,7 @@ export const resizeFile = (file) =>
       (uri) => {
         resolve(uri);
       },
-      "file"
+      "blob"
     );
   });
 
@@ -28,5 +28,3 @@ export const imageFileUpload = async (file, folderName) => {
   }
   return null;
 };
-
-
