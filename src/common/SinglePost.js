@@ -17,7 +17,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
     setCommentText(e.target.value);
   };
 
-  const getComments = useCallback( async () => {
+  const getComments = useCallback(async () => {
     try {
       const { data } = await makeRequest(`/comments/${post?._id}`);
       if (data.isSuccess) {
@@ -26,7 +26,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
     } catch (error) {
       console.log(error);
     }
-  },[post?._id]);
+  }, [post?._id]);
 
   useEffect(() => {
     getComments();
@@ -70,7 +70,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 w-screen h-full bg-opacity-70 backdrop-blur-sm bg-white dark:bg-gray-900 dark:bg-opacity-50 flex  items-center justify-center">
+    <div className="fixed inset-0 z-50 w-screen h-full overflow-y-scroll bg-opacity-70 backdrop-blur-sm bg-white dark:bg-gray-900 dark:bg-opacity-50 flex  items-center justify-center">
       <button
         className="absolute lg:right-10 lg:top-10 top-5 right-5"
         onClick={setClose}
@@ -89,11 +89,11 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
       >
         right
       </button>
-      <div className="lg:w-3/4 lg:h-[96%] h-full overflow-y-auto shadow-xl flex flex-col lg:flex-row bg-white dark:bg-gray-700">
+      <div className="lg:w-3/4 lg:h-[96%] w-full overflow-y-auto shadow-xl flex flex-col lg:flex-row bg-white dark:bg-gray-700">
         <img
           src={post?.imageUrl}
           alt="ujjwal"
-          className="lg:w-1/2 h-full flex-1 bg-gray-900 object-contain"
+          className="lg:w-1/2 h-96 lg:h-full flex-1 bg-gray-900 object-contain"
         />
         <div className="flex flex-col flex-1 dark:text-gray-50">
           <div className="hidden lg:flex  justify-between items-center">
@@ -111,7 +111,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
             </div>
           </div>
           <hr />
-          <div className="flex-1 hidden lg:block overflow-y-scroll">
+          <div className="flex-1 max-h-96 lg:max-h-full overflow-y-scroll">
             {comments?.map((comment) => {
               return (
                 <div key={comment._id} className="p-3 dark:text-gray-50  ">

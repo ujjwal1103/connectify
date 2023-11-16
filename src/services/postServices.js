@@ -2,7 +2,7 @@ import { storage } from "../config/firebase.config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Resizer from "react-image-file-resizer";
 
-export const resizeFile = (file) =>
+export const resizeFile = (file, type) =>
   new Promise((resolve) => {
     Resizer.imageFileResizer(
       file,
@@ -10,11 +10,11 @@ export const resizeFile = (file) =>
       300,
       "jpg",
       100,
-      0,
+      0,  
       (uri) => {
         resolve(uri);
       },
-      "blob"
+      type
     );
   });
 

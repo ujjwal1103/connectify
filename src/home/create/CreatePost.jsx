@@ -4,7 +4,7 @@ import { makeRequest } from "../../config/api.config";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../../redux/services/postSlice";
-import { imageFileUpload, resizeFile } from "../../services/postServices";
+import { resizeFile } from "../../services/postServices";
 import { addPostToUser } from "../../redux/services/authSlice";
 import EditImage from "./EditImage/EditImage";
 import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
@@ -15,15 +15,16 @@ const CreatePost = ({ setClose }) => {
   const [loading, setIsLoading] = useState(false);
   const [editImage, setEditImage] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const [newfile, setNewFile] = useState();
   const dispatch = useDispatch();
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
-    const file = e.target.files[0];
-    const resizedFile = await resizeFile(file);
-    console.log(resizedFile);
+    let file = e.target.files[0];
+    file = await resizeFile(file, "file");
+    setNewFile(file);
     let reader = new FileReader();
-    reader.readAsDataURL(resizedFile);
+    reader.readAsDataURL(file);
     reader.onload = function () {
       let dataURL = reader.result;
       setImageUrl(dataURL);
@@ -33,12 +34,11 @@ const CreatePost = ({ setClose }) => {
 
   const handlePost = async () => {
     if (imageUrl) {
-      const body = {
-        imageUrl: imageUrl,
-        caption: caption || "",
-      };
+      const formData = new FormData();
+      formData.append("imageUrl", newfile);
+      formData.append("caption", caption || "");
       try {
-        const { data } = await makeRequest.post("/post", body);
+        const { data } = await makeRequest.post("/post", formData);
 
         if (data?.isSuccess) {
           dispatch(addPost(data.post));

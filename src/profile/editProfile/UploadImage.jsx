@@ -1,60 +1,72 @@
 import avatar from "../../assets/man.png";
 import { useState } from "react";
-import { OutlineLoading3Quarters } from "../../icons";
 import { resizeFile } from "../../services/postServices";
 
-const UploadImage = ({ setProfilePic, profilePic }) => {
+const UploadImage = ({ setProfilePic, profilePic, setImage }) => {
   const [loading, setIsLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
     let file = e.target.files[0];
-    file = await resizeFile(file);
+    file = await resizeFile(file, "file");
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       let dataURL = reader.result;
       setProfilePic(dataURL);
+      setImage(file);
       setIsLoading(false);
+      setOpenModal(false);
     };
   };
+
+  const handleRemoveProfilePicture = () => {
+    setProfilePic("");
+    setImage("");
+    setIsLoading(false);
+    setOpenModal(false);
+  };
+
   return (
     <div className="flex flex-col ">
-      {loading ? (
-        <label
-          htmlFor="profilePic"
-          className="flex justify-center items-center relative overflow-clip"
-        >
-          <img
-            src={profilePic || avatar}
-            className="w-20 h-20 rounded-full object-cover"
-            alt=""
-          />
-          <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
-            <div className="mx-3 text-violet-100 font-semibold ">
-              <OutlineLoading3Quarters className="animate-spin" size={23} />
-            </div>
+      <div
+        onClick={() => setOpenModal(true)}
+        className="flex justify-center items-center"
+      >
+        <img
+          src={profilePic || avatar}
+          className="w-20 h-20 rounded-full object-cover"
+          alt=""
+        />
+      </div>
+
+      {openModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center">
+          <div className="w-96 h-96 bg-slate-800 rounded-md flex justify-center items-center flex-col gap-4 ">
+            <label
+              htmlFor="profilePic"
+              className="flex justify-center items-center py-2 px-3 bg-slate-950 rounded-lg cursor-pointer"
+            >
+              Select New Profile Picture
+            </label>
+            <button
+              type="button"
+              onClick={handleRemoveProfilePicture}
+              className="flex justify-center items-center py-2 px-3 bg-slate-950 rounded-lg"
+            >
+              Remove profile picture
+            </button>
+            <input
+              type="file"
+              onChange={handleImagePick}
+              hidden
+              id="profilePic"
+              accept="image/png, image/gif, image/jpeg"
+            />
           </div>
-        </label>
-      ) : (
-        <label
-          htmlFor="profilePic"
-          className="flex justify-center items-center"
-        >
-          <img
-            src={profilePic || avatar}
-            className="w-20 h-20 rounded-full object-cover"
-            alt=""
-          />
-        </label>
+        </div>
       )}
-      <input
-        type="file"
-        onChange={handleImagePick}
-        hidden
-        id="profilePic"
-        accept="image/png, image/gif, image/jpeg"
-      />
     </div>
   );
 };

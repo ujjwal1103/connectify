@@ -12,6 +12,7 @@ const EditProfile = ({ user, setClose, setUser }) => {
   const [gender, setGender] = useState(user?.gender);
   const [profilePic, setProfilePic] = useState(user?.profilePicture);
   const [submitDisabled, setSubmitDisabled] = useState(true);
+  const [image, setImage] = useState();
 
   useEffect(() => {
     if (
@@ -40,14 +41,17 @@ const EditProfile = ({ user, setClose, setUser }) => {
 
   const editProfile = async (e) => {
     e.preventDefault();
-    const user = {
-      username,
-      name,
-      bio,
-      gender,
-      profilePicture: profilePic,
-    };
-    const result = await makeRequest.put("/user/edit", user);
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("name", name);
+    formData.append("bio", bio);
+    formData.append("gender", gender);
+    formData.append("image", image);
+    const result = await makeRequest.put("/user/edit", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     setUser(result.user);
     setClose();
   };
@@ -66,6 +70,7 @@ const EditProfile = ({ user, setClose, setUser }) => {
               <UploadImage
                 profilePic={profilePic}
                 setProfilePic={setProfilePic}
+                setImage={setImage}
               />
             </div>
             <Input

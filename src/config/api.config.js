@@ -2,7 +2,7 @@ import axios from "axios";
 console.log(process.env.REACT_APP_DEV_BASE_URL);
 // Create the axios instance without the Authorization header initially
 const makeRequest = axios.create({
-  baseURL: process.env.REACT_APP_DEV_BASE_URL,
+  baseURL: "http://localhost:3100/api",
 });
 
 // Add an axios request interceptor to set the Authorization header before sending requests
