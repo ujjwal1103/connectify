@@ -3,7 +3,7 @@ import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import blackUser from "../assets/no_avatar.png";
 import { useParams } from "react-router-dom";
-import { sendFriendRequest } from "./services/postServices";
+import { sendFriendRequest, unfollowUser } from "./services/postServices";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
 import { useState, useEffect, useCallback } from "react";
@@ -21,36 +21,52 @@ const UserProfile = () => {
   }, [username]);
 
   const handleFollowRequest = async () => {
+    setUser((user) => ({
+      ...user,
+      isFollowed: true,
+      followers: Number(user.followers) + 1,
+    }));
     const data = await sendFriendRequest(user?._id);
-
     if (data.isSuccess) {
-      const newUser = (user.isFollowed = true);
-      setUser(newUser);
+      setUser((user) => ({
+        ...user,
+        isFollowed: true,
+      }));
     }
   };
 
   const toggleShow = () => {
-    if (user?.followers.length > 0) {
+    if (user?.followers > 0) {
       setShow((prev) => !prev);
     }
   };
   const toggleShowFollowing = () => {
-    if (user?.following.length > 0) {
+    if (user?.following > 0) {
       setShowFollowing((prev) => !prev);
     }
   };
 
   const handleUnfollow = async () => {
-    // const data = await sendFriendRequest(user?._id);
-    // if (data.isSuccess) {
-    //   const newUser = (user.isFollowed = true);
-    //   setUser(newUser);
-    // }
+    setUser((user) => ({
+      ...user,
+      isFollowed: false,
+      followers: Number(user.followers) - 1,
+    }));
+    const data = await unfollowUser(user?._id);
+    if (data.isSuccess) {
+      setUser((user) => ({ ...user, isFollowed: false }));
+    } else {
+      setUser((user) => ({
+        ...user,
+        isFollowed: true,
+        followers: Number(user.followers) + 1,
+      }));
+    }
   };
 
   const handleSendMessage = async () => {
     try {
-      const response = await makeRequest.post('/chat', {to: user._id})
+      const response = await makeRequest.post("/chat", { to: user._id });
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -62,7 +78,7 @@ const UserProfile = () => {
   }, [getUser]);
 
   if (!user) {
-    return <div >loading</div>;
+    return <div>loading</div>;
   }
 
   return (
@@ -82,7 +98,7 @@ const UserProfile = () => {
           <div className="p-3">
             <div className="pt-6 flex gap-10 items-center lg:flex-row flex-col">
               <span className="text-2xl">{user?.username}</span>
-              {user?.isFollowed || user.followers.includes(currUser._id) ? (
+              {user?.isFollowed ? (
                 <button
                   onClick={handleUnfollow}
                   className="text-2xl border p-2 lg:w-40 border-slate-600/30  text-violet-800  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 font-semibold rounded-md"
@@ -97,26 +113,25 @@ const UserProfile = () => {
                   Follow
                 </button>
               )}
-              {user?.isFollowed ||
-                (user.followers.includes(currUser._id) && (
-                  <button
-                    onClick={handleSendMessage}
-                    className="text-2xl border p-2 lg:w-52 border-slate-600/30  text-violet-800  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 font-semibold rounded-md"
-                  >
-                    Send Message
-                  </button>
-                ))}
+              {user?.isFollowed && (
+                <button
+                  onClick={handleSendMessage}
+                  className="text-2xl border p-2 lg:w-52 border-slate-600/30  text-violet-800  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 font-semibold rounded-md"
+                >
+                  Send Message
+                </button>
+              )}
             </div>
             <div className="flex pt-6 justify-between">
               <div className="flex flex-col justify-center items-center">
-                <span className="text-2xl">{user?.posts?.length}</span>
+                <span className="text-2xl">{user?.posts}</span>
                 <span>Posts</span>
               </div>
               <div
                 className="flex flex-col justify-center items-center"
                 onClick={toggleShow}
               >
-                <span className="text-2xl">{user?.followers.length}</span>
+                <span className="text-2xl">{user?.followers}</span>
                 <span>Followers</span>
               </div>
               <div
@@ -124,7 +139,7 @@ const UserProfile = () => {
                 onClick={toggleShowFollowing}
               >
                 <span className="text-2xl">
-                  {user && formatNumberWithKAndM(user?.following.length)}
+                  {user && formatNumberWithKAndM(user?.following)}
                 </span>
                 <span>Following</span>
               </div>

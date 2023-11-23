@@ -1,24 +1,40 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Input from "../../../common/InputFields/Input";
 import { makeRequest } from "../../../config/api.config";
 import { Link } from "react-router-dom";
 import blackUser from "../../../assets/no_avatar.png";
 import { Search } from "../../../icons";
+import { useEffect } from "react";
 
 const SearchInput = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = async (e) => {
-    setShowSearchResults(true);
-    try {
-      const res = await makeRequest(`/users/search?query=${e.target.value}`);
-      if (res) {
-        setSearchResults(res?.data?.users);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchQuery.trim() !== "") {
+        try {
+          const res = await makeRequest(`/users/search?query=${searchQuery}`);
+          if (res) {
+            setSearchResults(res?.data?.users);
+            setShowSearchResults(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        setShowSearchResults(false);
+        setSearchResults([]);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    }, 700); // Adjust the debounce delay time as needed (in milliseconds)
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const handleSearch = (e) => {
+    setShowSearchResults(true);
+    setSearchQuery(e.target.value);
   };
 
   return (

@@ -42,10 +42,10 @@ const EditProfile = ({ user, setClose, setUser }) => {
   const editProfile = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("username", username);
-    formData.append("name", name);
-    formData.append("bio", bio);
-    formData.append("gender", gender);
+    formData.append("username", username || "");
+    formData.append("name", name || "");
+    formData.append("bio", bio || "");
+    formData.append("gender", gender || null);
     formData.append("image", image);
     const result = await makeRequest.put("/user/edit", formData, {
       headers: {

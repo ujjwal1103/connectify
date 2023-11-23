@@ -61,7 +61,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
         comment: commentText,
       });
       if (data.isSuccess) {
-        getComments();
+        setComments((prev) => [data.comment, ...prev]);
         setCommentText("");
       }
     } catch (error) {

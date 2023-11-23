@@ -5,7 +5,7 @@ import { setSelectedChat } from "../../redux/services/chatSlice";
 import { DotsNine } from "../../icons";
 
 const SingleChat = ({ chat }) => {
-  const [options, setOptions] = useState(false)
+  const [options, setOptions] = useState(false);
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const selectThisChat = () => {
@@ -13,8 +13,8 @@ const SingleChat = ({ chat }) => {
   };
 
   const handleOptions = () => {
-    setOptions(prev=>!prev)
-  }
+    setOptions((prev) => !prev);
+  };
 
   return (
     <div
@@ -37,21 +37,32 @@ const SingleChat = ({ chat }) => {
           <span className="text-sm text-white">{}</span>
         </div>
       )}
-    
-        <div className="w-5 h-5 flex relative justify-center items-center text-black" onMouseEnter={handleOptions} onMouseLeave={handleOptions}>
-          <span className=""><DotsNine/></span>
 
-          {options && <div className="absolute bg-white origin-bottom-right top-1/2 right-0 py-2 rounded-md">
-        <ul className="text-sm w-20 text-center">
-          <li className="py-2 hover:bg-gray-100 "><button>Archive</button></li>
-          <li className="py-2 hover:bg-gray-100 "><button>Delete</button></li>
-          <li className="py-2 hover:bg-gray-100 "><button>Mute</button></li>
-        </ul>
-      </div>}
-        </div>
- 
+      <div
+        className="w-5 h-5 flex relative justify-center items-center text-black"
+        onMouseEnter={handleOptions}
+        onMouseLeave={handleOptions}
+      >
+        <span className="">
+          <DotsNine />
+        </span>
 
- 
+        {options && (
+          <div className="absolute bg-white origin-bottom-right top-1/2 right-0 py-2 rounded-md">
+            <ul className="text-sm w-20 text-center">
+              <li className="py-2 hover:bg-gray-100 ">
+                <button>Archive</button>
+              </li>
+              <li className="py-2 hover:bg-gray-100 ">
+                <button>Delete</button>
+              </li>
+              <li className="py-2 hover:bg-gray-100 ">
+                <button>Mute</button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

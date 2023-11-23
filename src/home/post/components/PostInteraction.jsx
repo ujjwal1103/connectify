@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
   const [commentText, setCommentText] = useState(null);
-  const [comments, setComments] = useState([]);
 
   const path =
     userId.username === user.username ? "/profile" : `/${userId.username}`;
@@ -14,19 +13,19 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
     setCommentText(e.target.value);
   };
 
-  useEffect(() => {
-    const getComments = async () => {
-      try {
-        const { data } = await makeRequest(`/comments/${_id}`);
-        if (data.isSuccess) {
-          setComments(data.comments);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getComments();
-  }, [_id]);
+  // useEffect(() => {
+  //   const getComments = async () => {
+  //     try {
+  //       const { data } = await makeRequest(`/comments/${_id}`);
+  //       if (data.isSuccess) {
+  //         setComments(data.comments);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getComments();
+  // }, [_id]);
 
   const sendComment = async () => {
     try {
@@ -35,7 +34,6 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
         comment: commentText,
       });
       if (data.isSuccess) {
-        setComments((prev) => [...prev, data.comment]);
         setCommentText("");
       }
     } catch (error) {

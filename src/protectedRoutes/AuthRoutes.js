@@ -1,22 +1,19 @@
-import React, { useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthProvider';
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const AuthRoutes = () => {
   const navigate = useNavigate();
-  
-  const {user} = useAuth();
 
-  useEffect(()=>{
-    if(user){
-       navigate('/home');
-    }else{
-      navigate('/');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
     }
-  },[user, navigate])
-  
-  
-  return <Outlet/>
-}
+  }, [user, navigate]);
 
-export default AuthRoutes
+  return <Outlet />;
+};
+
+export default AuthRoutes;
