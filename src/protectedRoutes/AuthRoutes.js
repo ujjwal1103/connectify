@@ -7,8 +7,10 @@ const AuthRoutes = () => {
 
   const { user } = useAuth();
 
+  console.log(localStorage.getItem("user"));
+
   useEffect(() => {
-    if (user) {
+    if (localStorage.getItem("user")) {
       navigate("/home");
     }
   }, [user, navigate]);

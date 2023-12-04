@@ -2,41 +2,41 @@ import React from "react";
 import Logo from "../icons/Logo";
 export function FooterThree() {
   return (
-    <section className="relative overflow-hidden bg-white py-8 dark:bg-transparent dark:text-white">
-      <div className=" relative z-10 mx-auto px-4">
-        <div className="-m-8 flex flex-wrap items-center justify-between">
-          <div className="p-8">
+    <section className="hidden relative overflow-hidden bg-white lg:py-8 py-2 dark:bg-transparent dark:text-white">
+      <div className=" relative z-10 mx-auto lg:px-4 px-2">
+        <div className="flex flex-wrap items-center justify-between">
+          <div className="p-8 hidden lg:block">
             <div className="inline-flex items-center">
               <div className="hidden lg:block">
                 <Logo className="dark:fill-white" />
               </div>
             </div>
           </div>
-          <div className="w-auto p-8">
-            <ul className="-m-5 flex flex-wrap items-center">
-              <li className="p-5">
+          <div className="w-auto lg:p-8 p-2">
+            <ul className="-lg:m-5 flex  items-center">
+              <li className="lg:p-5 p-2">
                 <span className="font-medium text-gray-600 hover:text-gray-700">
                   Privacy Policy
                 </span>
               </li>
-              <li className="p-5">
+              <li className="lg:p-5 p-2">
                 <span className="font-medium text-gray-600 hover:text-gray-700">
                   Terms of Service
                 </span>
               </li>
-              <li className="p-5">
+              <li className="lg:p-5 p-2">
                 <span className="font-medium text-gray-600 hover:text-gray-700">
                   Return Policy
                 </span>
               </li>
-              <li className="p-5">
+              <li className="lg:p-5 p-2">
                 <span className="font-medium text-gray-600 hover:text-gray-700">
                   Contact Us
                 </span>
               </li>
             </ul>
           </div>
-          <div className="w-auto p-8">
+          <div className="w-auto lg:p-8 p-2 ">
             <div className="-m-1.5 flex flex-wrap">
               <div className="w-auto p-1.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 hover:border-gray-400">

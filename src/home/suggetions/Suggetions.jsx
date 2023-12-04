@@ -13,9 +13,9 @@ const Suggetions = () => {
   const getSuggetions = useCallback(async () => {
     try {
       const res = await makeRequest("users");
-      dispatch(setSuggetions(res.data.users));
+      dispatch(setSuggetions(res.users));
     } catch (error) {
-      console.log("error", error.message);
+      console.log("error", error);
     }
   }, [dispatch]);
 
@@ -26,10 +26,12 @@ const Suggetions = () => {
   return (
     <div className="hidden lg:block">
       <Self />
-      <div className="p-2 mx-2 flex justify-between dark:text-gray-100">
-        <span>Suggested for you</span>
-        <span>see all</span>
-      </div>
+      {suggestedusers.length > 0 && (
+        <div className="p-2 mx-2 flex justify-between dark:text-gray-100">
+          <span>Suggested for you</span>
+          <span>see all</span>
+        </div>
+      )}
       {suggestedusers?.map((u) => (
         <Suggetion
           key={u?._id}

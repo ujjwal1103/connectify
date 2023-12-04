@@ -5,6 +5,7 @@ import feedReducer from "./services/feedSlice";
 import notificationsReducer from "./services/notificationSlice";
 import suggetionsReducer from "./services/suggetionSlice";
 import chatReducer from "./services/chatSlice";
+import storyReducer from "./services/storySlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     notifications: notificationsReducer,
     suggetions: suggetionsReducer,
     chat: chatReducer,
+    story: storyReducer,
   },
 });

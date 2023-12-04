@@ -3,11 +3,9 @@ import { useState } from "react";
 import { resizeFile } from "../../services/postServices";
 
 const UploadImage = ({ setProfilePic, profilePic, setImage }) => {
-  const [loading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   const handleImagePick = async (e) => {
-    setIsLoading(true);
     let file = e.target.files[0];
     file = await resizeFile(file, "file");
     let reader = new FileReader();
@@ -16,7 +14,7 @@ const UploadImage = ({ setProfilePic, profilePic, setImage }) => {
       let dataURL = reader.result;
       setProfilePic(dataURL);
       setImage(file);
-      setIsLoading(false);
+
       setOpenModal(false);
     };
   };
@@ -24,7 +22,7 @@ const UploadImage = ({ setProfilePic, profilePic, setImage }) => {
   const handleRemoveProfilePicture = () => {
     setProfilePic("");
     setImage("");
-    setIsLoading(false);
+
     setOpenModal(false);
   };
 

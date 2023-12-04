@@ -5,10 +5,10 @@ import { FooterThree } from "../common/Footer";
 
 const Layout = () => {
   return (
-    <div className="bg-gray-100 dark:bg-slate-900">
+    <div className="bg-gray-100 dark:bg-slate-900 h-screen">
       <Navbar />
       <Outlet />
-      <FooterThree/>
+      <FooterThree />
     </div>
   );
 };

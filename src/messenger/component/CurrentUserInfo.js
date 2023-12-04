@@ -10,7 +10,7 @@ const CurrentUserInfo = ({ user }) => {
   const dispatch = useDispatch();
   const getAllUsers = async () => {
     const res = await makeRequest.get("/friends");
-    setUsers(res.data.users);
+    setUsers(res.users);
   };
 
   useEffect(() => {
@@ -30,8 +30,8 @@ const CurrentUserInfo = ({ user }) => {
   const handleUserSelect = async (userId) => {
     try {
       const response = await makeRequest.post("/chat", { to: userId });
-      if (response.data.isSuccess) {
-        dispatch(addChat(response.data.chat));
+      if (response.isSuccess) {
+        dispatch(addChat(response.chat));
         setNewUserPopup(false);
       }
     } catch (error) {

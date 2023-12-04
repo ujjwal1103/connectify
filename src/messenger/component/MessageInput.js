@@ -15,8 +15,8 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
   };
 
   const response = await makeRequest.post(`message/${chatId}`,newMessage);
-  if(response.data.isSuccess) {
-     console.log(response.data)
+  if(response.isSuccess) {
+     console.log(response)
      getMessages()
      setMessageText("")
   }

@@ -12,9 +12,9 @@ const Posts = ({ userId }) => {
   const getPosts = useCallback(async () => {
     try {
       const res = await makeRequest(`/users/${userId || "posts"}`);
-      console.log(res);
-      if (res.data.isSuccess) {
-        dispatch(setPosts(res.data.posts));
+
+      if (res.isSuccess) {
+        dispatch(setPosts(res.posts));
       }
     } catch (error) {
       dispatch(setError("something went wrong"));

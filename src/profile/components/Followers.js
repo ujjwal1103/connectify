@@ -13,7 +13,7 @@ const Followers = ({ userId, setClose }) => {
   useEffect(() => {
     const getFollowers = async () => {
       try {
-        const { data } = await makeRequest.get(`/user/followers/${userId}`);
+        const data = await makeRequest.get(`/user/followers/${userId}`);
         if (data.isSuccess) {
           setFollowers(data.users);
         }

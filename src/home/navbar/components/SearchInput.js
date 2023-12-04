@@ -16,8 +16,8 @@ const SearchInput = () => {
       if (searchQuery.trim() !== "") {
         try {
           const res = await makeRequest(`/users/search?query=${searchQuery}`);
-          if (res) {
-            setSearchResults(res?.data?.users);
+          if (res.isSuccess) {
+            setSearchResults(res?.users);
             setShowSearchResults(true);
           }
         } catch (error) {

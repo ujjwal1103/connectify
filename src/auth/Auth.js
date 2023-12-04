@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { makeRequest } from "../config/api.config";
 import { login } from "../redux/services/authSlice";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 
 const Auth = () => {
@@ -16,21 +15,24 @@ const Auth = () => {
   const [user, setUser] = useState(null);
   const { login: loginUser } = useAuth();
 
-  const userSignIn = async (username, password) => {
-    setLoading(true);
-    try {
-      const res = await makeRequest.post("/login", {
-        username,
-        password,
-      });
-      res && localStorage.setItem("user", JSON.stringify(res.data));
-      loginUser(res?.data?.user);
-      dispatch(login({ isAuthenticated: true, user: res?.data?.user }));
-      navigator("/home");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const userSignIn = useCallback(
+    async (username, password) => {
+      setLoading(true);
+      try {
+        const res = await makeRequest.post("/login", {
+          username,
+          password,
+        });
+        res && localStorage.setItem("user", JSON.stringify(res.user));
+        loginUser(res?.user);
+        dispatch(login({ isAuthenticated: true, user: res?.user }));
+        navigator("/home");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [dispatch, loginUser, navigator]
+  );
 
   const userSignUp = async () => {
     try {
@@ -42,24 +44,24 @@ const Auth = () => {
       setLoading(false);
       console.log(res);
 
-      res && localStorage.setItem("user", JSON.stringify(res.data));
+      res && localStorage.setItem("user", JSON.stringify(res));
 
-      dispatch(login({ isAuthenticated: true, user: res?.data?.user }));
+      dispatch(login({ isAuthenticated: true, user: res?.user }));
       navigator("/home");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const authenticate = async () => {
+  const authenticate = useCallback(async () => {
     try {
       const res = await makeRequest(`/authenticate${location.search}`);
 
-      if (res.data.isSuccess) {
-        if (res.data?.existingUser) {
-          userSignIn(res.data.existingUser.username, res.data.user.id);
+      if (res.isSuccess) {
+        if (res.existingUser) {
+          userSignIn(res.existingUser.username, res.user.id);
         } else {
-          setUser(res.data.user);
+          setUser(res.user);
           setLoading(false);
           setUsernamePopup(true);
         }
@@ -67,11 +69,11 @@ const Auth = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [location.search, userSignIn]);
 
   useEffect(() => {
     authenticate();
-  }, [location.search]);
+  }, [authenticate]);
 
   if (loading) {
     return (

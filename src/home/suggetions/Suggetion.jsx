@@ -29,7 +29,7 @@ const Suggetion = ({ user, username, userId }) => {
         <div className="flex items-center space-x-2">
           <img
             className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
-            src={user?.profilePicture || avatar}
+            src={ user?.profilePicture || avatar}
             alt={user?.username}
           />
           <Link to={`/${user?.username}`} className="flex flex-col">

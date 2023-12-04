@@ -19,7 +19,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
 
   const getComments = useCallback(async () => {
     try {
-      const { data } = await makeRequest(`/comments/${post?._id}`);
+      const data = await makeRequest(`/comments/${post?._id}`);
       if (data.isSuccess) {
         setComments(data.comments);
       }
@@ -56,7 +56,7 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
 
   const sendComment = async () => {
     try {
-      const { data } = await makeRequest.post(`/comment`, {
+      const data = await makeRequest.post(`/comment`, {
         post: post?._id,
         comment: commentText,
       });

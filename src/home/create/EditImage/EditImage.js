@@ -13,7 +13,7 @@ const EditImage = ({ imageSrc }) => {
 
     image.src = imageSrc;
 
-    console.log(image); // Replace with your image URL
+  // Replace with your image URL
 
     image.onload = () => {
       canvas.width = image.width;

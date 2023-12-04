@@ -15,11 +15,11 @@ import {
   BsHouseDoor as HouseDoor,
   BsPersonCircle as PersonCircle,
   BsPlusSquare as PlusSquare,
-  BsEmojiWink as EmojiWink, 
+  BsEmojiWink as EmojiWink,
   BsThreeDots as ThreeDots,
   BsImageFill as ImageFill,
   BsEmojiSmile as EmojiSmile,
-  BsCamera as Camera
+  BsCamera as Camera,
 } from "react-icons/bs";
 import {
   AiOutlineLoading as OutlineLoading,
@@ -33,13 +33,19 @@ import {
   FaCog as Cog,
   FaQuestionCircle as QuestionCircle,
   FaPhone as Phone,
-  FaSignOutAlt as SignOutAlt
+  FaSignOutAlt as SignOutAlt,
 } from "react-icons/fa";
 import { PiDotsNine as DotsNine } from "react-icons/pi";
 import Google from "./Google";
 import { IoMdList as MdList } from "react-icons/io";
+import {
+  IoChevronForwardCircle as ChevronForwardCircle,
+  IoChevronBackCircle as ChevronBackCircle,
+} from "react-icons/io5";
 
 export {
+  ChevronForwardCircle,
+  ChevronBackCircle,
   EmojiWink,
   ThreeDots,
   HouseDoor,
@@ -73,5 +79,5 @@ export {
   ImageFill,
   HeartFill,
   EmojiSmile,
-  Camera
+  Camera,
 };

@@ -47,7 +47,7 @@ const EditProfile = ({ user, setClose, setUser }) => {
     formData.append("bio", bio || "");
     formData.append("gender", gender || null);
     formData.append("image", image);
-    const result = await makeRequest.put("/user/edit", formData, {
+    const result = await makeRequest.putForm("/user/edit", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

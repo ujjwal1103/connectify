@@ -38,15 +38,16 @@ const Login = () => {
         username,
         password,
       });
-      res && localStorage.setItem("user", JSON.stringify(res.data));
+
+      res && localStorage.setItem("user", JSON.stringify(res));
       setLoading(false);
       setError(null);
-      loginUser(res?.data?.user);
-      dispatch(login({ isAuthenticated: true, user: res?.data?.user }));
+      loginUser(res?.user);
+      dispatch(login({ isAuthenticated: true, user: res?.user }));
       navigator("/home");
     } catch (error) {
       setLoading(false);
-      setError(error?.response?.data?.message || error.message);
+      setError(error?.response?.data?.message || error?.message);
       emailRef?.current.focus();
       setTimeout(() => {
         setError(null);

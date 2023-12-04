@@ -6,22 +6,26 @@ import { makeRequest } from "../config/api.config";
 
 import Suggetions from "./suggetions/Suggetions";
 
-import { setFeeds } from "../redux/services/feedSlice";
+import { setFeeds, setError } from "../redux/services/feedSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Loading from "../common/Loading";
+import ErrorPage from "../common/ErrorPage";
+import Story from "./story/Story";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { feeds } = useSelector((state) => state.feed);
+  const { feeds, loading, error } = useSelector((state) => state.feed);
 
   const fetchPosts = useCallback(async () => {
     try {
-      const { data } = await makeRequest.get("/posts");
-      if (data?.isSuccess) {
-        dispatch(setFeeds(data.posts));
+      const res = await makeRequest.get("/posts");
+      if (res?.isSuccess) {
+        dispatch(setFeeds(res.posts));
       }
     } catch (error) {
-      console.log("error", error.message);
+      console.error("error:", error);
+      dispatch(setError(error?.data?.error?.message || "something went wrong"));
     }
   }, [dispatch]);
 
@@ -29,8 +33,28 @@ const HomePage = () => {
     fetchPosts();
   }, [fetchPosts]);
 
+  if (loading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorPage error={error} />;
+  }
+
+  if (feeds.length === 0) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center ">
+        <h1 className="text-xl dark:text-gray-50 font-medium">
+          No feeds found
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div className=" flex  w-full p-4 lg:gap-10">
+      <div>
+        <Story />
+      </div>
       <div className="">
         <aside className="hidden lg:flex  w-64 flex-col overflow-y-scroll rounded-md bg-white px-5 py-8 dark:bg-slate-800">
           <Link to="#" className="">
@@ -51,8 +75,7 @@ const HomePage = () => {
             <nav className="-mx-3 space-y-6">
               <div className="space-y-3">
                 <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-50">
-                  {" "}
-                  analytics{" "}
+                  analytics
                 </label>
                 <Link
                   className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
@@ -229,7 +252,7 @@ const HomePage = () => {
           </div>
         </aside>
       </div>
-      <div className="flex flex-1 gap-10 justify-between">
+      <div className="flex flex-1 gap-10 justify-between z-10">
         <div className=" grid grid-cols-1 flex-1 flex-col  gap-10 ">
           {feeds.map((post, i) => (
             <Post key={post._id} post={post} />

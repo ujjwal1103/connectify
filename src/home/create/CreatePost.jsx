@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import avatar from "../../assets/man.png";
 import { makeRequest } from "../../config/api.config";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
@@ -12,11 +12,12 @@ import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
 const CreatePost = ({ setClose }) => {
   const [imageUrl, setImageUrl] = useState();
   const [caption, setCaption] = useState("");
-  const [loading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [editImage, setEditImage] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  const [newfile, setNewFile] = useState();
+  const [newFile, setNewFile] = useState();
   const dispatch = useDispatch();
+  const canvasref = useRef(null);
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
@@ -35,7 +36,7 @@ const CreatePost = ({ setClose }) => {
   const handlePost = async () => {
     if (imageUrl) {
       const formData = new FormData();
-      formData.append("imageUrl", newfile);
+      formData.append("imageUrl", newFile);
       formData.append("caption", caption || "");
       try {
         const { data } = await makeRequest.post("/post", formData);
@@ -54,19 +55,19 @@ const CreatePost = ({ setClose }) => {
   };
 
   return (
-    <div className="fixed lg:inset-0 bottom-0 left-0 bg-opacity-70 backdrop-blur-sm h-screen w-full bg-black   z-[1000]  flex justify-center items-center ">
+    <div className=" fixed lg:inset-0 bottom-0 left-0 bg-opacity-70 backdrop-blur-sm h-screen w-full bg-black    flex justify-center items-center ">
       <div className="lg:w-1/3   bg-white rounded-2xl dark:bg-gray-600">
         <div className="h-[83%]">
           <div className="p-3 flex dark:text-gray-50  items-center justify-between">
             <h1>Create Post</h1>
-            {loading ? (
+            {isLoading ? (
               <div className="mx-3 text-violet-800  dark:text-gray-50 font-semibold animate-spin">
                 <OutlineLoading3Quarters />
               </div>
             ) : (
               <div className="flex flex-end gap-2">
                 <button
-                  class="middle none center rounded-lg py-3 px-6 font-sans text-xs font-bold uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  className="middle none center rounded-lg py-3 px-6 font-sans text-xs font-bold uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                   data-ripple-dark="true"
                   onClick={() => setEditImage(true)}
                   disabled={!imageUrl}
@@ -74,7 +75,7 @@ const CreatePost = ({ setClose }) => {
                   Edit
                 </button>
                 <button
-                  class="middle none center rounded-lg bg-slate-900 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                  className="middle none center rounded-lg bg-slate-900 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                   data-ripple-light="true"
                   onClick={handlePost}
                   disabled={!imageUrl}
@@ -92,7 +93,6 @@ const CreatePost = ({ setClose }) => {
               <img
                 src={user?.profilePicture || avatar}
                 alt=""
-                srcset=""
                 width={40}
                 className="rounded-full"
               />
@@ -131,7 +131,8 @@ const CreatePost = ({ setClose }) => {
                     className="w-full h-full max-h-[400px] rounded-lg"
                     alt="hiii"
                   />
-                  {loading && (
+                  <canvas ref={canvasref}></canvas>
+                  {isLoading && (
                     <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
                       <div className="mx-3 text-violet-100 font-semibold ">
                         <OutlineLoading3Quarters
@@ -147,12 +148,12 @@ const CreatePost = ({ setClose }) => {
           </div>
         </div>
       </div>
-      <span
+      <button
         className="absolute right-10 top-10 text-white cursor-pointer"
         onClick={setClose}
       >
         <OutlineClose size={46} />
-      </span>
+      </button>
       {editImage && <EditImage imageSrc={imageUrl} />}
     </div>
   );

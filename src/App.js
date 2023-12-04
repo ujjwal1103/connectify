@@ -4,6 +4,7 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import HomePage from "./home/HomePage";
 import PageNotFound from "./PageNotFound/PageNotFound";
+import UnAuthorized from "./PageNotFound/UnAuthorized.js";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import Layout from "./home/Layout";
 import Profile from "./profile/Profile";
@@ -14,7 +15,14 @@ import { Messanger } from "./messenger";
 import Auth from "./auth/Auth";
 import AuthRoutes from "./protectedRoutes/AuthRoutes";
 
-function App() {
+const App = () => {
+
+ 
+
+
+
+
+
   useAuth();
   return (
     <Routes>
@@ -27,14 +35,19 @@ function App() {
         <Route path="/messenger" element={<Messanger />} />
         <Route path="" element={<Layout />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={<Profile />}
+            ErrorBoundary={<div>Error</div>}
+          />
           <Route path="/:username" element={<UserProfile />} />
           <Route path="/search" element={<Search />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
+      <Route path="/unauthorized" element={<UnAuthorized />} />
     </Routes>
   );
-}
+};
 
 export default App;

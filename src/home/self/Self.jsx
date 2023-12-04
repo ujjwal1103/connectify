@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import avatar from "../../assets/man.png";
 import { makeRequest } from "../../config/api.config";
-
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 const Self = () => {
   const [user, setUser] = useState();
   const dispatch = useDispatch();
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
-      const data = response.data;
-      setUser(data.user);
-      dispatch(setUser(data.user));
+      setUser(response.user);
+      dispatch(setUser(response.user));
     } catch (error) {
-      console.log("error", error.message)
+      console.log("error", error);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getUser();
-  }, []);
+  }, [getUser]);
 
   return (
     <div className="">

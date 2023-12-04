@@ -1,42 +1,35 @@
 import React, { useState } from "react";
-import { storage } from "../../config/firebase.config";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { makeRequest } from "../../config/api.config";
 import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
 
 const CreateStory = ({ setClose }) => {
   const [imageUrl, setImageUrl] = useState();
-  const [loading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState();
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
     const file = e.target.files[0];
+    setFile(e.target.files[0]);
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       let dataURL = reader.result;
       setImageUrl(dataURL);
     };
-
-    const fileRef = ref(storage, `images/${file.name}`);
-    const res = await uploadBytes(fileRef, file);
-
-    if (res) {
-      const url = await getDownloadURL(fileRef);
-      setImageUrl(url);
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
   const handlePost = async () => {
-    if (imageUrl) {
-      const body = {
-        content: imageUrl,
-      };
-      try {
-        const { data } = await makeRequest.post("/story", body);
+    const data = new FormData();
+    data.append("story", file);
 
-        if (data?.isSuccess) {
+    console.log(data);
+    if (data) {
+      try {
+        const res = await makeRequest.post("/story", data);
+
+        if (res?.isSuccess) {
           setClose();
         }
       } catch (error) {
@@ -48,14 +41,14 @@ const CreateStory = ({ setClose }) => {
   };
 
   return (
-    <div className="fixed h-screen w-full bg-black bg-opacity-70  inset-0 flex justify-center items-center ">
-      <div className="w-1/3   bg-white rounded-2xl">
+    <div className="z-50 fixed h-screen w-full bg-black bg-opacity-90 backdrop-blur-md top-0 left-0 flex justify-center items-center ">
+      <div className="w-1/3  bg-white rounded-2xl">
         <div className="h-[83%]">
           <div className="p-3 flex  items-center justify-between">
             <h1>Create Story</h1>
-            {loading ? (
+            {isLoading ? (
               <div className="mx-3 text-violet-800 font-semibold animate-spin">
-                <OutlineLoading3Quarters/>
+                <OutlineLoading3Quarters />
               </div>
             ) : (
               <button
@@ -97,7 +90,7 @@ const CreateStory = ({ setClose }) => {
                     alt="iii"
                   />
                 )}
-                {loading && (
+                {isLoading && (
                   <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
                     <div className="mx-3 text-violet-100 font-semibold ">
                       <OutlineLoading3Quarters
@@ -112,12 +105,12 @@ const CreateStory = ({ setClose }) => {
           </div>
         </div>
       </div>
-      <span
+      <button
         className="absolute right-10 top-10 text-white cursor-pointer"
         onClick={setClose}
       >
         <OutlineClose size={46} />
-      </span>
+      </button>
     </div>
   );
 };

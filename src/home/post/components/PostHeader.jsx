@@ -3,14 +3,20 @@ import avatar from "../../../assets/man.png";
 import { ThreeDots } from "../../../icons";
 import { Link } from "react-router-dom";
 const PostHeader = ({ post, username }) => {
-  const path =  post?.userId.username === username ? "/profile" : `/${post?.userId?.username}`;
+  const path =
+    post?.userId.username === username
+      ? "/profile"
+      : `/${post?.userId?.username}`;
 
   return (
     <div className="w-full p-3 flex gap-6 items-center justify-between">
       <div className="flex gap-6 items-center">
         <div>
           <img
-            src={post?.userId?.profilePicture || avatar}
+            src={
+              post?.userId?.profilePicture ||
+              avatar
+            }
             alt="url"
             className="rounded-full w-10 h-10"
           />

@@ -1,5 +1,5 @@
 // Tabs.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeRequest } from "../../config/api.config";
 import avatar from "../../assets/man.png";
 const Tabs = ({ userId, username, setClose, tab }) => {
@@ -7,26 +7,26 @@ const Tabs = ({ userId, username, setClose, tab }) => {
   const [followersData, setFollowersData] = useState([]);
   const [followingData, setFollowingData] = useState([]);
 
-  const getFollowers = async () => {
+  const getFollowers = useCallback(async () => {
     try {
-      const { data } = await makeRequest.get(`/user/followers/${userId}`);
+      const data = await makeRequest.get(`/user/followers/${userId}`);
       if (data.isSuccess) {
         setFollowersData(data.users);
       }
     } catch (error) {
       console.log(error);
     }
-  };
-  const getFollowings = async () => {
+  }, [userId]);
+  const getFollowings = useCallback(async () => {
     try {
-      const { data } = await makeRequest.get(`/user/following/${userId}`);
+      const data = await makeRequest.get(`/user/following/${userId}`);
       if (data.isSuccess) {
         setFollowingData(data.users);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     if (activeTab === "Followers") {
@@ -35,7 +35,7 @@ const Tabs = ({ userId, username, setClose, tab }) => {
     if (activeTab === "Following") {
       getFollowings();
     }
-  }, [activeTab, userId]);
+  }, [activeTab, getFollowers, getFollowings]);
 
   return (
     <div className="w-screen h-screen lg:hidden bg-slate-950  fixed inset-0 overflow-hidden z-[999]">

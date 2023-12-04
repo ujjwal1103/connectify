@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { makeRequest } from "../../../config/api.config";
 import { EmojiSmile } from "../../../icons";
 import { Link } from "react-router-dom";
@@ -10,6 +10,10 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
     userId.username === user.username ? "/profile" : `/${userId.username}`;
 
   const handleChange = (e) => {
+    if (e.target.value.startsWith("@")) {
+      console.log("show users");
+    }
+
     setCommentText(e.target.value);
   };
 
@@ -45,7 +49,20 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
     <div className="flex flex-col p-3 dark:text-gray-50">
       <span>{likedBy.length} likes</span>
       <span className="line-clamp-2 dark:text-gray-50">
-        <Link to={path}>{userId?.username}</Link> <span>{caption}</span>
+        <Link to={path}>{userId?.username}</Link>{" "}
+        <span>
+          {caption.split(" ").map((word, index) => {
+            if (word.startsWith("#")) {
+              return (
+                <span key={index} className="text-blue-700">
+                  {word}{" "}
+                </span>
+              );
+            } else {
+              return <span key={index}>{word} </span>;
+            }
+          })}
+        </span>
       </span>
 
       <div className="flex justify-between gap-6 items-center">
