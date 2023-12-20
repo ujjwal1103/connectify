@@ -1,16 +1,18 @@
 import axios from "axios";
+import { createBrowserHistory } from "history";
+import { toast } from "react-toastify";
 
-const baseURL = process.env.REACT_APP_DEV_BASE_URL;
-// process.env.NODE_ENV !== "production"
-//   ?
-//   : "http://localhost:3100/api";
-// Create the axios instance without the Authorization header initially
+const history = createBrowserHistory();
+
+let baseURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_DEV_BASE_URL
+    : "http://localhost:3200/api";
+
 const makeRequest = axios.create({
   baseURL: baseURL,
-  timeoutErrorMessage: "timeout error",
 });
 
-// Add an axios request interceptor to set the Authorization header before sending requests
 makeRequest.interceptors.request.use(
   (config) => {
     // Check if user data with a token exists in localStorage
@@ -29,18 +31,23 @@ makeRequest.interceptors.request.use(
 );
 
 makeRequest.interceptors.response.use(
-  (config) => {
-    return config.data;
+  (res) => {
+    return res.data;
   },
+
   (error) => {
-    console.log(error?.response?.statusText);
-    if (
-      error?.response?.statusText === "Unauthorized" ||
-      error?.response?.status === 401
-    ) {
-      window.location.href = "http://localhost:3000/unauthorized";
+    if (error?.response?.status === 401) {
+      toast.error("Unauthorized Access");
+      history.push("/unauthorized");
     }
-    return Promise.reject(error.response);
+    const myerror = {
+      ...error.response?.data,
+      message:
+        error.response?.data.error.message ||
+        error.message ||
+        "something went wrong",
+    };
+    return Promise.reject(myerror);
   }
 );
 

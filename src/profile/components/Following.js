@@ -4,24 +4,29 @@ import avatar from "../../assets/man.png";
 import { useNavigate } from "react-router-dom";
 import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
+import FollowButton from "../../shared/FollowButton";
+import { unfollowUser } from "../services/postServices";
+import { useDispatch } from "react-redux";
+import { setFollowing } from "../../redux/services/profileSlice";
 
 const Following = ({ userId, setClose }) => {
-  const [followers, setFollowers] = useState([]);
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+  const { followings } = useSelector(profileState);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const getFollowers = async () => {
+    const getFollowing = async () => {
       try {
         const data = await makeRequest.get(`/user/following/${userId}`);
         if (data.isSuccess) {
-          setFollowers(data.users);
+          dispatch(setFollowing(data.users));
         }
       } catch (error) {
         console.log(error);
       }
     };
-    getFollowers();
+    getFollowing();
   }, [userId]);
 
   const navigateToUser = (username) => {
@@ -30,6 +35,13 @@ const Following = ({ userId, setClose }) => {
       navigate(`/profile`);
     } else {
       navigate(`/${username}`);
+    }
+  };
+
+  const handleFollowButtonClick = async (userId) => {
+    const data = await unfollowUser(userId);
+    if (data.isSuccess) {
+      setFollowers((prev) => prev.filter((f) => f._id !== userId));
     }
   };
 
@@ -42,7 +54,7 @@ const Following = ({ userId, setClose }) => {
         >
           <OutlineClose size={34} />
         </button>
-        <div className=" text-black text-center w-full p-3 ">
+        <div className=" text-black dark:text-white text-center w-full p-3 ">
           <h2 className="text-xl">Following</h2>
         </div>
         <hr />
@@ -57,7 +69,7 @@ const Following = ({ userId, setClose }) => {
           </div>
         </div>
         <div className="overflow-y-scroll h-full">
-          {followers?.map((user) => (
+          {followings?.map((user) => (
             <div className="m-3" key={user?._id}>
               <div className="flex items-center dark:bg-slate-600 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg  ">
                 <div className="flex items-center space-x-2">
@@ -66,7 +78,7 @@ const Following = ({ userId, setClose }) => {
                     src={user?.profilePicture || avatar}
                     alt={user?.username}
                   />
-                  <span
+                  <button
                     onClick={() => navigateToUser(user?.username)}
                     className="flex flex-col"
                   >
@@ -76,21 +88,16 @@ const Following = ({ userId, setClose }) => {
                     <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                       {user?.username}
                     </span>
-                  </span>
-                </div>
-                {user?.isFollowed ? (
-                  <button className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1">
-                    Following
                   </button>
-                ) : user?.username === currentUser.username ? (
+                </div>
+                {user?.username === currentUser.username ? (
                   ""
                 ) : (
-                  <button
+                  <FollowButton
+                    onClick={() => handleFollowButtonClick(user?._id)}
+                    isFollow={true}
                     className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
-                    // onClick={}
-                  >
-                    Follow
-                  </button>
+                  />
                 )}
               </div>
             </div>

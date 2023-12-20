@@ -6,6 +6,7 @@ import notificationsReducer from "./services/notificationSlice";
 import suggetionsReducer from "./services/suggetionSlice";
 import chatReducer from "./services/chatSlice";
 import storyReducer from "./services/storySlice";
+import profileReducer from "./services/profileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     suggetions: suggetionsReducer,
     chat: chatReducer,
     story: storyReducer,
+    profile: profileReducer,
   },
 });

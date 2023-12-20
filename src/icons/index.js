@@ -42,7 +42,7 @@ import {
   IoChevronForwardCircle as ChevronForwardCircle,
   IoChevronBackCircle as ChevronBackCircle,
 } from "react-icons/io5";
-
+import { IoIosLock as PasswordLock } from "react-icons/io";
 export {
   ChevronForwardCircle,
   ChevronBackCircle,
@@ -80,4 +80,5 @@ export {
   HeartFill,
   EmojiSmile,
   Camera,
+  PasswordLock,
 };

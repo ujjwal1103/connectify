@@ -4,18 +4,20 @@ import avatar from "../../assets/man.png";
 import { useNavigate } from "react-router-dom";
 import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
+import { setFollower } from "../../redux/services/profileSlice";
+import { useDispatch } from "react-redux";
 
 const Followers = ({ userId, setClose }) => {
-  const [followers, setFollowers] = useState([]);
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-
+  const { followers } = useSelector(profileState);
+  const dispatch = useDispatch();
   useEffect(() => {
     const getFollowers = async () => {
       try {
         const data = await makeRequest.get(`/user/followers/${userId}`);
         if (data.isSuccess) {
-          setFollowers(data.users);
+          dispatch(setFollower(data.users));
         }
       } catch (error) {
         console.log(error);
@@ -42,7 +44,7 @@ const Followers = ({ userId, setClose }) => {
         >
           <OutlineClose size={34} />
         </button>
-        <div className=" text-black text-center w-full p-3 ">
+        <div className=" text-black dark:text-white text-center w-full p-3 ">
           <h2 className="text-xl">Followers</h2>
         </div>
         <hr />
@@ -66,7 +68,7 @@ const Followers = ({ userId, setClose }) => {
                     src={user?.profilePicture || avatar}
                     alt={user?.username}
                   />
-                  <span
+                  <button
                     onClick={() => navigateToUser(user?.username)}
                     className="flex flex-col"
                   >
@@ -76,7 +78,7 @@ const Followers = ({ userId, setClose }) => {
                     <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                       {user?.username}
                     </span>
-                  </span>
+                  </button>
                 </div>
                 {user?.isFollowed ? (
                   <button className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1">

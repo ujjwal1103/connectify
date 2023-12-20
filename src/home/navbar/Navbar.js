@@ -24,6 +24,8 @@ import {
 } from "../../icons";
 import Logo from "../../icons/Logo";
 import { useClickOutside } from "@react-hookz/web";
+import FocusTrap from "../../shared/FocusTrap";
+import Modal from "../../shared/Modal";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,12 +55,11 @@ const Navbar = () => {
 
   const toggleCreatePost = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
-    document.body.classList.toggle("overflow-hidden");
   };
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  useClickOutside(modelRef, ()=>setIsOpen(false));
+  useClickOutside(modelRef, () => setIsOpen(false));
 
   const toggleNotification = () => {
     setIsOpenNotification((prev) => !prev);
@@ -84,7 +85,7 @@ const Navbar = () => {
     <header className="p-4 lg:sticky left-0 z-50 fixed bottom-0 right-0">
       <nav className="bg-violet-700 bg-opacity-70  dark:bg-opacity-70 backdrop-blur-lg p-4 flex justify-between gap-10 dark:bg-slate-700  rounded-lg sticky  ">
         <div className="hidden lg:block">
-          <Logo className="fill-white" />
+          <Logo className="fill-white" size={"100%"} />
         </div>
         <div className="hidden lg:block">
           <SearchInput />
@@ -174,7 +175,15 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        {isOpenCreatePost && <CreatePost setClose={toggleCreatePost} />}
+        {isOpenCreatePost && (
+          // <FocusTrap>
+          //
+          // </FocusTrap>
+
+          <Modal onClose={() => setIsOpenCreatePost(false)}>
+            <CreatePost />
+          </Modal>
+        )}
         {isOpenNotification && <Notification setClose={toggleNotification} />}
       </nav>
     </header>

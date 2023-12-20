@@ -4,6 +4,7 @@ import { deletePost, setPost } from "../redux/services/postSlice";
 import { deleteThisPost } from "./services/postServices";
 import SinglePost from "../common/SinglePost";
 import { Heart } from "../icons";
+import Modal from "../shared/Modal";
 
 const Post = ({ post }) => {
   const [showPost, setShowPost] = useState(false);
@@ -29,7 +30,6 @@ const Post = ({ post }) => {
   return (
     <div key={post._id} className="mx-auto  h-80  ">
       <div
-        
         className="group relative h-full  bg-gray-700 rounded-xl"
         onClick={handleSetPost}
       >
@@ -48,12 +48,14 @@ const Post = ({ post }) => {
         </div>
       </div>
       {showPost && (
-        <SinglePost
-          setClose={showCurrentPost}
-          post={post}
-          posts={posts}
-          fromFeed={false}
-        />
+        <Modal onClose={showCurrentPost}>
+          <SinglePost
+            setClose={showCurrentPost}
+            post={post}
+            posts={posts}
+            fromFeed={false}
+          />
+        </Modal>
       )}
     </div>
   );

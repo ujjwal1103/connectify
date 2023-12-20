@@ -3,6 +3,7 @@ import avatar from "../../assets/man.png";
 import { makeRequest } from "../../config/api.config";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import ProfilePicture from "../../common/ProfilePicture";
 
 const Self = () => {
   const [user, setUser] = useState();
@@ -25,10 +26,9 @@ const Self = () => {
     <div className="">
       <div className="flex items-center dark:bg-slate-800 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg  p-2 rounded-lg w-80 mx-auto">
         <div className="flex items-center space-x-2">
-          <img
+          <ProfilePicture
+            url={user?.profilePicture}
             className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
-            src={user?.profilePicture || avatar}
-            alt="Dan_Abromov"
           />
           <span className="flex flex-col">
             <span className="text-sm font-medium text-gray-900 dark:text-gray-50">

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import Input from "../../../common/InputFields/Input";
 import { makeRequest } from "../../../config/api.config";
 import { Link } from "react-router-dom";
 import blackUser from "../../../assets/no_avatar.png";
 import { Search } from "../../../icons";
-import { useEffect } from "react";
+import UsernameLink from "../../../shared/UsernameLink";
 
 const SearchInput = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
@@ -33,8 +33,8 @@ const SearchInput = () => {
   }, [searchQuery]);
 
   const handleSearch = (e) => {
-    setShowSearchResults(true);
     setSearchQuery(e.target.value);
+    setShowSearchResults(true);
   };
 
   return (
@@ -42,6 +42,7 @@ const SearchInput = () => {
       <Input
         type="search"
         onChange={handleSearch}
+        value={searchQuery}
         placeholder="search your friends"
         className="w-full rounded-lg border-none outline-none focus:border-none dark:bg-slate-500 dark:placeholder:text-white dark:text-gray-50"
         sufix={
@@ -55,8 +56,11 @@ const SearchInput = () => {
       {showSearchResults && searchResults.length > 0 && (
         <div className="lg:absolute mt-2 lg:m-0 bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
           {searchResults?.map((result) => (
-            <Link
-              to={`/${result?.username}`}
+            <div
+              onClick={() => {
+                setShowSearchResults(false);
+                setSearchResults([]);
+              }}
               className="flex gap-6 items-center"
             >
               <img
@@ -64,8 +68,11 @@ const SearchInput = () => {
                 alt=""
                 className="w-10 h-10 rounded-full object-contain bg-gray-400 "
               />
-              <span>{result.username}</span>
-            </Link>
+              <UsernameLink
+                username={result.username}
+                className="cursor-pointer"
+              />
+            </div>
           ))}
         </div>
       )}

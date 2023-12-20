@@ -4,32 +4,31 @@ import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setUser } from "../redux/services/authSlice";
-
+import { logout } from "../redux/services/authSlice";
+import { setUser, profileState } from "../redux/services/profileSlice";
 import { resetState } from "../redux/services/postSlice";
 import { resetFeedState } from "../redux/services/feedSlice";
 import { useNavigate } from "react-router-dom";
-
 import ProfileCard from "./components/ProfileCard";
+
 const Profile = () => {
   const [edit, setEdit] = useState(false);
 
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector(profileState);
   const navigate = useNavigate();
+
   const toggleEdit = () => {
     setEdit((prev) => !prev);
     window.scrollTo({
       top: 0,
       behavior: "smooth", // Add smooth scrolling behavior
     });
-    document.body.classList.toggle("overflow-hidden");
   };
 
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
-
       dispatch(setUser(response.user));
     } catch (error) {
       console.log("error", error.message);

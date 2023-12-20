@@ -7,6 +7,7 @@ import { EmojiWink, Heart, OutlineClose, ThreeDots } from "../icons";
 import { makeRequest } from "../config/api.config";
 import avatar from "../assets/man.png";
 import { setFeed } from "../redux/services/feedSlice";
+import UsernameLink from "../shared/UsernameLink";
 const SinglePost = ({ setClose, post, posts, fromFeed }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -70,24 +71,18 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 w-screen h-full overflow-y-scroll bg-opacity-70 backdrop-blur-sm bg-white dark:bg-gray-900 dark:bg-opacity-50 flex  items-center justify-center">
+    <div className="w-full h-full   overflow-y-scroll bg-opacity-70 backdrop-blur-sm bg-white dark:bg-gray-900 dark:bg-opacity-50 flex  items-center justify-center">
       <button
-        className="absolute lg:right-10 lg:top-10 top-5 right-5"
-        onClick={setClose}
-      >
-        <OutlineClose size={46} className="dark:text-white" />
-      </button>
-      <button
-        className="absolute top-1/2 left-10 w-20 border hidden lg:block"
+        className="absolute top-1/2 left-10 text-3xl text-white hidden lg:block "
         onClick={handleLeftClick}
       >
-        left
+        {"<"}
       </button>
       <button
-        className="absolute top-1/2 right-10 w-20 border hidden lg:block"
+        className="absolute top-1/2 right-10  text-3xl text-white hidden lg:block"
         onClick={handleRightClick}
       >
-        right
+        {">"}
       </button>
       <div className="lg:w-3/4 lg:h-[96%] w-full overflow-y-auto shadow-xl flex flex-col lg:flex-row bg-white dark:bg-gray-700">
         <img
@@ -103,7 +98,10 @@ const SinglePost = ({ setClose, post, posts, fromFeed }) => {
                 alt=""
                 className="w-12 h-12 object-cover border-2 border-white rounded-full"
               />
-              <h2 className="cursor-pointer">{post?.userId?.username}</h2>
+              <UsernameLink
+                username={post?.userId?.username}
+                className="cursor-pointer"
+              />
               <h2 className="text-sky-600 cursor-pointer">Follow</h2>
             </div>
             <div>

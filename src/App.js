@@ -8,22 +8,12 @@ import UnAuthorized from "./PageNotFound/UnAuthorized.js";
 import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
 import Layout from "./home/Layout";
 import Profile from "./profile/Profile";
-import { useAuth } from "./hooks/useAuth";
 import UserProfile from "./profile/UserProfile";
 import Search from "./search/Search";
 import { Messanger } from "./messenger";
 import Auth from "./auth/Auth";
 import AuthRoutes from "./protectedRoutes/AuthRoutes";
-
 const App = () => {
-
- 
-
-
-
-
-
-  useAuth();
   return (
     <Routes>
       <Route exact path="" element={<AuthRoutes />}>

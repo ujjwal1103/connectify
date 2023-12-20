@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { makeRequest } from "../../../config/api.config";
 import { EmojiSmile } from "../../../icons";
-import { Link } from "react-router-dom";
+import UsernameLink from "./../../../shared/UsernameLink";
 
-const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
+const PostInteraction = ({ post: { _id, userId, likedBy, caption } }) => {
   const [commentText, setCommentText] = useState(null);
-
-  const path =
-    userId.username === user.username ? "/profile" : `/${userId.username}`;
 
   const handleChange = (e) => {
     if (e.target.value.startsWith("@")) {
@@ -16,20 +13,6 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
 
     setCommentText(e.target.value);
   };
-
-  // useEffect(() => {
-  //   const getComments = async () => {
-  //     try {
-  //       const { data } = await makeRequest(`/comments/${_id}`);
-  //       if (data.isSuccess) {
-  //         setComments(data.comments);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getComments();
-  // }, [_id]);
 
   const sendComment = async () => {
     try {
@@ -49,9 +32,9 @@ const PostInteraction = ({ user, post: { _id, userId, likedBy, caption } }) => {
     <div className="flex flex-col p-3 dark:text-gray-50">
       <span>{likedBy.length} likes</span>
       <span className="line-clamp-2 dark:text-gray-50">
-        <Link to={path}>{userId?.username}</Link>{" "}
+        <UsernameLink username={userId.username} />
         <span>
-          {caption.split(" ").map((word, index) => {
+          {caption?.split(" ").map((word, index) => {
             if (word.startsWith("#")) {
               return (
                 <span key={index} className="text-blue-700">

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import SinglePost from "../../common/SinglePost";
 import { setFeed } from "../../redux/services/feedSlice";
+import Modal from "../../shared/Modal";
 const Post = ({ post }) => {
   const { user } = JSON.parse(localStorage.getItem("user"));
   const { feed, feeds } = useSelector((state) => state.feed);
@@ -29,23 +30,24 @@ const Post = ({ post }) => {
       className="border bg-gray-50 h-auto  dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
     >
       <div>
-        <PostHeader post={post} username={user?.username} />
+        <PostHeader post={post} />
         <PostContent contentUrl={post?.imageUrl} onClick={handleSetPost} />
         <PostActions
           post={post}
           userId={user._id}
-          username={user.username}
           showCurrentPost={handleSetPost}
         />
         <PostInteraction user={user} post={post} />
       </div>
       {showPost && (
-        <SinglePost
-          setClose={showCurrentPost}
-          post={feed}
-          posts={feeds}
-          fromFeed={true}
-        />
+        <Modal onClose={showCurrentPost}>
+          <SinglePost
+            setClose={showCurrentPost}
+            post={feed}
+            posts={feeds}
+            fromFeed={true}
+          />
+        </Modal>
       )}
     </div>
   );

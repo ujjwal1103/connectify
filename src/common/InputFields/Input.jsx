@@ -1,4 +1,23 @@
-import { useEffect , forwardRef } from "react";
+import { forwardRef, useState } from "react";
+import { EyeFill, FillEyeSlashFill } from "../../icons";
+
+const ShowPassword = ({ showPassword, setShowPassword }) => {
+  if (showPassword) {
+    return (
+      <FillEyeSlashFill
+        onClick={() => setShowPassword(false)}
+        className=" fill-violet-50"
+      />
+    );
+  }
+
+  return (
+    <EyeFill
+      onClick={() => setShowPassword(true)}
+      className=" fill-violet-50 "
+    />
+  );
+};
 
 const Input = (props, ref) => {
   const {
@@ -6,34 +25,33 @@ const Input = (props, ref) => {
     placeholder,
     prefix = "",
     sufix = "",
-    onChange,
     value,
     className,
-    error,
   } = props;
 
-  useEffect(() => {
-    if (ref) {
-      if (error) {
-        ref.current.style = "border: 1px solid red";
-      } else {
-        ref.current.style = "";
-      }
-    }
-  }, [ref, error]);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex items-center relative w-full">
-      <span className="absolute px-2  text-white  ">{prefix}</span>
+      <span className="absolute px-2  dark:text-white  ">{prefix}</span>
       <input
         ref={ref}
         value={value}
-        onChange={onChange}
-        type={type}
+        {...props}
+        type={showPassword ? "text" : type}
         className={className}
         placeholder={placeholder}
       />
-      <span className="absolute right-0 px-3 text-white">{sufix}</span>
+      <span className="absolute right-0 px-3 text-white">
+        {type === "password" ? (
+          <ShowPassword
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+          />
+        ) : (
+          sufix
+        )}
+      </span>
     </div>
   );
 };

@@ -1,17 +1,22 @@
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { sendFriendRequest, unfollowUser } from "./services/postServices";
 import Followers from "./components/Followers";
 import Following from "./components/Following";
 import { useState, useEffect, useCallback } from "react";
 import ProfileCard from "./components/ProfileCard";
+import { useDispatch } from "react-redux";
+import { addChat } from "../redux/services/chatSlice";
+import Loading from "../common/Loading";
 
 const UserProfile = () => {
   const [user, setUser] = useState("");
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const { username } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getUser = useCallback(async () => {
     try {
@@ -20,7 +25,7 @@ const UserProfile = () => {
     } catch (error) {
       console.log(error.toString());
     }
-  }, [username]);
+  }, [username, show, showFollowing]);
 
   const handleFollowRequest = async () => {
     setUser((user) => ({
@@ -70,8 +75,8 @@ const UserProfile = () => {
     try {
       const response = await makeRequest.post("/chat", { to: user._id });
       if (response.isSucess) {
-        // TODO document why this block is empty
-        console.log(response);
+        dispatch(addChat(response.chat));
+        navigate("/messenger");
       }
     } catch (error) {
       console.log(error);
@@ -83,8 +88,12 @@ const UserProfile = () => {
   }, [getUser]);
 
   if (!user) {
-    return <div>loading</div>;
+    return <Loading />;
   }
+
+  // if (user?.isPrivate && !user?.isFollowed) {
+  //   return <div>User account is isPrivate</div>;
+  // }
 
   return (
     <div
@@ -125,7 +134,7 @@ const UserProfile = () => {
 
       <hr className="h-1 bg-violet-100" />
 
-      <Posts userId={user?._id} />
+      {user?.isFollowed && <Posts userId={user?._id} />}
       {show && <Followers userId={user._id} setClose={toggleShow} />}
       {showFollowing && (
         <Following userId={user._id} setClose={toggleShowFollowing} />

@@ -7,7 +7,7 @@ import {
 } from "../../../redux/services/feedSlice";
 import { Chat, Heart, HeartFill, Send } from "../../../icons";
 
-const PostActions = ({ post, userId, username, showCurrentPost }) => {
+const PostActions = ({ post, userId, showCurrentPost }) => {
   const dispatch = useDispatch();
 
   const likePost = async () => {

@@ -1,105 +1,69 @@
-import React, { useRef, useState } from "react";
-import { useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 
-const EditImage = ({ imageSrc }) => {
-  const [saturation, setSaturation] = useState(100);
+const EditImage = ({ imageUrl  }) => {
   const canvasRef = useRef(null);
-  const inputRef = useRef();
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
+    const cropImage = () => {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      const image = new Image();
 
-    image.src = imageSrc;
+      image.onload = () => {
+        const aspectRatio = image.width / image.height;
 
-  // Replace with your image URL
+        // Set canvas dimensions
+        canvas.width = 200; // Width
+        canvas.height = 500; // Height
 
-    image.onload = () => {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0, image.width, image.height);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      adjustSaturation(saturation, imageData, ctx);
+        let sx = 0;
+        let sy = 0;
+        let sWidth = image.width;
+        let sHeight = image.height;
+
+        // Calculate cropping dimensions
+        if (aspectRatio > canvas.width / canvas.height) {
+          sWidth = canvas.width * aspectRatio;
+          sx = (image.width - sWidth) / 2;
+        } else {
+          sHeight = canvas.height * (1 / aspectRatio);
+          sy = (image.height - sHeight) / 2;
+        }
+
+        // Draw cropped image on canvas
+        ctx.drawImage(
+          image,
+          sx,
+          sy,
+          sWidth,
+          sHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+      };
+
+      image.src = imageUrl;
     };
-  }, [saturation, imageSrc]);
 
-  const handleSaturationChange = (e) => {
-    setSaturation(e.target.value);
-  };
-
-  const adjustSaturation = (value, imageData, ctx) => {
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      const r = imageData.data[i];
-      const g = imageData.data[i + 1];
-      const b = imageData.data[i + 2];
-
-      // Convert RGB to HSL
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      const l = (max + min) / 2;
-      const d = max - min;
-      let s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
-
-      // Adjust saturation
-      s *= value / 100;
-
-      // Convert HSL back to RGB
-      const c = (1 - Math.abs(2 * l - 1)) * s;
-      const x = c * (1 - Math.abs(((l / 60) % 2) - 1));
-      const m = l - c / 2;
-
-      let rgb1, rgb2, rgb3;
-
-      if (0 <= l && l < 60) {
-        rgb1 = c;
-        rgb2 = x;
-        rgb3 = 0;
-      } else if (60 <= l && l < 120) {
-        rgb1 = x;
-        rgb2 = c;
-        rgb3 = 0;
-      } else if (120 <= l && l < 180) {
-        rgb1 = 0;
-        rgb2 = c;
-        rgb3 = x;
-      } else if (180 <= l && l < 240) {
-        rgb1 = 0;
-        rgb2 = x;
-        rgb3 = c;
-      } else if (240 <= l && l < 300) {
-        rgb1 = x;
-        rgb2 = 0;
-        rgb3 = c;
-      } else if (300 <= l && l < 360) {
-        rgb1 = c;
-        rgb2 = 0;
-        rgb3 = x;
-      }
-
-      const r1 = (rgb1 + m) * 255;
-      const g1 = (rgb2 + m) * 255;
-      const b1 = (rgb3 + m) * 255;
-
-      imageData.data[i] = r1;
-      imageData.data[i + 1] = g1;
-      imageData.data[i + 2] = b1;
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-  };
+    cropImage();
+  }, [imageUrl]);
 
   return (
-    <div className="w-screen h-screen fixed inset-0 flex justify-center items-center bg-white">
-      <input
+    <div className="w-screen h-screen fixed left-0 top-0 flex justify-center items-center">
+      {/* <input
         type="range"
         min="0"
         max="200"
         value={saturation}
         onChange={handleSaturationChange}
         ref={inputRef}
-      />
-      <canvas ref={canvasRef} className="bg-red-400  rounded-md"></canvas>
+      /> */}
+      <canvas
+        ref={canvasRef}
+        className="bg-red-400 w-1/2 h-96 rounded-md"
+      ></canvas>
     </div>
   );
 };

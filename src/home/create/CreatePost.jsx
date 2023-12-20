@@ -9,7 +9,7 @@ import { addPostToUser } from "../../redux/services/authSlice";
 import EditImage from "./EditImage/EditImage";
 import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
 
-const CreatePost = ({ setClose }) => {
+const CreatePost = ({}) => {
   const [imageUrl, setImageUrl] = useState();
   const [caption, setCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,6 @@ const CreatePost = ({ setClose }) => {
   const { user } = useSelector((state) => state.auth);
   const [newFile, setNewFile] = useState();
   const dispatch = useDispatch();
-  const canvasref = useRef(null);
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
@@ -44,7 +43,6 @@ const CreatePost = ({ setClose }) => {
         if (data?.isSuccess) {
           dispatch(addPost(data.post));
           dispatch(addPostToUser(data.post._id));
-          setClose();
         }
       } catch (error) {
         console.log(error);
@@ -55,8 +53,8 @@ const CreatePost = ({ setClose }) => {
   };
 
   return (
-    <div className=" fixed lg:inset-0 bottom-0 left-0 bg-opacity-70 backdrop-blur-sm h-screen w-full bg-black    flex justify-center items-center ">
-      <div className="lg:w-1/3   bg-white rounded-2xl dark:bg-gray-600">
+    <div className="lg:w-1/3">
+      <div className="bg-white rounded-2xl dark:bg-gray-600">
         <div className="h-[83%]">
           <div className="p-3 flex dark:text-gray-50  items-center justify-between">
             <h1>Create Post</h1>
@@ -131,7 +129,7 @@ const CreatePost = ({ setClose }) => {
                     className="w-full h-full max-h-[400px] rounded-lg"
                     alt="hiii"
                   />
-                  <canvas ref={canvasref}></canvas>
+                  {/* <canvas ref={canvasref}></canvas> */}
                   {isLoading && (
                     <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
                       <div className="mx-3 text-violet-100 font-semibold ">
@@ -148,13 +146,13 @@ const CreatePost = ({ setClose }) => {
           </div>
         </div>
       </div>
-      <button
+      {/* <button
         className="absolute right-10 top-10 text-white cursor-pointer"
         onClick={setClose}
       >
         <OutlineClose size={46} />
-      </button>
-      {editImage && <EditImage imageSrc={imageUrl} />}
+      </button> */}
+      {editImage && <EditImage imageUrl={imageUrl} />}
     </div>
   );
 };

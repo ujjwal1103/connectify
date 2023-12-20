@@ -1,14 +1,13 @@
-import React, { useRef, useState } from "react";
-import avatar from "../../assets/man.png";
+import React, { useState } from "react";
 import { formatNumberWithKAndM } from "../../utils/number-formaters";
 import Following from "./Following";
 import Tabs from "./Tabs";
 import Followers from "./Followers";
+import ProfilePicture from "../../common/ProfilePicture";
 
 const ProfileCard = ({ user, children }) => {
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const imageref = useRef(null);
   const toggleShow = () => {
     if (user?.followers > 0) {
       setShow((prev) => !prev);
@@ -23,15 +22,9 @@ const ProfileCard = ({ user, children }) => {
     <div className="lg:w-2/3 w-full flex-col lg:mx-auto flex justify-center lg:justify-start items-center lg:p-3">
       <div className="lg:mt-10 p-3 border-black flex flex-col lg:flex-row lg:gap-10 dark:bg-gray-800 rounded-lg lg:mb-2  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 shadow-lg">
         <div className="h-44 w-44 mx-auto">
-          <img
-            ref={imageref}
-            src={user?.profilePicture || avatar}
-            onError={() => {
-              console.log(imageref.current.src);
-              imageref.current.src = avatar;
-            }}
-            alt=""
-            className="h-44 w-44 object-cover rounded-full border"
+          <ProfilePicture
+            url={user?.profilePicture}
+            className="h-44 w-44 object-cover rounded-full shadow-sm"
           />
         </div>
         <div className="p-3">

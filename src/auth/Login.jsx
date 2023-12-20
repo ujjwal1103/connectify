@@ -1,57 +1,52 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect } from "react";
 import Input from "../common/InputFields/Input";
-import {
-  ArrowRight,
-  EyeFill,
-  LockFill,
-  PersonFill,
-  OutlineLoading,
-  Google,
-  FillEyeSlashFill,
-} from "../icons";
+import { PersonFill, OutlineLoading, Google, PasswordLock } from "../icons";
+import im from "../../src/assets/bgg.png";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logo/logo.png";
-import ErrorPopup from "../common/errorPopup";
+
 import { useDispatch } from "react-redux";
 import { login } from "../redux/services/authSlice";
 import { makeRequest } from "../config/api.config";
 import getGoogleUrl from "../config/getGoogleUri";
 import { useAuth } from "../context/AuthProvider";
+import Logo from "../icons/Logo";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigator = useNavigate();
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const { login: loginUser } = useAuth();
-
-  const emailRef = useRef();
-  const passwordRef = useRef();
-
-  const userSignIn = async () => {
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm();
+  const onSubmit = (data) => {
+    userSignIn(data);
+  };
+  const userSignIn = async (data) => {
     try {
       const res = await makeRequest.post("/login", {
-        username,
-        password,
+        username: data.username,
+        password: data.password,
       });
-
       res && localStorage.setItem("user", JSON.stringify(res));
-      setLoading(false);
-      setError(null);
       loginUser(res?.user);
       dispatch(login({ isAuthenticated: true, user: res?.user }));
       navigator("/home");
     } catch (error) {
-      setLoading(false);
-      setError(error?.response?.data?.message || error?.message);
-      emailRef?.current.focus();
+      console.log(error);
+      setError("root.serverError", {
+        type: error?.error?.statusCode,
+        message: error?.message,
+      });
+      toast.error(error?.message);
       setTimeout(() => {
-        setError(null);
-      }, 2000);
+        clearErrors();
+      }, 5000);
     }
   };
 
@@ -60,83 +55,89 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="h-screen bg-hero-pattern bg-gray-50 flex lg:flex-row flex-col justify-evenly items-center bg-cover bg-center bg-no-repeat">
-      <div className="text-white">
-        <h1 className=" mb-3 text-bold flex justify-center lg:justify-start">
-          <img src={logo} alt={"logo"} className="lg:w-80 w-52 " />
+    <div className="h-screen relative bg-white flex lg:flex-row flex-col  items-center overflow-hidden">
+      <div className="w-screen h-[400px] bg-black absolute top-0 lg:block hidden" />
+      <div className="w-screen h-[400px] bg-[#470047] absolute bottom-0 lg:block hidden " />
+      <div className="relative hidden  dark:bg-black dark:text-white lg:flex-1 lg:h-screen   w-full   lg:p-8 p-6 lg:flex justify-center items-center flex-col lg:rounded-br-[200px]">
+        <h1 className="mb-3 text-bold flex justify-center items-center z-10">
+          <Logo className="fill-black dark:fill-white text-7xl" size={"200%"} />
         </h1>
-        <h3 className="lg:text-2xl text-justify tracking-wide">
+        <h3 className="lg:text-3xl text-justify font-display lg:block hidden z-10">
           Connectify Redefining the Way You Connect <br />
           and Share by Offering a Seamless, Intuitive, <br />
           and Personalized Environment.
         </h3>
+        <img src={im} alt="" className="absolute opacity-30 " loading="lazy" />
       </div>
-      <div className="flex flex-col gap-5 border border-violet-950 p-8 rounded-md  backdrop-blur-sm shadow-md">
-        <div className="flex flex-col gap-5 text-white">Sign In to account</div>
+      <div className=" flex-1 flex justify-center items-center h-screen  bg-[#470047] border-violet-950 p-8 backdrop-blur-sm  lg:rounded-tl-[200px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col justify-center items-center gap-5 w-96   "
+        >
+          <h1 className="mb-3 text-bold flex justify-center items-center lg:hidden">
+            <Logo className="fill-black dark:fill-white " size={"100%"} />
+          </h1>
+          <div className="flex flex-col gap-5 dark:text-white text-4xl font-bold">
+            Welcome!
+          </div>
+          <div className="flex flex-col gap-5 dark:text-white text-xl">
+            Sign In to Connectify
+          </div>
+          <Input
+            className="authInput"
+            type="text"
+            placeholder="Enter you username"
+            prefix={<PersonFill className=" fill-violet-50  text-2xl" />}
+            error={errors?.username}
+            {...register("username", { required: "Username is required" })}
+          />
 
-        <Input
-          ref={emailRef}
-          type="text"
-          placeholder="Enter you username"
-          prefix={<PersonFill />}
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-          className="authInput"
-          error={error}
-          // sufix={<BsPersonFill/>}
-        />
+          <Input
+            {...register("password", {
+              required: "Password is required",
+            })}
+            type={"password"}
+            placeholder="Enter you password"
+            prefix={<PasswordLock className=" fill-violet-50 text-2xl" />}
+            className="authInput "
+            error={errors?.password}
+          />
 
-        <Input
-          ref={passwordRef}
-          type={showPassword ? "text" : "password"}
-          placeholder="Enter you password"
-          prefix={<LockFill />}
-          sufix={
-            showPassword ? (
-              <FillEyeSlashFill onClick={() => setShowPassword(false)} />
-            ) : (
-              <EyeFill onClick={() => setShowPassword(true)} />
-            )
-          }
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          className="authInput"
-          error={error}
-        />
+          <div className="flex justify-between w-full items-center">
+            <button
+              type="submit"
+              disabled={isSubmitting || !isValid}
+              className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white text-2x hover:bg-black"
+            >
+              {isSubmitting ? (
+                <OutlineLoading className="animate-spin" />
+              ) : (
+                "Login"
+              )}
+            </button>
+          </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-white">Sign In</span>
+          <p className="text-white">
+            Dont have an account?
+            <Link
+              to={"/register"}
+              className="text-violet-200 cursor-pointer px-2"
+            >
+              Register
+            </Link>
+          </p>
 
-          <button
-            onClick={userSignIn}
-            disabled={loading}
-            className="rounded-full bg-violet-600 p-3 text-white text-2x hover:bg-violet-700"
-          >
-            {loading ? (
-              <OutlineLoading className="animate-spin" />
-            ) : (
-              <ArrowRight />
-            )}
-          </button>
-        </div>
-
-        <p className="text-white">
-          dont have an account?
-          <Link to={"/register"} className="text-violet-200 cursor-pointer">
-            register
-          </Link>
-        </p>
-
-        <div className="flex justify-center ">
-          <a
-            href={getGoogleUrl()}
-            className="text-white  bg-white rounded-full p-1"
-          >
-            <Google className={"text-xl"} />
-          </a>
-        </div>
+          <div className="flex rounded-full justify-center  ">
+            <a href={getGoogleUrl()} className="text-white p-3 ">
+              <Google
+                className={
+                  "text-xl bg-white rounded-full  hover:shadow-2xl hover:shadow-slate-950"
+                }
+              />
+            </a>
+          </div>
+        </form>
       </div>
-      {error && <ErrorPopup message={error} />}
     </div>
   );
 };
