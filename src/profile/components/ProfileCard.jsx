@@ -68,7 +68,6 @@ const ProfileCard = ({ user, children }) => {
           {user?.bio}
         </pre>
       </div>
-
       {show && <Followers userId={user._id} setClose={toggleShow} />}
       {showFollowing && (
         <Following userId={user._id} setClose={toggleShowFollowing} />

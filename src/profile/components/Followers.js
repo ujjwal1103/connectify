@@ -4,13 +4,14 @@ import avatar from "../../assets/man.png";
 import { useNavigate } from "react-router-dom";
 import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
-import { setFollower } from "../../redux/services/profileSlice";
-import { useDispatch } from "react-redux";
+import { profileState, setFollower } from "../../redux/services/profileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import FollowButton from "../../shared/FollowButton";
 
 const Followers = ({ userId, setClose }) => {
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const { followers } = useSelector(profileState);
+  const { followers =[ ] } = useSelector(profileState);
   const dispatch = useDispatch();
   useEffect(() => {
     const getFollowers = async () => {
@@ -34,10 +35,13 @@ const Followers = ({ userId, setClose }) => {
       navigate(`/${username}`);
     }
   };
+  
+  const handleRemoveFollower = (userId)=>{
 
+  }
   return (
     <div className="z-[999] fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-      <div className="w-96 h-96 bg-white dark:bg-gray-950 rounded-lg ">
+      <div className=" bg-white dark:bg-gray-950 rounded-lg ">
         <button
           className="absolute text-white top-10 right-10"
           onClick={setClose}
@@ -87,12 +91,12 @@ const Followers = ({ userId, setClose }) => {
                 ) : user?.username === currentUser.username ? (
                   ""
                 ) : (
-                  <button
-                    className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
-                    // onClick={}
-                  >
-                    Follow
-                  </button>
+                  <FollowButton
+                  btnText="Remove"
+                  onClick={() => handleRemoveFollower(user?._id)}
+                  isFollow={false}
+                  className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
+                />
                 )}
               </div>
             </div>

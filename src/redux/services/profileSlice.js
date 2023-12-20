@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: {},
   otherUser: {},
-  followers: {},
-  followings: {},
+  followers: [],
+  followings: [],
 };
 
 const profilleSlice = createSlice({

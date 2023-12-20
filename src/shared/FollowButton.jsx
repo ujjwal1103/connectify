@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 
-const FollowButton = ({ className, isFollow, onClick }) => {
-  const [btnTitle, setBtnTitle] = useState("follow");
+const FollowButton = ({ className, isFollow, onClick , btnText}) => {
+  const [btnTitle, setBtnTitle] = useState(btnText);
 
   useEffect(() => {
     if (isFollow) {

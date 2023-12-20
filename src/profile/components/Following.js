@@ -6,13 +6,13 @@ import { OutlineClose, Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
 import FollowButton from "../../shared/FollowButton";
 import { unfollowUser } from "../services/postServices";
-import { useDispatch } from "react-redux";
-import { setFollowing } from "../../redux/services/profileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { profileState, setFollowing } from "../../redux/services/profileSlice";
 
 const Following = ({ userId, setClose }) => {
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const { followings } = useSelector(profileState);
+  const { followings } = useSelector     (profileState);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,13 +41,13 @@ const Following = ({ userId, setClose }) => {
   const handleFollowButtonClick = async (userId) => {
     const data = await unfollowUser(userId);
     if (data.isSuccess) {
-      setFollowers((prev) => prev.filter((f) => f._id !== userId));
+
     }
   };
 
   return (
     <div className="z-[999] fixed inset-0 bg-black bg-opacity-70 flex h-full items-center justify-center">
-      <div className="w-96 h-96 bg-white dark:bg-gray-950 rounded-lg ">
+      <div className="w-96 bg-white dark:bg-gray-950 rounded-lg ">
         <button
           className="absolute text-white top-10 right-10"
           onClick={setClose}
@@ -94,6 +94,7 @@ const Following = ({ userId, setClose }) => {
                   ""
                 ) : (
                   <FollowButton
+                  btnText="UnFollow"
                     onClick={() => handleFollowButtonClick(user?._id)}
                     isFollow={true}
                     className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
