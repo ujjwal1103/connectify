@@ -4,6 +4,7 @@ import Following from "./Following";
 import Tabs from "./Tabs";
 import Followers from "./Followers";
 import ProfilePicture from "../../common/ProfilePicture";
+import Modal from "../../shared/Modal";
 
 const ProfileCard = ({ user, children }) => {
   const [show, setShow] = useState(false);
@@ -68,9 +69,16 @@ const ProfileCard = ({ user, children }) => {
           {user?.bio}
         </pre>
       </div>
-      {show && <Followers userId={user._id} setClose={toggleShow} />}
+
+      {show && (
+        <Modal onClose={() => setShow(false)}>
+          <Followers userId={user._id} />
+        </Modal>
+      )}
       {showFollowing && (
-        <Following userId={user._id} setClose={toggleShowFollowing} />
+        <Modal onClose={() => setShowFollowing(false)}>
+          <Following userId={user._id} />
+        </Modal>
       )}
 
       {(showFollowing || show) && (

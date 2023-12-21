@@ -8,7 +8,7 @@ import { profileState, setFollower } from "../../redux/services/profileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import FollowButton from "../../shared/FollowButton";
 
-const Followers = ({ userId, setClose }) => {
+const Followers = ({ userId }) => {
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const { followers =[ ] } = useSelector(profileState);
@@ -28,7 +28,6 @@ const Followers = ({ userId, setClose }) => {
   }, [userId]);
 
   const navigateToUser = (username) => {
-    setClose();
     if (username === currentUser?.username) {
       navigate(`/profile`);
     } else {
@@ -40,14 +39,8 @@ const Followers = ({ userId, setClose }) => {
 
   }
   return (
-    <div className="z-[999] fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-      <div className=" bg-white dark:bg-gray-950 rounded-lg ">
-        <button
-          className="absolute text-white top-10 right-10"
-          onClick={setClose}
-        >
-          <OutlineClose size={34} />
-        </button>
+    <div className="fixed inset-0 flex items-center justify-center">
+      <div className="w-96 bg-white dark:bg-gray-950 rounded-lg ">
         <div className=" text-black dark:text-white text-center w-full p-3 ">
           <h2 className="text-xl">Followers</h2>
         </div>
@@ -84,17 +77,13 @@ const Followers = ({ userId, setClose }) => {
                     </span>
                   </button>
                 </div>
-                {user?.isFollowed ? (
-                  <button className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1">
-                    Following
-                  </button>
-                ) : user?.username === currentUser.username ? (
+                { user?.username === currentUser.username ? (
                   ""
                 ) : (
                   <FollowButton
-                  btnText="Remove"
+                  btnText={user?.isFollow ? "Following": "Follow"}
                   onClick={() => handleRemoveFollower(user?._id)}
-                  isFollow={false}
+                  isFollow={user?.isFollow}
                   className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
                 />
                 )}

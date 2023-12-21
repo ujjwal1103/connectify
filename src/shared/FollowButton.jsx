@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 
 const FollowButton = ({ className, isFollow, onClick , btnText}) => {
   const [btnTitle, setBtnTitle] = useState(btnText);
+  
 
   useEffect(() => {
     if (isFollow) {
-      setBtnTitle("Unfollow");
+      setBtnTitle("Following");
     }
   }, []);
   return (
