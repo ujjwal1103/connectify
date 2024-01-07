@@ -20,7 +20,8 @@
 }
 
 body {
-  overflow: overlay
+  overflow: overlay;
+  background: "red"
 }
 
 input{

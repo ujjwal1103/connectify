@@ -8,12 +8,12 @@ const PostHeader = ({ post }) => {
       <div className="flex gap-6 items-center">
         <div>
           <ProfilePicture
-            url={post?.userId?.profilePicture}
+            url={post?.user?.profilePicture}
             className="rounded-full w-10 h-10 object-cover"
           />
         </div>
         <div className="flex flex-col items-center dark:text-gray-50">
-          <UsernameLink username={post?.userId?.username} />
+          <UsernameLink username={post?.user?.username} />
 
           <span>{post?.location}</span>
         </div>

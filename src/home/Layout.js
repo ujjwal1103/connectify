@@ -5,7 +5,7 @@ import { FooterThree } from "../common/Footer";
 
 const Layout = () => {
   return (
-    <div className="bg-gray-100 dark:bg-slate-900 h-screen">
+    <div className="bg-slate-950">
       <Navbar />
       <Outlet />
       <FooterThree />

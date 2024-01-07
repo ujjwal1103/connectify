@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-
-const FollowButton = ({ className, isFollow, onClick , btnText}) => {
+const FollowButton = ({ className, isFollow, onClick, btnText, canRemove }) => {
   const [btnTitle, setBtnTitle] = useState(btnText);
-  
-
+  console.log({ className, isFollow, onClick, canRemove });
   useEffect(() => {
-    if (isFollow) {
+    if (canRemove) {
+      setBtnTitle("Remove");
+    } else if (isFollow && !canRemove) {
       setBtnTitle("Following");
+    } else {
+      setBtnTitle("follow");
     }
   }, []);
   return (

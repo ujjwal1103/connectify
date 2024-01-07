@@ -4,11 +4,12 @@ import PostActions from "./components/PostActions";
 import PostInteraction from "./components/PostInteraction";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import SinglePost from "../../common/SinglePost";
 import { setFeed } from "../../redux/services/feedSlice";
 import Modal from "../../shared/Modal";
-const Post = ({ post }) => {
+import { makeRequest } from "../../config/api.config";
+const Post = ({ post }, ref) => {
   const { user } = JSON.parse(localStorage.getItem("user"));
   const { feed, feeds } = useSelector((state) => state.feed);
   const [showPost, setShowPost] = useState(false);
@@ -21,13 +22,15 @@ const Post = ({ post }) => {
 
   const showCurrentPost = () => {
     setShowPost((prev) => !prev);
-    // document.body.classList.toggle("overflow-hidden");
   };
+
+
 
   return (
     <div
       id={post._id}
-      className="border bg-gray-50 h-auto  dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
+      ref={ref && ref}
+      className="border bg-gray-50 h-fit dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
     >
       <div>
         <PostHeader post={post} />
@@ -53,4 +56,4 @@ const Post = ({ post }) => {
   );
 };
 
-export default Post;
+export default forwardRef(Post);

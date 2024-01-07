@@ -54,7 +54,7 @@ const SearchInput = () => {
       />
 
       {showSearchResults && searchResults.length > 0 && (
-        <div className="lg:absolute mt-2 lg:m-0 bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
+        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-scroll bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
           {searchResults?.map((result) => (
             <div
               onClick={() => {

@@ -5,6 +5,9 @@
 
 
 @layer base   {
+    #root{
+     @apply dark:bg-slate-950 bg-white h-screen
+    }
     .authInput {
       @apply border-2  w-96 bg-transparent dark:text-white rounded-xl border-violet-50 focus:ring-1 focus:ring-violet-50 focus:shadow-md focus:outline-none focus:shadow-violet-950 px-9 placeholder:text-violet-50;
     }

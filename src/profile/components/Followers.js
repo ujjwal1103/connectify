@@ -16,9 +16,9 @@ const Followers = ({ userId }) => {
   useEffect(() => {
     const getFollowers = async () => {
       try {
-        const data = await makeRequest.get(`/user/followers/${userId}`);
+        const data = await makeRequest.get(`/followers/${userId}`);
         if (data.isSuccess) {
-          dispatch(setFollower(data.users));
+          dispatch(setFollower(data.followers));
         }
       } catch (error) {
         console.log(error);
@@ -36,7 +36,7 @@ const Followers = ({ userId }) => {
   };
   
   const handleRemoveFollower = (userId)=>{
-
+     
   }
   return (
     <div className="fixed inset-0 flex items-center justify-center">
@@ -81,9 +81,10 @@ const Followers = ({ userId }) => {
                   ""
                 ) : (
                   <FollowButton
-                  btnText={user?.isFollow ? "Following": "Follow"}
+                  {...user}
+                  
+                  
                   onClick={() => handleRemoveFollower(user?._id)}
-                  isFollow={user?.isFollow}
                   className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
                 />
                 )}

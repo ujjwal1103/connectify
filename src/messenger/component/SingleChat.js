@@ -3,13 +3,18 @@ import noDp from "../../assets/no_avatar.png";
 import { useDispatch } from "react-redux";
 import { setSelectedChat } from "../../redux/services/chatSlice";
 import { DotsNine } from "../../icons";
+import ProfilePicture from "../../common/ProfilePicture";
+import UsernameLink from "../../shared/UsernameLink";
+import { useNavigate } from "react-router-dom";
 
 const SingleChat = ({ chat }) => {
   const [options, setOptions] = useState(false);
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectThisChat = () => {
     dispatch(setSelectedChat(chat));
+    navigate(`/messenger/${chat._id}`);
   };
 
   const handleOptions = () => {
@@ -21,9 +26,10 @@ const SingleChat = ({ chat }) => {
       className="w-full flex  gap-4 p-2 items-center dark:text-gray-50"
       onClick={selectThisChat}
     >
-      <div className="w-10 h-10 rounded-full overflow-clip">
-        <img src={chat?.friend?.profilePicture || noDp} alt="" />
-      </div>
+      <ProfilePicture
+        url={chat?.friend?.profilePicture}
+        className="inline-block h-10 w-10 rounded-full hover:scale-90 duration-500 object-cover"
+      />
       <div className="flex-1">
         <h4 className="font-semibold">{chat?.friend?.username}</h4>
         {chat?.lastMessage?.from !== currentUser._id && (

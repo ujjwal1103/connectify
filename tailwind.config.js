@@ -4,6 +4,9 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      height: {
+        page: "calc(100vh - 7.2rem)",
+      },
       backgroundImage: {
         "hero-pattern":
           "url('https://img.freepik.com/free-vector/realistic-style-technology-particle-background_23-2148426704.jpg?size=626&ext=jpg')",

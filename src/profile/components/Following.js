@@ -14,20 +14,25 @@ const Following = ({ userId }) => {
   const navigate = useNavigate();
   const { followings } = useSelector(profileState);
   const dispatch = useDispatch();
-
+  const [query, setQuery] = useState();
   useEffect(() => {
     const getFollowing = async () => {
+      let url = `/following/${userId}`;
+      if (query) {
+        url = url + `?username=${query}`;
+      }
+
       try {
-        const data = await makeRequest.get(`/user/following/${userId}`);
+        const data = await makeRequest.get(url);
         if (data.isSuccess) {
-          dispatch(setFollowing(data.users));
+          dispatch(setFollowing(data.followings));
         }
       } catch (error) {
         console.log(error);
       }
     };
     getFollowing();
-  }, [userId]);
+  }, [userId, query]);
 
   const navigateToUser = (username) => {
     if (username === currentUser?.username) {
@@ -40,13 +45,12 @@ const Following = ({ userId }) => {
   const handleFollowButtonClick = async (userId) => {
     const data = await unfollowUser(userId);
     if (data.isSuccess) {
-
     }
   };
 
   return (
-    <div className="  flex h-full items-center justify-center">
-      <div className="w-96 bg-white dark:bg-gray-950 rounded-lg ">
+    <div className="flex  items-center justify-center">
+      <div className="w-96 bg-white dark:bg-gray-950 border rounded-lg ">
         <div className=" text-black dark:text-white text-center w-full p-3 ">
           <h2 className="text-xl">Following</h2>
         </div>
@@ -55,13 +59,15 @@ const Following = ({ userId }) => {
           <div className="w-full p-2">
             <Input
               type="text"
-              className="w-full p-3 outline-none border-none ml-5 focus:outline-none focus:ring-0 bg-transparent"
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full p-3 text-white outline-none border-none ml-5 focus:outline-none focus:ring-0 bg-transparent"
               placeholder="search"
-              prefix={<Search className="text-gray-800" />}
+              value={query}
+              prefix={<Search className="text-gray-100" />}
             />
           </div>
         </div>
-        <div className="overflow-y-scroll h-full">
+        <div className="overflow-y-scroll h-[500px]">
           {followings?.map((user) => (
             <div className="m-3" key={user?._id}>
               <div className="flex items-center dark:bg-slate-600 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg  ">
@@ -87,8 +93,10 @@ const Following = ({ userId }) => {
                   ""
                 ) : (
                   <FollowButton
-                    btnText={user?.isFollow ? "Following": "Follow"}
-                    onClick={() => handleFollowButtonClick(user?._id, user?.isFollow)}
+                    btnText={user?.isFollow ? "Following" : "Follow"}
+                    onClick={() =>
+                      handleFollowButtonClick(user?._id, user?.isFollow)
+                    }
                     isFollow={user?.isFollow}
                     className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
                   />

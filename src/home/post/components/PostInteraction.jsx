@@ -3,9 +3,9 @@ import { makeRequest } from "../../../config/api.config";
 import { EmojiSmile } from "../../../icons";
 import UsernameLink from "./../../../shared/UsernameLink";
 
-const PostInteraction = ({ post: { _id, userId, likedBy, caption } }) => {
+const PostInteraction = ({ post: { _id, user, likedBy, caption } }) => {
   const [commentText, setCommentText] = useState(null);
-
+  const [likes, setLikes] = useState([]);
   const handleChange = (e) => {
     if (e.target.value.startsWith("@")) {
       console.log("show users");
@@ -28,17 +28,33 @@ const PostInteraction = ({ post: { _id, userId, likedBy, caption } }) => {
     }
   };
 
+  const fetchLikes = async (_id) => {
+    try {
+      if (likedBy.length > 0) {
+        const res = await makeRequest(`/postLikes/${_id}`);
+        setLikes(res.likes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex flex-col p-3 dark:text-gray-50">
-      <span>{likedBy.length} likes</span>
+      <span className="" onClick={fetchLikes}>
+        {likedBy.length === 0
+          ? ""
+          : `${likedBy.length} ${likedBy.length === 1 ? "like" : "likes"}`}
+      </span>
+
       <span className="line-clamp-2 dark:text-gray-50">
-        <UsernameLink username={userId.username} />
-        <span>
+        <UsernameLink username={user.username} />
+        <span className="px-2">
           {caption?.split(" ").map((word, index) => {
             if (word.startsWith("#")) {
               return (
                 <span key={index} className="text-blue-700">
-                  {word}{" "}
+                  {word}
                 </span>
               );
             } else {

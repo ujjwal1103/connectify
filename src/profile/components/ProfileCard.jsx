@@ -9,6 +9,7 @@ import Modal from "../../shared/Modal";
 const ProfileCard = ({ user, children }) => {
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+
   const toggleShow = () => {
     if (user?.followers > 0) {
       setShow((prev) => !prev);
@@ -20,54 +21,54 @@ const ProfileCard = ({ user, children }) => {
     }
   };
   return (
-    <div className="lg:w-2/3 w-full flex-col lg:mx-auto flex justify-center lg:justify-start items-center lg:p-3">
-      <div className="lg:mt-10 p-3 border-black flex flex-col lg:flex-row lg:gap-10 dark:bg-gray-800 rounded-lg lg:mb-2  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 shadow-lg">
-        <div className="h-44 w-44 mx-auto">
-          <ProfilePicture
-            url={user?.profilePicture}
-            className="h-44 w-44 object-cover rounded-full shadow-sm"
-          />
+    <>
+      <div className="p-2 h-fit w-full bg-slate-900 rounded-xl">
+        <div className="flex justify-center items-center my-3">
+          <span className=" px-5  text-xl">{user?.username}</span>
         </div>
-        <div className="p-3">
-          <div className="pt-6 flex gap-10 items-center lg:flex-row flex-col">
-            <span className="text-2xl">{user?.username}</span>
-            {children}
-          </div>
-          <div className="flex pt-6 justify-between w-80 lg:w-auto">
-            <div className="flex flex-col justify-center items-center">
-              <span className="text-2xl">{user?.posts || 0}</span>
-              <span>Posts</span>
-            </div>
-            <div
-              className="flex flex-col justify-center items-center cursor-pointer group"
-              onClick={toggleShow}
-            >
-              <span className="text-2xl group-hover:text-blue-500">
-                {user?.followers || 0}
-              </span>
-              <span class="group-hover:text-blue-500 transition-all">
-                Followers
-              </span>
-            </div>
-            <div
-              className="flex flex-col justify-center items-center cursor-pointer group"
-              onClick={toggleShowFollowing}
-            >
-              <span className="text-2xl group-hover:text-blue-500">
-                {user && formatNumberWithKAndM(user?.following || 0)}
-              </span>
-              <span class="group-hover:text-blue-500 transition-all">
-                Following
-              </span>
-            </div>
+        <div className="flex justify-center items-center">
+          <div className=" bg-gray-500 rounded-full">
+            <ProfilePicture
+              url={user?.profilePicture}
+              className="h-32 w-32 object-cover rounded-full shadow-sm"
+            />
           </div>
         </div>
-      </div>
-      <div className="w-full px-14 py-4 overflow-hidden">
-        <strong className="py-2">{user?.name}</strong>
-        <pre className="text-xs leading-8 lg:leading-10 lg:text-sm ">
-          {user?.bio}
-        </pre>
+        <div className="flex justify-center items-center ">
+          <span className="text-xl px-10 py-2">{user.name}</span>
+        </div>
+        {children}
+        <div className="grid grid-cols-3  gap-3  my-2">
+          <button className="flex flex-col rounded-lg justify-center items-center bg-slate-800">
+            <span className="">Posts</span>
+            <span className="text-xl">{user?.posts}</span>
+          </button>
+          <button
+            onClick={toggleShow}
+            className="flex flex-col rounded-lg justify-center items-center  bg-slate-800"
+          >
+            <span className="">Followers</span>
+            <span className="text-xl">{user?.followers}</span>
+          </button>
+          <button
+            onClick={toggleShowFollowing}
+            className="flex flex-col    rounded-lg justify-center items-center  bg-slate-800"
+          >
+            <span className="">Following</span>
+            <span className="text-xl">{user?.following}</span>
+          </button>
+        </div>
+        <div>
+          <div className="text-xs">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Accusantium provident velit quaerat saepe doloremque aliquid
+              voluptas architecto reiciendis harum, tempora ab expedita maiores
+              culpa quibusdam nobis facere eveniet illum cum.
+            </p>
+            <pre>{user?.bio}</pre>
+          </div>
+        </div>
       </div>
 
       {show && (
@@ -81,7 +82,7 @@ const ProfileCard = ({ user, children }) => {
         </Modal>
       )}
 
-      {(showFollowing || show) && (
+      {/* {(showFollowing || show) && (
         <Tabs
           userId={user._id}
           username={user.username}
@@ -91,8 +92,8 @@ const ProfileCard = ({ user, children }) => {
           }}
           tab={showFollowing ? "Following" : "Followers"}
         />
-      )}
-    </div>
+      )} */}
+    </>
   );
 };
 

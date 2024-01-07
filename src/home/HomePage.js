@@ -1,53 +1,73 @@
 import Post from "./post/Post";
 import Suggetions from "./suggetions/Suggetions";
-import { setFeeds, setError } from "../redux/services/feedSlice";
-import Loading from "../common/Loading";
-import ErrorPage from "../common/ErrorPage";
 import Story from "./story/Story";
 import Sidebar from "./components/Sidebar";
-import { useFetchData } from "../utils/useFetchData";
+import { useCallback, useRef, useState } from "react";
+import usePosts from "../hooks/usePosts";
+import VideoPlayer from "./components/VideoPlayer";
 
 const HomePage = () => {
-  const { feeds, loading, error } = useFetchData(
-    "/posts",
-    "posts",
-    "feed",
-    setFeeds,
-    setError
+  const [pageNum, setPageNum] = useState(1);
+  const { isLoading, isError, error, feeds, hasNextPage } = usePosts(pageNum);
+  const intObserver = useRef();
+
+  const lastPostRef = useCallback(
+    (post) => {
+      if (isLoading) return;
+
+      if (intObserver.current) intObserver.current.disconnect();
+
+      intObserver.current = new IntersectionObserver((posts) => {
+        if (posts[0].isIntersecting && hasNextPage) {
+          console.log("We are near the last post!");
+          setPageNum((prev) => prev + 1);
+        }
+      });
+
+      if (post) intObserver.current.observe(post);
+    },
+    [isLoading, hasNextPage]
   );
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  console.log(error, "error");
-  if (error) {
-    return <ErrorPage error={error} />;
-  }
-
-  if (feeds.length === 0) {
+  if (isError)
     return (
-      <div className="fixed inset-0 flex justify-center items-center ">
-        <h1 className="text-xl dark:text-gray-50 font-medium">
-          No feeds found
-        </h1>
-      </div>
+      <p className="flex h-screen w-screen text-white">
+        Error: {error.message}
+      </p>
     );
-  }
+
+  const content = feeds.map((post, i) => {
+    if (feeds.length === i + 1) {
+      return <Post ref={lastPostRef} key={post.id} post={post} />;
+    }
+    return <Post key={post.id} post={post} />;
+  });
 
   return (
     <div className=" flex w-full p-4 lg:gap-10 flex-col dark:bg-slate-900 z-10">
-      <div className="flex justify-start px-2">
+      <div className=" hidden  justify-start px-2">
         <Story />
       </div>
+
       <div className="flex lg:gap-10">
         <Sidebar />
-        <div className="flex flex-1 gap-10 justify-between z-10">
+        <div className="flex flex-1  gap-10 justify-between z-10">
           <div className=" grid grid-cols-1 flex-1 flex-col  gap-10 ">
-            {feeds.map((post, i) => (
-              <Post key={post._id} post={post} />
-            ))}
+            {/* {feeds.map((post, i) => (
+              <Post ref={lastPostRef} key={post._id} post={post} />
+            ))} */}
+            {content}
+            {isLoading && (
+              <p className="text-center text-white">
+                <div className=" grid grid-cols-1 flex-1 flex-col  gap-10">
+                  {[1, 2].map((i) => (
+                    <div className="border animate-pulse bg-gray-50 h-96 w-full dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"></div>
+                  ))}
+                </div>
+              </p>
+            )}
           </div>
+
           <Suggetions />
         </div>
       </div>

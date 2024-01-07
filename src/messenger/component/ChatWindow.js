@@ -6,9 +6,12 @@ import { useCallback, useEffect } from "react";
 import { makeRequest } from "../../config/api.config";
 import { setMessages } from "../../redux/services/chatSlice";
 
-const ChatWindow = ({ currentUserId, fetchAllChats }) => {
+const ChatWindow = () => {
   const { selectedChat } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
+  const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
+
+  
 
   const getAllMessages = useCallback(async () => {
     try {
@@ -29,11 +32,12 @@ const ChatWindow = ({ currentUserId, fetchAllChats }) => {
     <div className="flex-1 bg-slate-900 h-screen overflow-hidden flex flex-col">
       <ChatHeader otherUser={selectedChat?.friend} />
       <hr />
-      <Messages fetchAllChats={fetchAllChats} />
+
+      <Messages />
       <div className="bg-gray-500">
         <MessageInput
           userId={selectedChat?.friend?._id}
-          currentUserId={currentUserId}
+          currentUserId={currentUser._id}
           chatId={selectedChat?._id}
           getMessages={getAllMessages}
         />

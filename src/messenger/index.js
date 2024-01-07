@@ -1,6 +1,6 @@
-import Messanger from "./Messanger";
+import Messenger from "./Messenger";
 
 
 export {
-    Messanger
+    Messenger
 }

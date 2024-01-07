@@ -5,6 +5,7 @@ const initialState = {
   feeds: [],
   loading: true,
   error: null,
+  totalPages: 0
 };
 
 const feedSlice = createSlice({
@@ -13,8 +14,12 @@ const feedSlice = createSlice({
   reducers: {
     setFeeds: (state, action) => {
       state.loading = false;
-      state.feeds = action.payload;
-    },
+      const newPosts = action.payload.posts.filter(
+        (post) => !state.feeds.some((feed) => feed._id === post._id)
+      );
+      state.feeds = [...state.feeds,...newPosts];
+      state.totalPages = action.payload.totalPages
+    }, 
     setError: (state, action) => {
       state.loading = false;
       state.error = action.payload;

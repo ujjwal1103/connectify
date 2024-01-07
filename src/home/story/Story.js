@@ -14,9 +14,13 @@ const Story = () => {
   const { stories } = useSelector((state) => state.story);
 
   const fetchStories = useCallback(async () => {
-    const res = await makeRequest("/stories");
-    if (res.isSuccess) {
-      dispatch(setStories(res.stories));
+    try {
+      const res = await makeRequest("/stories");
+      if (res.isSuccess) {
+        dispatch(setStories(res.stories));
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, [dispatch]);
 

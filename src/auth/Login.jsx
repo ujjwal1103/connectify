@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Input from "../common/InputFields/Input";
 import { PersonFill, OutlineLoading, Google, PasswordLock } from "../icons";
-import im from "../../src/assets/bgg.png";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthProvider";
 import Logo from "../icons/Logo";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import Connectify from "./components/Connectify";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -36,7 +37,7 @@ const Login = () => {
       res && localStorage.setItem("user", JSON.stringify(res));
       loginUser(res?.user);
       dispatch(login({ isAuthenticated: true, user: res?.user }));
-      navigator("/home");
+      navigator("/");
     } catch (error) {
       console.log(error);
       setError("root.serverError", {
@@ -58,17 +59,7 @@ const Login = () => {
     <div className="h-screen relative bg-white flex lg:flex-row flex-col  items-center overflow-hidden">
       <div className="w-screen h-[400px] bg-black absolute top-0 lg:block hidden" />
       <div className="w-screen h-[400px] bg-[#470047] absolute bottom-0 lg:block hidden " />
-      <div className="relative hidden  dark:bg-black dark:text-white lg:flex-1 lg:h-screen   w-full   lg:p-8 p-6 lg:flex justify-center items-center flex-col lg:rounded-br-[200px]">
-        <h1 className="mb-3 text-bold flex justify-center items-center z-10">
-          <Logo className="fill-black dark:fill-white text-7xl" size={"200%"} />
-        </h1>
-        <h3 className="lg:text-3xl text-justify font-display lg:block hidden z-10">
-          Connectify Redefining the Way You Connect <br />
-          and Share by Offering a Seamless, Intuitive, <br />
-          and Personalized Environment.
-        </h3>
-        <img src={im} alt="" className="absolute opacity-30 " loading="lazy" />
-      </div>
+      <Connectify />
       <div className=" flex-1 flex justify-center items-center h-screen  bg-[#470047] border-violet-950 p-8 backdrop-blur-sm  lg:rounded-tl-[200px]">
         <form
           onSubmit={handleSubmit(onSubmit)}

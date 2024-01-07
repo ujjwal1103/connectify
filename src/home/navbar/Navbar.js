@@ -6,7 +6,7 @@ import { logout } from "../../redux/services/authSlice";
 import { resetState } from "../../redux/services/postSlice";
 import { resetFeedState } from "../../redux/services/feedSlice";
 import Notification from "../notification/Notification";
-import { socket } from "../../config/socket.io";
+// import { socket } from "../../config/socket.io";
 import SearchInput from "./components/SearchInput";
 import {
   Chat,
@@ -36,22 +36,22 @@ const Navbar = () => {
   const modelRef = useRef();
   const { user } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (user) {
-      socket.emit("addUser", { userId: user?._id, username: user?.username });
-      socket.on("getUsers", (data) => {
-        console.log(data);
-      });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     socket.emit("addUser", { userId: user?._id, username: user?.username });
+  //     socket.on("getUsers", (data) => {
+  //       console.log(data);
+  //     });
+  //   }
+  // }, [user]);
 
-  useEffect(() => {
-    socket.on("sendNotification", (data) => {
-      if (data) {
-        console.log("data", data);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("sendNotification", (data) => {
+  //     if (data) {
+  //       console.log("data", data);
+  //     }
+  //   });
+  // }, []);
 
   const toggleCreatePost = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
@@ -92,7 +92,7 @@ const Navbar = () => {
         </div>
         <div className="text-white flex lg:w-60  items-center justify-between w-full">
           <div>
-            <Link to={"/home"}>
+            <Link to={""}>
               <HouseDoor size={24} />
             </Link>
           </div>
@@ -176,10 +176,6 @@ const Navbar = () => {
           </div>
         </div>
         {isOpenCreatePost && (
-          // <FocusTrap>
-          //
-          // </FocusTrap>
-
           <Modal onClose={() => setIsOpenCreatePost(false)}>
             <CreatePost />
           </Modal>

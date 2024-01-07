@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { sendFriendRequest } from "../../profile/services/postServices";
+// import { sendFriendRequest } from "../../profile/services/postServices";
 import { useDispatch } from "react-redux";
 import { followUser } from "../../redux/services/suggetionSlice";
 import ProfilePicture from "../../common/ProfilePicture";
@@ -8,12 +8,12 @@ const Suggetion = ({ user }) => {
   const dispatch = useDispatch();
   const { _id: userId, profilePicture, username, isFollowed, name } = user;
 
-  const handleFollowRequest = async () => {
-    const { isSuccess } = await sendFriendRequest(userId);
-    if (isSuccess) {
-      dispatch(followUser(userId));
-    }
-  };
+  // const handleFollowRequest = async () => {
+  //   const { isSuccess } = await sendFriendRequest(userId);
+  //   if (isSuccess) {
+  //     dispatch(followUser(userId));
+  //   }
+  // };
 
   return (
     <div className="">
@@ -39,7 +39,7 @@ const Suggetion = ({ user }) => {
         ) : (
           <button
             className="text-xs bg-sky-500 px-2 rounded-xl text-sky-100 py-1"
-            onClick={handleFollowRequest}
+            // onClick={handleFollowRequest}
           >
             Follow
           </button>

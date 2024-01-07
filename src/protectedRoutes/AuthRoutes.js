@@ -1,21 +1,16 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
 
 const AuthRoutes = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
-  const { user } = useAuth();
-
-  console.log(localStorage.getItem("user"));
-
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      navigate("/home");
+    if (user?.token) {
+      navigate("/");
     }
-  }, [user, navigate]);
-
-  return <Outlet />;
+  }, [user?.token]);
+  return !localStorage.getItem("user") && <Outlet />;
 };
 
 export default AuthRoutes;

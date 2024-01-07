@@ -10,18 +10,19 @@ export const deleteThisPost = async (postId) => {
   }
 };
 
-export const sendFriendRequest = async (userId) => {
+export const followUser = async (userId) => {
   try {
-    const res = await makeRequest.put(`/sendFriendReq`, { friendId: userId });
+    const res = await makeRequest.post(`/follow/${userId}`);
     return res;
   } catch (err) {
     console.log(err);
     return err;
   }
 };
+
 export const unfollowUser = async (userId) => {
   try {
-    const res = await makeRequest.put(`/unfollow/${userId}`);
+    const res = await makeRequest.delete(`/unfollow/${userId}`);
     return res;
   } catch (err) {
     console.log(err);

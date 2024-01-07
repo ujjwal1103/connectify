@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setError, setPosts } from "../../redux/services/postSlice";
 import NoPosts from "./NoPosts";
 import Post from "../Post";
+import { PostLoading } from "./UserLoading";
 
 const Posts = ({ userId }) => {
   const dispatch = useDispatch();
@@ -29,34 +30,35 @@ const Posts = ({ userId }) => {
   }, [dispatch, getPosts]);
 
   if (loading) {
-    return (
-      <div className="lg:min-w-[60] lg:max-w-[80%] lg:mx-auto">
-        <div className="grid lg:grid-cols-3  place-content-center gap-2 py-5 p-4 lg:p-0">
-          {[1, 2, 3, 4, 5, 6].map((index) => {
-            return (
-              <div key={index} className="mx-auto animate-pulse h-80 w-96 ">
-                <div className="group relative h-full  bg-gray-700 rounded-xl">
-                  <div className="group-hover:flex e hidden absolute rounded-md top-0 w-full h-full  group-hover:bg-black group-hover:bg-opacity-30  justify-center items-center"></div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
+    return <PostLoading />;
   }
 
   if (posts?.length === 0) {
     return <NoPosts />;
   }
 
+  // return (
+  //   <div className="lg:min-w-[60] lg:max-w-[80%] lg:mx-auto">
+  //     <div className="grid lg:grid-cols-3  place-content-center gap-2 py-5 p-4 lg:p-0">
+  //       {posts?.map((post) => {
+  //         return <Post post={post} />;
+  //       })}
+  //     </div>
+  //   </div>
+  // );
   return (
-    <div className="lg:min-w-[60] lg:max-w-[80%] lg:mx-auto">
-      <div className="grid lg:grid-cols-3  place-content-center gap-2 py-5 p-4 lg:p-0">
-        {posts?.map((post) => {
-          return <Post post={post} />;
-        })}
-      </div>
+    <div className="p-5 flex-1 h-full grid lg:grid-cols-3 gap-5 place-items-center overflow-y-scroll">
+      {posts.map((post) => {
+        return (
+          <div className=" w-full h-[270px] flex items-center rounded shadow-xl justify-center">
+            <img
+              src={post.imageUrl}
+              alt=""
+              className="object-cover w-full h-full rounded "
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

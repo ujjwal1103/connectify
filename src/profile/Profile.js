@@ -54,22 +54,26 @@ const Profile = () => {
   return (
     <div
       className=" 
-    bg-gray-100 h-full w-full dark:bg-slate-950  dark:text-gray-50 p-2 "
+    h-full  w-full flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items-start"
     >
-      <div className="p-2 lg:hidden  w-full bg-gray-950 mb-2 flex justify-end">
+      <div className="p-2 lg:hidden bg-gray-950 mb-2 flex justify-end">
         <div className="w-fit">
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
-      <ProfileCard toggleEdit={toggleEdit} user={user}>
-        <button
-          onClick={toggleEdit}
-          className="text-2xl border p-2 lg:w-80 border-slate-600/30  text-violet-800  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 font-semibold rounded-md"
-        >
-          Edit profile
-        </button>
-      </ProfileCard>
-      <hr className="h-1 bg-violet-100 dark:bg-gray-900 " />
+      <div className=" p-3 sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
+        <ProfileCard toggleEdit={toggleEdit} user={user}>
+          <div className="flex justify-center items-center">
+            {" "}
+            <button
+              onClick={toggleEdit}
+              className="text-2xl border p-2 lg:w-80 border-slate-600/30  text-violet-800  dark:text-slate-100   dark:bg-gradient-to-r  dark:from-slate-950 dark:to-gray-900 font-semibold rounded-md"
+            >
+              Edit profile
+            </button>
+          </div>
+        </ProfileCard>
+      </div>
 
       <Posts />
 

@@ -3,13 +3,13 @@ import { Camera } from "../../icons";
 
 function NoPosts() {
   return (
-    <div className="flex flex-col items-center justify-center space-y-2 py-20 dark:text-white">
-      <div className="w-20 h-20 border-2 border-black dark:border-gray-50 rounded-full flex items-center justify-center p-4">
-        <Camera size={34} strokeWidth={0} />
+    <div className="p-5 flex-1 h-page ">
+      <div className="h-full  flex items-center justify-center flex-col">
+        <div className="w-24 h-24 border-4  rounded-full flex  justify-center items-center">
+          <Camera size={52}/>
+        </div>
+        <span className="text-2xl"> No Posts Yet</span>
       </div>
-      <p className="text-black text-lg font-medium dark:text-gray-50">
-        Crate Memories With friends
-      </p>
     </div>
   );
 }
