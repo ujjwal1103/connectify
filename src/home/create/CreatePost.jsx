@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import avatar from "../../assets/man.png";
 import { makeRequest } from "../../config/api.config";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
@@ -7,7 +7,7 @@ import { addPost } from "../../redux/services/postSlice";
 import { resizeFile } from "../../services/postServices";
 import { addPostToUser } from "../../redux/services/authSlice";
 import EditImage from "./EditImage/EditImage";
-import { ImageFill, OutlineClose, OutlineLoading3Quarters } from "../../icons";
+import { ImageFill, OutlineLoading3Quarters } from "../../icons";
 
 const CreatePost = ({}) => {
   const [imageUrl, setImageUrl] = useState();
@@ -35,7 +35,7 @@ const CreatePost = ({}) => {
   const handlePost = async () => {
     if (imageUrl) {
       const formData = new FormData();
-      formData.append("imageUrl", newFile);
+      formData.append("postImage", newFile);
       formData.append("caption", caption || "");
       try {
         const { data } = await makeRequest.post("/post", formData);
@@ -53,7 +53,7 @@ const CreatePost = ({}) => {
   };
 
   return (
-    <div className="lg:w-1/3">
+    <div className="">
       <div className="bg-white rounded-2xl dark:bg-gray-600">
         <div className="h-[83%]">
           <div className="p-3 flex dark:text-gray-50  items-center justify-between">
@@ -146,12 +146,6 @@ const CreatePost = ({}) => {
           </div>
         </div>
       </div>
-      {/* <button
-        className="absolute right-10 top-10 text-white cursor-pointer"
-        onClick={setClose}
-      >
-        <OutlineClose size={46} />
-      </button> */}
       {editImage && <EditImage imageUrl={imageUrl} />}
     </div>
   );

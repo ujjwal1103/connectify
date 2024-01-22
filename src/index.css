@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-@layer base   {
-    #root{
-     @apply dark:bg-slate-950 bg-white h-screen
-    }
-    .authInput {
-      @apply border-2  w-96 bg-transparent dark:text-white rounded-xl border-violet-50 focus:ring-1 focus:ring-violet-50 focus:shadow-md focus:outline-none focus:shadow-violet-950 px-9 placeholder:text-violet-50;
-    }
+@layer base {
+  #root {
+    @apply dark:bg-zinc-950 bg-white dark:text-white;
   }
+  .authInput {
+    @apply border-2  w-96 bg-transparent dark:text-white rounded-xl border-violet-50 focus:ring-1 focus:ring-violet-50 focus:shadow-md focus:outline-none focus:shadow-violet-950 px-9 placeholder:text-violet-50;
+  }
+}

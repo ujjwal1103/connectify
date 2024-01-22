@@ -10,7 +10,6 @@ const Messages = () => {
   const messagesRef = useRef(null);
 
   useEffect(() => {
-    console.log(groupMessagesByDate(messages));
     setGroupedMessages(groupMessagesByDate(messages));
     messagesRef && messagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -34,6 +33,7 @@ const Messages = () => {
           </h3>
           {groupedMessages[date].map((message) => (
             <Message
+            key={message._id}
               currentUserMessage={message.from === currentUser._id}
               message={message}
             />

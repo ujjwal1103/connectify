@@ -1,64 +1,59 @@
-import { useCallback, useEffect } from "react";
-import { makeRequest } from "../../config/api.config";
-import { useDispatch, useSelector } from "react-redux";
-import { setError, setPosts } from "../../redux/services/postSlice";
+import { useCallback, useRef, useState } from "react";
 import NoPosts from "./NoPosts";
-import Post from "../Post";
+import Post from "./Post";
 import { PostLoading } from "./UserLoading";
+import useMyPosts from "../../hooks/useMyPosts";
+import Loading from "../../common/Loading";
 
 const Posts = ({ userId }) => {
-  const dispatch = useDispatch();
+  const [pageNum, setPageNum] = useState(1);
+  const { isLoading, posts, hasNextPage, emptyPosts } = useMyPosts(
+    pageNum,
+    userId
+  );
 
-  const { posts, loading } = useSelector((s) => s.post);
-  const getPosts = useCallback(async () => {
-    try {
-      const res = await makeRequest(`/users/${userId || "posts"}`);
+  console.log(isLoading, "loading");
 
-      if (res.isSuccess) {
-        dispatch(setPosts(res.posts));
-      }
-    } catch (error) {
-      dispatch(setError("something went wrong"));
-    }
-  }, [dispatch, userId]);
+  const intObserver = useRef();
 
-  useEffect(() => {
-    getPosts();
-    return () => {
-      dispatch(setPosts([]));
-    };
-  }, [dispatch, getPosts]);
+  const lastPostRef = useCallback(
+    (post) => {
+      if (intObserver.current) intObserver.current.disconnect();
 
-  if (loading) {
-    return <PostLoading />;
-  }
+      intObserver.current = new IntersectionObserver((p) => {
+        if (p[0].isIntersecting && hasNextPage) {
+          setPageNum((prev) => prev + 1);
+        }
+      });
 
-  if (posts?.length === 0) {
+      if (post) intObserver.current.observe(post);
+    },
+    [isLoading, hasNextPage]
+  );
+
+ 
+
+  if (emptyPosts) {
     return <NoPosts />;
   }
 
-  // return (
-  //   <div className="lg:min-w-[60] lg:max-w-[80%] lg:mx-auto">
-  //     <div className="grid lg:grid-cols-3  place-content-center gap-2 py-5 p-4 lg:p-0">
-  //       {posts?.map((post) => {
-  //         return <Post post={post} />;
-  //       })}
-  //     </div>
-  //   </div>
-  // );
+  const renderPosts = posts?.map((post, index) => (
+    <Post
+      ref={posts.length === index + 1 ? lastPostRef : null}
+      key={post.id}
+      post={post}
+    />
+  ));
+
   return (
-    <div className="p-5 flex-1 h-full grid lg:grid-cols-3 gap-5 place-items-center overflow-y-scroll">
-      {posts.map((post) => {
-        return (
-          <div className=" w-full h-[270px] flex items-center rounded shadow-xl justify-center">
-            <img
-              src={post.imageUrl}
-              alt=""
-              className="object-cover w-full h-full rounded "
-            />
-          </div>
-        );
-      })}
+    <div
+      className={`flex-1 ${
+        posts?.length <= 6 ? "lg:h-full xl:h-auto" : "xl:h-full h-full"
+      } grid lg:grid-cols-2 xl:grid-cols-3 md:grid-cols-2 gap-4 pb-5 overflow-y-scroll`}
+    >
+      {renderPosts}
+
+      {isLoading && <PostLoading />}
     </div>
   );
 };

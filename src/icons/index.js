@@ -20,6 +20,8 @@ import {
   BsImageFill as ImageFill,
   BsEmojiSmile as EmojiSmile,
   BsCamera as Camera,
+  BsBookmark as BookMark,
+  BsBookmarkFill as BookMarkFill
 } from "react-icons/bs";
 import {
   AiOutlineLoading as OutlineLoading,
@@ -37,21 +39,29 @@ import {
 } from "react-icons/fa";
 import { PiDotsNine as DotsNine } from "react-icons/pi";
 import Google from "./Google";
-import { IoMdList as MdList } from "react-icons/io";
 import {
   IoChevronForwardCircle as ChevronForwardCircle,
   IoChevronBackCircle as ChevronBackCircle,
 } from "react-icons/io5";
-import { IoIosLock as PasswordLock } from "react-icons/io";
+import { IoIosLock as PasswordLock, IoMdList as MdList } from "react-icons/io";
 import { RiMessengerLine as MessengerLine } from "react-icons/ri";
 import { FiEdit as Edit } from "react-icons/fi";
+import {
+  IoChevronForward as ChevronForward,
+  IoChevronBack as ChevronBack,
+} from "react-icons/io5";
+import { AiOutlineMenuFold as OutlineMenuFold } from "react-icons/ai";
 export {
   AngleLeft,
   ArrowRight,
+  BookMark,
+  BookMarkFill,
   Camera,
   Chat,
   ChevronBackCircle,
   ChevronForwardCircle,
+  ChevronBack,
+  ChevronForward,
   Cog,
   DarkMode,
   DotsNine,
@@ -73,6 +83,7 @@ export {
   OutlineClose,
   OutlineLoading,
   OutlineLoading3Quarters,
+  OutlineMenuFold,
   PasswordLock,
   PersonCircle,
   PersonFill,

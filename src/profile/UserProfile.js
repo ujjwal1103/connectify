@@ -122,9 +122,9 @@ const UserProfile = () => {
   return (
     <div
       className=" 
-   h-full  w-full flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items-start"
+      w-full flex h-page px-4 pt-4 lg:flex-row flex-col gap-4 items-center lg:items-start "
     >
-      <div className=" p-3 sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
+      <div className=" sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
         <ProfileCard user={user}>
           <div className="flex gap-3 justify-center items-center">
             {user?.isFollow ? (

@@ -1,8 +1,12 @@
 import axios from "axios";
-import { createBrowserHistory } from "history";
 import { toast } from "react-toastify";
 
-const history = createBrowserHistory();
+const handleUnauthorizedAccess = () => {
+  toast.error("Unauthorized Access");
+  console.log("Attempting history push to /unauthorized");
+  localStorage.clear();
+  window.location.href = "/unauthorized";
+};
 
 let baseURL =
   process.env.NODE_ENV === "production"
@@ -15,13 +19,12 @@ const makeRequest = axios.create({
 
 makeRequest.interceptors.request.use(
   (config) => {
-    // Check if user data with a token exists in localStorage
     const userData = localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
       : null;
 
-    if (userData && userData.token) {
-      config.headers.Authorization = userData.token;
+    if (userData && userData.accessToken) {
+      config.headers.Authorization = userData.accessToken;
     }
     return config;
   },
@@ -37,8 +40,7 @@ makeRequest.interceptors.response.use(
 
   (error) => {
     if (error?.response?.status === 401) {
-      toast.error("Unauthorized Access");
-      history.push("/unauthorized");
+      handleUnauthorizedAccess();
     }
     const myerror = {
       ...error.response?.data,

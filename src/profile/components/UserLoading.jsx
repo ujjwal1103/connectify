@@ -27,8 +27,8 @@ h-full  w-96 flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items
             </div>
             <div className="grid grid-cols-3  gap-3  my-2">
               {[1, 2, 3].map((i) => (
-                <div className="flex animate-pulse flex-col h-16 rounded-lg justify-center items-center bg-slate-800"></div>
-              ))}{" "}
+                <div key={i} className="flex animate-pulse flex-col h-16 rounded-lg justify-center items-center bg-slate-800"></div>
+              ))}
             </div>
             <div>
               <div className="text-xs">
@@ -47,13 +47,13 @@ h-full  w-96 flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items
 export default UserLoading;
 
 export const PostLoading = () => (
-  <div className="p-3 flex-1 h-page overflow-hidden">
-    <div className="grid lg:grid-cols-3 gap-5 w-full">
-      {[1, 2, 3, 4, 5, 6].map((index) => {
+  <div className="pl-3 flex-1 h-full overflow-hidden">
+    <div className="grid lg:grid-cols-3 overflow-hidden gap-5 w-full">
+      {[1, 2, 3, 4, 5, 6, 7,8,9].map((index) => {
         return (
           <div
             key={index}
-            className=" bg-slate-800 animate-pulse w-52 h-52  rounded-md "
+            className=" bg-slate-900 animate-pulse  h-52  rounded-md "
           ></div>
         );
       })}

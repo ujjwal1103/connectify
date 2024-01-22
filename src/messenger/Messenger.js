@@ -63,7 +63,6 @@ const Messenger = () => {
     fetchAllChats();
   }, [fetchAllChats]);
 
-  console.log(chatId);
 
   return (
     <div className="bg-gray-100  dark:bg-slate-950 flex h-screen ">
@@ -74,10 +73,10 @@ const Messenger = () => {
           <Search searchTerm={searchTerm} onChange={handleChange} />
           {!searchTerm &&
             chats?.map((chat) => {
-              return <SingleChat chat={chat} />;
+              return <SingleChat key={chat._id} chat={chat} />;
             })}
           {searchResults?.map((chat) => {
-            return <SingleChat chat={chat} />;
+            return <SingleChat key={chat._id} chat={chat} />;
           })}
         </div>
       </div>

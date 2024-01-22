@@ -2,15 +2,16 @@ import { useState } from "react";
 import { makeRequest } from "../../../config/api.config";
 import { EmojiSmile } from "../../../icons";
 import UsernameLink from "./../../../shared/UsernameLink";
+import Modal from "../../../shared/Modal";
+import Likes from "./Likes";
 
-const PostInteraction = ({ post: { _id, user, likedBy, caption } }) => {
+const PostInteraction = ({ post: { _id, user, like, caption } }) => {
   const [commentText, setCommentText] = useState(null);
-  const [likes, setLikes] = useState([]);
+  const [openLikes, setOpenLikes] = useState(false);
   const handleChange = (e) => {
     if (e.target.value.startsWith("@")) {
       console.log("show users");
     }
-
     setCommentText(e.target.value);
   };
 
@@ -28,24 +29,11 @@ const PostInteraction = ({ post: { _id, user, likedBy, caption } }) => {
     }
   };
 
-  const fetchLikes = async (_id) => {
-    try {
-      if (likedBy.length > 0) {
-        const res = await makeRequest(`/postLikes/${_id}`);
-        setLikes(res.likes);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <div className="flex flex-col p-3 dark:text-gray-50">
-      <span className="" onClick={fetchLikes}>
-        {likedBy.length === 0
-          ? ""
-          : `${likedBy.length} ${likedBy.length === 1 ? "like" : "likes"}`}
-      </span>
+    <div className="flex flex-col py-2  dark:text-gray-50">
+      <button className="text-left" onClick={() => setOpenLikes(true)}>
+        {like === 0 ? "" : `${like} ${like?.length === 1 ? "like" : "likes"}`}
+      </button>
 
       <span className="line-clamp-2 dark:text-gray-50">
         <UsernameLink username={user.username} />
@@ -64,11 +52,11 @@ const PostInteraction = ({ post: { _id, user, likedBy, caption } }) => {
         </span>
       </span>
 
-      <div className="flex justify-between gap-6 items-center">
+      <div className="flex justify-between gap-3 items-center">
         <input
           onChange={handleChange}
           type="text"
-          className="bg-transparent border-none  w-full focus:border-none outline-none focus:ring-0 my-2"
+          className="bg-transparent border-none p-1  w-full focus:border-none outline-none focus:ring-0"
           placeholder="Add a comment..."
           value={commentText}
         />
@@ -77,6 +65,12 @@ const PostInteraction = ({ post: { _id, user, likedBy, caption } }) => {
           <EmojiSmile />
         </button>
       </div>
+
+      {openLikes && (
+        <Modal onClose={() => setOpenLikes(false)}>
+          <Likes postId={_id} like={like} />
+        </Modal>
+      )}
     </div>
   );
 };

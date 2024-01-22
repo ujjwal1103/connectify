@@ -54,14 +54,14 @@ const Profile = () => {
   return (
     <div
       className=" 
-    h-full  w-full flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items-start"
+      w-full flex lg:h-page px-4 pt-4 lg:flex-row flex-col gap-4 items-center lg:items-start"
     >
-      <div className="p-2 lg:hidden bg-gray-950 mb-2 flex justify-end">
+      <div className=" lg:hidden bg-gray-950 mb-2 flex justify-end">
         <div className="w-fit">
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
-      <div className=" p-3 sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
+      <div className="lg:sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
         <ProfileCard toggleEdit={toggleEdit} user={user}>
           <div className="flex justify-center items-center">
             {" "}

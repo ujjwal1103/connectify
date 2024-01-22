@@ -1,6 +1,6 @@
 import React from 'react'
-import im from "../../../src/assets/bgg.png";
-import Logo from "../../icons/Logo";
+import im from "../../../../src/assets/bgg.png";
+import Logo from "../../../../src/icons/Logo";
 
 const Connectify = () => {
   return (

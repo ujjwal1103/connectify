@@ -1,15 +1,15 @@
-import Input from "../common/InputFields/Input";
+import Input from "../../common/InputFields/Input";
 
 import { useForm } from "react-hook-form";
-import { PersonFill, OutlineLoading, PasswordLock, Google } from "../icons";
+import { PersonFill, OutlineLoading, PasswordLock, Google } from "../../icons";
 import { Link, useNavigate } from "react-router-dom";
-import { makeRequest } from "../config/api.config";
+import { makeRequest } from "../../config/api.config";
 import { toast } from "react-toastify";
-import getGoogleUrl from "../config/getGoogleUri";
+import getGoogleUrl from "../../config/getGoogleUri";
 
 import { useEffect } from "react";
 import Connectify from "./components/Connectify";
-import Logo from "../icons/Logo";
+import Logo from "../../icons/Logo";
 
 const Register = () => {
   const navigator = useNavigate();

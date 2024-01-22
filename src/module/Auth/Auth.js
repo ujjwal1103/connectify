@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { makeRequest } from "../config/api.config";
-import { login } from "../redux/services/authSlice";
+import { makeRequest } from "../../config/api.config";
+import { login } from "../../redux/services/authSlice";
 import { useDispatch } from "react-redux";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 
 const Auth = () => {
   const location = useLocation();

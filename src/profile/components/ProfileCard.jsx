@@ -60,12 +60,7 @@ const ProfileCard = ({ user, children }) => {
         </div>
         <div>
           <div className="text-xs">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Accusantium provident velit quaerat saepe doloremque aliquid
-              voluptas architecto reiciendis harum, tempora ab expedita maiores
-              culpa quibusdam nobis facere eveniet illum cum.
-            </p>
+          
             <pre>{user?.bio}</pre>
           </div>
         </div>

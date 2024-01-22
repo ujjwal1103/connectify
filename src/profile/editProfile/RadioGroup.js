@@ -9,7 +9,7 @@ const RadioGroup = ({ values, selectedValue, setState, name }) => {
       <div className="flex gap-10">
         {values.map((value) => {
           return (
-            <div className="inline-flex items-center">
+            <div className="inline-flex items-center" key={value}>
               <label
                 className="relative flex cursor-pointer items-center rounded-full p-3"
                 for="ripple-on"

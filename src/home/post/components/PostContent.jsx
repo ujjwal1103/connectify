@@ -10,7 +10,7 @@ const PostContent = ({ contentUrl, onClick, type = "video" }) => {
   // }
 
   return (
-    <div className=" w-full rounded-md p-2 " onClick={onClick}>
+    <div className=" w-full rounded-md " onClick={onClick}>
       <div className="relative w-full min-h-fit max-h-[500px]">
         <img
           src={contentUrl}

@@ -6,11 +6,12 @@ const AuthRoutes = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.token) {
-      navigate("/");
+    if (user?.accessToken) {
+      navigate("/", { replace: true });
     }
-  }, [user?.token]);
-  return !localStorage.getItem("user") && <Outlet />;
+  }, [user?.accessToken]);
+
+  return !user && <Outlet />;
 };
 
 export default AuthRoutes;

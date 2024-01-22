@@ -1,15 +1,15 @@
 import { useEffect } from "react";
-import Input from "../common/InputFields/Input";
-import { PersonFill, OutlineLoading, Google, PasswordLock } from "../icons";
+import Input from "../../common/InputFields/Input";
+import { PersonFill, OutlineLoading, Google, PasswordLock } from "../../icons";
 
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
-import { login } from "../redux/services/authSlice";
-import { makeRequest } from "../config/api.config";
-import getGoogleUrl from "../config/getGoogleUri";
-import { useAuth } from "../context/AuthProvider";
-import Logo from "../icons/Logo";
+import { login } from "../../redux/services/authSlice";
+import { makeRequest } from "../../config/api.config";
+import getGoogleUrl from "../../config/getGoogleUri";
+import { useAuth } from "../../context/AuthProvider";
+import Logo from "../../icons/Logo";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Connectify from "./components/Connectify";

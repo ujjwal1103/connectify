@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  feed: {},
+  feed: {
+    
+  },
   feeds: [],
   loading: true,
   error: null,
-  totalPages: 0
+  totalPages: 0,
 };
 
 const feedSlice = createSlice({
@@ -17,9 +19,9 @@ const feedSlice = createSlice({
       const newPosts = action.payload.posts.filter(
         (post) => !state.feeds.some((feed) => feed._id === post._id)
       );
-      state.feeds = [...state.feeds,...newPosts];
-      state.totalPages = action.payload.totalPages
-    }, 
+      state.feeds = [...state.feeds, ...newPosts];
+      state.totalPages = action.payload.totalPages;
+    },
     setError: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -29,18 +31,15 @@ const feedSlice = createSlice({
     },
     likePost: (state, action) => {
       const postId = action.payload.postId;
-      const userId = action.payload.postId;
 
       const likedPostIndex = state.feeds.findIndex(
         (post) => post._id === postId
       );
       if (likedPostIndex !== -1) {
-        state.feeds[likedPostIndex].likeCount += 1;
-        state.feeds[likedPostIndex].likedBy.push(userId);
+        state.feeds[likedPostIndex].like += 1;
         state.feeds[likedPostIndex].isLiked = true;
         if (Object.entries(state.feed).length !== 0) {
-          state.feed.likeCount += 1;
-          state.feed.likedBy.push(userId);
+          state.feed.like += 1;
           state.feed.isLiked = true;
         }
       }
@@ -51,12 +50,11 @@ const feedSlice = createSlice({
         (post) => post._id === postId
       );
       if (unlikedPostIndex !== -1) {
-        state.feeds[unlikedPostIndex].likeCount -= 1;
-        state.feeds[unlikedPostIndex].likedBy.pop(userId);
+        state.feeds[unlikedPostIndex].like -= 1;
+
         state.feeds[unlikedPostIndex].isLiked = false;
         if (Object.entries(state.feed).length !== 0) {
-          state.feed.likeCount -= 1;
-          state.feed.likedBy.pop(userId);
+          state.feed.like -= 1;
           state.feed.isLiked = false;
         }
       }

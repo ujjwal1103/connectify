@@ -2,12 +2,11 @@ import Suggetion from "./Suggetion";
 import Self from "../self/Self";
 import { setSuggetions } from "../../redux/services/suggetionSlice";
 import { useFetchData } from "../../utils/useFetchData";
+import UserLoading from "../../common/loading/UserLoading";
 
 const Suggetions = () => {
   const { user } = JSON.parse(localStorage.getItem("user"));
-  // const { suggestedusers } = useSelector((state) => state.suggetions);
-
-  const { suggestedusers } = useFetchData(
+  const { suggestedusers, loading } = useFetchData(
     "users",
     "users",
     "suggetions",
@@ -23,7 +22,14 @@ const Suggetions = () => {
           <span>see all</span>
         </div>
       )}
-      {suggestedusers?.map((u) => (
+      {loading && (
+        <div className="mt-10 flex gap-2 flex-col">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <UserLoading />
+          ))}
+        </div>
+      )}
+      {!loading && suggestedusers?.map((u) => (
         <Suggetion
           key={u?._id}
           user={u}

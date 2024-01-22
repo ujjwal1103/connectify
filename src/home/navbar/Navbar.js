@@ -34,24 +34,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const modelRef = useRef();
-  const { user } = useSelector((state) => state.auth);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     socket.emit("addUser", { userId: user?._id, username: user?.username });
-  //     socket.on("getUsers", (data) => {
-  //       console.log(data);
-  //     });
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   socket.on("sendNotification", (data) => {
-  //     if (data) {
-  //       console.log("data", data);
-  //     }
-  //   });
-  // }, []);
 
   const toggleCreatePost = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
@@ -63,7 +45,6 @@ const Navbar = () => {
 
   const toggleNotification = () => {
     setIsOpenNotification((prev) => !prev);
-    // document.body.classList.toggle("overflow-hidden");
   };
 
   const handleLogout = () => {
@@ -83,10 +64,12 @@ const Navbar = () => {
   };
   return (
     <header className="p-4 lg:sticky left-0 z-50 fixed bottom-0 right-0">
-      <nav className="bg-violet-700 bg-opacity-70  dark:bg-opacity-70 backdrop-blur-lg p-4 flex justify-between gap-10 dark:bg-slate-700  rounded-lg sticky  ">
-        <div className="hidden lg:block">
-          <Logo className="fill-white" size={"100%"} />
+      <div className="w-full lg:hidden md:hidden  p-2 h-10 bg-slate-950 fixed mb-20 left-0 top-0">
+        <div className="flex justify-center items-center">
+          <Logo className="fill-white llg:hidden" size={"60%"} />
         </div>
+      </div>
+      <nav className="bg-violet-700 bg-opacity-70  dark:bg-opacity-70 backdrop-blur-lg p-4 flex justify-between gap-10 dark:bg-slate-700  rounded-lg sticky  ">
         <div className="hidden lg:block">
           <SearchInput />
         </div>

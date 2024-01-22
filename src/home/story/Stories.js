@@ -101,7 +101,8 @@ const Stories = ({ setClose }) => {
         <div className="absolute top-0 w-full p-2">
           <div className="w-full flex gap-2 h-1 ">
             {story.stories.map((_, index) => (
-              <span
+              <span 
+              key={index}
                 className={`  w-full  rounded-md overflow-hidden ${
                   index === currentIndex ? "bg-green-500 " : "bg-gray-500 "
                 }`}

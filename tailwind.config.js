@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        page: "calc(100vh - 7.2rem)",
+        page: "calc(100vh - 6.5rem)",
       },
       backgroundImage: {
         "hero-pattern":

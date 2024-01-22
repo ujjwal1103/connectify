@@ -5,14 +5,13 @@ const FocusTrap = ({ children }) => {
 
   useEffect(() => {
     const trapElement = trapRef.current;
+    const focusableEls = trapElement.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const lastFocusableEl = focusableEls[focusableEls.length - 1];
+    const firstFocusableEl = focusableEls[0];
 
     const handleFocus = (event) => {
-      const focusableEls = trapElement.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstFocusableEl = focusableEls[0];
-      const lastFocusableEl = focusableEls[focusableEls.length - 1];
-
       const isTabPressed = event.key === "Tab" || event.keyCode === 9;
 
       if (!isTabPressed) {
@@ -42,7 +41,11 @@ const FocusTrap = ({ children }) => {
     };
   }, []);
 
-  return <div ref={trapRef}>{children}</div>;
+  return (
+    <div ref={trapRef} className="focus:bg-red-500">
+      {children}
+    </div>
+  );
 };
 
 export default FocusTrap;

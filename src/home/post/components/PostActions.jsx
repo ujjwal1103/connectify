@@ -6,29 +6,45 @@ import {
   unlikePost as dislikeCurrentPost,
 } from "../../../redux/services/feedSlice";
 import { Chat, Heart, HeartFill, Send } from "../../../icons";
+import { useSocket } from "../../../context/SocketContext";
+import { sendNotification } from "../../notification/Services";
 
 const PostActions = ({ post, userId, showCurrentPost }) => {
   const dispatch = useDispatch();
 
+  const { socket, isUserOnline } = useSocket();
+
   const likePost = async () => {
-    dispatch(likeCurrentPost({ postId: post._id, userId }));
-    const res = await makeRequest.put(`/like/${post._id}`);
-    if (!res?.isSuccess) {
+    try {
+      dispatch(likeCurrentPost({ postId: post._id, userId }));
+      await makeRequest.post("/like", {
+        postId: post._id,
+      });
+
+      const isOnline = isUserOnline(post?.user?._id);
+
+      if (isOnline) {
+        await sendNotification(post?.user?._id, "Post Like", socket);
+      } else {
+        console.log("user is not online");
+      }
+    } catch (error) {
       dispatch(dislikeCurrentPost({ postId: post._id, userId }));
     }
   };
-
   const dislikePost = async () => {
-    dispatch(dislikeCurrentPost({ postId: post._id, userId }));
-    const res = await makeRequest.put(`/dislike/${post._id}`);
-    if (!res?.isSuccess) {
+    try {
+      dispatch(dislikeCurrentPost({ postId: post._id, userId }));
+      await makeRequest.delete(`/unLike`, {
+        postId: post._id,
+      });
+    } catch (error) {
       dispatch(likeCurrentPost({ postId: post._id, userId }));
     }
   };
-
   return (
-    <div className="flex justify-between items-center p-3">
-      <div className="flex items-center gap-5">
+    <div className="flex justify-between items-center pt-3 px-2">
+      <div className="flex items-center gap-3">
         {post?.isLiked ? (
           <HeartFill size={24} className="text-red-600" onClick={dislikePost} />
         ) : (

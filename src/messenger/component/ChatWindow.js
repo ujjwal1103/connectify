@@ -11,8 +11,6 @@ const ChatWindow = () => {
   const dispatch = useDispatch();
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
 
-  
-
   const getAllMessages = useCallback(async () => {
     try {
       const data = await makeRequest(`messages/${selectedChat._id}`);
