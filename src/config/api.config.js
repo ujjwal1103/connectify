@@ -1,20 +1,15 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { BASE_URL } from "./constant";
 
 const handleUnauthorizedAccess = () => {
   toast.error("Unauthorized Access");
-  console.log("Attempting history push to /unauthorized");
   localStorage.clear();
   window.location.href = "/unauthorized";
 };
 
-let baseURL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_DEV_BASE_URL
-    : "http://localhost:3200/api";
-
 const makeRequest = axios.create({
-  baseURL: baseURL,
+  baseURL: BASE_URL,
 });
 
 makeRequest.interceptors.request.use(
