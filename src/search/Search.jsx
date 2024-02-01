@@ -14,7 +14,7 @@ if(screenWidth > 785){
   },[screenWidth, navigate])
 
   return (
-    <div className="w-screen h-screen lg:hidden flex p-2">
+    <div className="w-screen h-screen lg:hidden flex justify-center p-2">
       <SearchInput />
     </div>
   );

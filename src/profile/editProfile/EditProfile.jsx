@@ -10,7 +10,7 @@ const EditProfile = ({ user, setClose, setUser }) => {
   const [name, setName] = useState(user?.name);
   const [bio, setBio] = useState(user?.bio);
   const [gender, setGender] = useState(user?.gender);
-  const [profilePic, setProfilePic] = useState(user?.profilePicture);
+  const [avatar, setAvatar] = useState(user?.avatar);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [image, setImage] = useState();
 
@@ -20,40 +20,28 @@ const EditProfile = ({ user, setClose, setUser }) => {
       name !== user?.name ||
       bio !== user?.bio ||
       gender !== user?.gender ||
-      profilePic !== user?.profilePicture
+      avatar !== user?.avatar
     ) {
       setSubmitDisabled(false);
     } else {
       setSubmitDisabled(true);
     }
-  }, [
-    username,
-    name,
-    bio,
-    gender,
-    profilePic,
-    user?.username,
-    user?.name,
-    user?.bio,
-    user?.gender,
-    user?.profilePicture,
-  ]);
+  }, [username, name, bio, gender, avatar]);
 
-  const editProfile = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("username", username || "");
-    formData.append("name", name || "");
-    formData.append("bio", bio || "");
-    formData.append("gender", gender || null);
-    formData.append("image", image);
-    const result = await makeRequest.putForm("/user/edit", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    setUser(result.user);
-    setClose();
+  const editProfile = async (data) => {
+    try {
+      const formData = new FormData();
+      ["username", "name", "bio", "gender"].forEach((field) =>
+        formData.append(field, eval(field) || "")
+      );
+      formData.append("avatar", image);
+
+      const result = await makeRequest.putForm("/user/edit", formData);
+      setUser(result);
+      setClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -68,8 +56,8 @@ const EditProfile = ({ user, setClose, setUser }) => {
           <form onSubmit={editProfile} className="flex flex-col gap-5">
             <div>
               <UploadImage
-                profilePic={profilePic}
-                setProfilePic={setProfilePic}
+                profilePic={avatar}
+                setProfilePic={setAvatar}
                 setImage={setImage}
               />
             </div>

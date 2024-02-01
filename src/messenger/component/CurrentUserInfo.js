@@ -31,7 +31,7 @@ const CurrentUserInfo = () => {
     <div className="w-full flex gap-4 p-2 justify-between items-center dark:text-gray-50">
       <div className="flex gap-4 p-2 dark:text-gray-50">
         <ProfilePicture
-          url={user?.profilePicture}
+          src={user?.avatar}
           className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
         />
         <div className="">

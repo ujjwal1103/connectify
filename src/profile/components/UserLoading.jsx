@@ -47,7 +47,7 @@ h-full  w-96 flex dark:text-gray-50   lg:flex-row flex-col items-center lg:items
 export default UserLoading;
 
 export const PostLoading = () => (
-  <div className="pl-3 flex-1 h-full overflow-hidden">
+  <div className="flex-1 h-full overflow-hidden">
     <div className="grid lg:grid-cols-3 overflow-hidden gap-5 w-full">
       {[1, 2, 3, 4, 5, 6, 7,8,9].map((index) => {
         return (

@@ -35,7 +35,7 @@ const Self = () => {
         <div className="flex items-center dark:bg-slate-800 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg  p-2 rounded-lg w-80 mx-auto">
           <div className="flex items-center space-x-2">
             <ProfilePicture
-              url={user?.profilePicture}
+              src={user?.avatar}
               className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
             />
             <span className="flex flex-col">

@@ -42,7 +42,7 @@ const Notification = ({ setClose }) => {
           <li key={n._id} className="p-2 dark:bg-slate-700 dark:text-gray-50  flex justify-between gap-4 items-center rounded-md">
             <span>
               <img
-                src={n.from.profilePicture || avatar}
+                src={n.from.avatar || avatar}
                 alt=""
                 className="w-10 h-10 rounded-full "
               />

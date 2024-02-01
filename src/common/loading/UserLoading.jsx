@@ -1,5 +1,5 @@
 const UserLoading = () => (
-  <div className="flex items-center  dark:bg-slate-800 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg  p-2 rounded-lg w-80 mx-auto">
+  <div className="flex items-center  dark:bg-slate-800  justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg  p-2 rounded-lg w-80 mx-auto">
     <div className="flex items-center space-x-2">
       <div className="w-12 h-12 bg-zinc-950 rounded-full">
        

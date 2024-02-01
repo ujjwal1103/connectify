@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { SocketProvider } from "../context/SocketContext";
+import { getCurrentUserAndAccessToken } from "../utils/getCurrentUserId";
 
 const ProtectedRoute = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, accessToken } = getCurrentUserAndAccessToken();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user?.accessToken) {
+    if (!(user && accessToken)) {
       navigate("/login", { replace: true });
     }
-  }, [user?.accessToken]);
+  }, [user, accessToken]);
 
   return (
-    user?.accessToken && (
+    user && accessToken && (
       <SocketProvider>
         <Outlet />
       </SocketProvider>

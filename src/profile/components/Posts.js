@@ -1,59 +1,57 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import NoPosts from "./NoPosts";
 import Post from "./Post";
+import { useDispatch } from "react-redux";
+import { resetState, setPage } from "../../redux/services/postSlice";
 import { PostLoading } from "./UserLoading";
-import useMyPosts from "../../hooks/useMyPosts";
-import Loading from "../../common/Loading";
+import useInfinitePosts from "../../hooks/useInfinitePosts";
 
 const Posts = ({ userId }) => {
-  const [pageNum, setPageNum] = useState(1);
-  const { isLoading, posts, hasNextPage, emptyPosts } = useMyPosts(
-    pageNum,
-    userId
-  );
+  const { posts, loading, hasNext, page } = useInfinitePosts(userId);
+  const dispatch = useDispatch();
 
-  console.log(isLoading, "loading");
+  
 
-  const intObserver = useRef();
-
-  const lastPostRef = useCallback(
-    (post) => {
-      if (intObserver.current) intObserver.current.disconnect();
-
-      intObserver.current = new IntersectionObserver((p) => {
-        if (p[0].isIntersecting && hasNextPage) {
-          setPageNum((prev) => prev + 1);
+  const observer = useRef();
+  const lastPost = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNext) {
+          dispatch(setPage(page + 1));
         }
       });
 
-      if (post) intObserver.current.observe(post);
+      if (node) observer?.current.observe(node);
     },
-    [isLoading, hasNextPage]
+    [loading, hasNext]
   );
 
- 
-
-  if (emptyPosts) {
+  if (!loading && posts.length === 0) {
     return <NoPosts />;
   }
 
-  const renderPosts = posts?.map((post, index) => (
-    <Post
-      ref={posts.length === index + 1 ? lastPostRef : null}
-      key={post.id}
-      post={post}
-    />
-  ));
+  const renderPosts = posts?.map((post, index) => {
+    if (posts.length === index + 1) {
+      return <Post ref={lastPost} key={post.id} post={post} />;
+    } else {
+      return <Post key={post.id} post={post} />;
+    }
+  });
 
   return (
     <div
-      className={`flex-1 ${
+      className={`flex flex-1 flex-col lg:overflow-y-scroll ${
         posts?.length <= 6 ? "lg:h-full xl:h-auto" : "xl:h-full h-full"
-      } grid lg:grid-cols-2 xl:grid-cols-3 md:grid-cols-2 gap-4 pb-5 overflow-y-scroll`}
+      }`}
     >
-      {renderPosts}
-
-      {isLoading && <PostLoading />}
+      <div
+        className={`grid lg:grid-cols-2 xl:grid-cols-3 md:grid-cols-2 gap-4 pb-5 `}
+      >
+        {renderPosts}
+      </div>
+      {loading && <PostLoading />}
     </div>
   );
 };

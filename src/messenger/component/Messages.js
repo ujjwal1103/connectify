@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import { groupMessagesByDate } from "../../utils/groupMessagesByDate";
+import { getCurrentUserId } from "../../utils/getCurrentUserId";
 
 const Messages = () => {
-  const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const { messages } = useSelector((state) => state.chat);
   const [groupedMessages, setGroupedMessages] = useState([]);
   const messagesRef = useRef(null);
@@ -33,8 +33,8 @@ const Messages = () => {
           </h3>
           {groupedMessages[date].map((message) => (
             <Message
-            key={message._id}
-              currentUserMessage={message.from === currentUser._id}
+              key={message._id}
+              currentUserMessage={message.from === getCurrentUserId()}
               message={message}
             />
           ))}

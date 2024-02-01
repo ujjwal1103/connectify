@@ -95,7 +95,7 @@ const AddNewUser = ({ onClose }) => {
                 key={user._id}
               >
                 <ProfilePicture
-                  url={user?.profilePicture}
+                  url={user?.avatar}
                   className="inline-block h-8 w-8  rounded-full hover:scale-90 duration-500 object-cover"
                 />
                 <UsernameLink

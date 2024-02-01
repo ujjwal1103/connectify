@@ -6,10 +6,10 @@ import { DotsNine } from "../../icons";
 import ProfilePicture from "../../common/ProfilePicture";
 import UsernameLink from "../../shared/UsernameLink";
 import { useNavigate } from "react-router-dom";
+import { getCurrentUserId, isCurrentUser } from "../../utils/getCurrentUserId";
 
 const SingleChat = ({ chat }) => {
   const [options, setOptions] = useState(false);
-  const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectThisChat = () => {
@@ -27,12 +27,12 @@ const SingleChat = ({ chat }) => {
       onClick={selectThisChat}
     >
       <ProfilePicture
-        url={chat?.friend?.profilePicture}
+        url={chat?.friend?.avatar}
         className="inline-block h-10 w-10 rounded-full hover:scale-90 duration-500 object-cover"
       />
       <div className="flex-1">
         <h4 className="font-semibold">{chat?.friend?.username}</h4>
-        {chat?.lastMessage?.from !== currentUser._id && (
+        {!isCurrentUser(chat?.lastMessage?.from) && (
           <span className="text-sm overflow-ellipsis line-clamp-1">
             {chat?.lastMessage?.text}
           </span>

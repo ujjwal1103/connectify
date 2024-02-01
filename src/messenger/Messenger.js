@@ -12,14 +12,17 @@ import NewChatBtn from "./component/NewChatBtn";
 
 const NoSelectedChat = () => {
   return (
-    <div className="flex-1 dark:bg-gray-900 bg-gray-50 dark:text-gray-50 t h-screen flex justify-center items-center">
+    <div className="flex-1 dark:bg-gray-900 hidden bg-gray-50 dark:text-gray-50 t h-screen lg:flex justify-center items-center">
       <div className="flex flex-col justify-center items-center">
         <div className="w-20 h-20 border-2 border-white rounded-full flex justify-center items-center">
           <MessengerLine size={60} />
         </div>
         <h1>Your Messages</h1>
         <p>Send private photos and messages to a friend or group</p>
-        <NewChatBtn title="Send Messages" className="p-2 bg-blue-600 rounded-lg my-2" />
+        <NewChatBtn
+          title="Send Messages"
+          className="p-2 bg-blue-600 rounded-lg my-2"
+        />
       </div>
     </div>
   );
@@ -63,12 +66,15 @@ const Messenger = () => {
     fetchAllChats();
   }, [fetchAllChats]);
 
-
   return (
     <div className="bg-gray-100  dark:bg-slate-950 flex h-screen ">
-      <div className="flex-[0.5]  bg-gray-950 overflow-auto hidden lg:block xl:block md:block">
+      <div
+        className={`lg:flex-[0.5] md:flex-[0.5] xl:flex-[0.5] flex-1 ${
+          chatId && "hidden lg:block "
+        } bg-gray-950 overflow-auto  xl:block md:block`}
+      >
         <CurrentUserInfo user={currentUser} />
-        <hr />
+        <hr />  
         <div className="bg-gray-950">
           <Search searchTerm={searchTerm} onChange={handleChange} />
           {!searchTerm &&

@@ -9,14 +9,13 @@ import { addPostToUser } from "../../redux/services/authSlice";
 import EditImage from "./EditImage/EditImage";
 import { ImageFill, OutlineLoading3Quarters } from "../../icons";
 
-const CreatePost = ({}) => {
+const CreatePost = ({ onClose }) => {
   const [imageUrl, setImageUrl] = useState();
   const [caption, setCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [editImage, setEditImage] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const [newFile, setNewFile] = useState();
-  const dispatch = useDispatch();
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
@@ -38,11 +37,11 @@ const CreatePost = ({}) => {
       formData.append("postImage", newFile);
       formData.append("caption", caption || "");
       try {
-        const { data } = await makeRequest.post("/post", formData);
+        const data = await makeRequest.post("/post", formData);
 
         if (data?.isSuccess) {
-          dispatch(addPost(data.post));
-          dispatch(addPostToUser(data.post._id));
+
+          onClose();
         }
       } catch (error) {
         console.log(error);
@@ -89,7 +88,7 @@ const CreatePost = ({}) => {
           <div className="flex flex-col h-full">
             <div className="p-2 m-2 border border-gray-800 rounded-lg flex items-start">
               <img
-                src={user?.profilePicture || avatar}
+                src={user?.avatar || avatar}
                 alt=""
                 width={40}
                 className="rounded-full"

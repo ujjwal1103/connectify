@@ -5,11 +5,11 @@ import MessageInput from "./MessageInput";
 import { useCallback, useEffect } from "react";
 import { makeRequest } from "../../config/api.config";
 import { setMessages } from "../../redux/services/chatSlice";
+import { getCurrentUserId } from "../../utils/getCurrentUserId";
 
 const ChatWindow = () => {
   const { selectedChat } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
-  const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
 
   const getAllMessages = useCallback(async () => {
     try {
@@ -35,7 +35,7 @@ const ChatWindow = () => {
       <div className="bg-gray-500">
         <MessageInput
           userId={selectedChat?.friend?._id}
-          currentUserId={currentUser._id}
+          currentUserId={getCurrentUserId()}
           chatId={selectedChat?._id}
           getMessages={getAllMessages}
         />

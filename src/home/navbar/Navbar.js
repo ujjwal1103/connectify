@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import {  useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../../redux/services/authSlice";
 import { resetState } from "../../redux/services/postSlice";
 import { resetFeedState } from "../../redux/services/feedSlice";
@@ -22,9 +22,7 @@ import {
   Search,
   SignOutAlt,
 } from "../../icons";
-import Logo from "../../icons/Logo";
 import { useClickOutside } from "@react-hookz/web";
-import FocusTrap from "../../shared/FocusTrap";
 import Modal from "../../shared/Modal";
 
 const Navbar = () => {
@@ -64,11 +62,6 @@ const Navbar = () => {
   };
   return (
     <header className="p-4 lg:sticky left-0 z-50 fixed bottom-0 right-0">
-      <div className="w-full lg:hidden md:hidden  p-2 h-10 bg-slate-950 fixed mb-20 left-0 top-0">
-        <div className="flex justify-center items-center">
-          <Logo className="fill-white llg:hidden" size={"60%"} />
-        </div>
-      </div>
       <nav className="bg-violet-700 bg-opacity-70  dark:bg-opacity-70 backdrop-blur-lg p-4 flex justify-between gap-10 dark:bg-slate-700  rounded-lg sticky  ">
         <div className="hidden lg:block">
           <SearchInput />

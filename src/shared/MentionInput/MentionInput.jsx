@@ -1,28 +1,29 @@
 import { useDebouncedState } from "@react-hookz/web";
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { makeRequest } from "../../config/api.config";
 
-const MentionInput = () => {
-  const inputRef = useRef(null);
+const MentionInput = (
+  { text, setText, placeholder, setCursorPosition, onClick, onBlur, mentionedUsers, setMentionedUsers },
+  ref
+) => {
   const [query, setQuery] = useDebouncedState("", 600, 500);
-  const [text, setText] = useState();
   const [users, setUsers] = useState([]);
   const [mentionStartIndex, setMentionStartIndex] = useState(null);
-  const [mentionedUsers, setMentionedUsers] = useState([]);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
 
-    if (inputValue === "") {
+    console.log(inputValue);
+
+    if (inputValue.trim() === "") {
       setMentionedUsers([]);
     }
     setText(inputValue);
+    setCursorPosition(e.target.selectionStart);
 
     // Detect "@" symbol in the input
     const atIndex = inputValue.lastIndexOf("@");
 
-    console.log(atIndex);
 
     if (atIndex !== -1) {
       // "@" found at the end, consider it a mention trigger
@@ -37,6 +38,10 @@ const MentionInput = () => {
       setMentionStartIndex(null);
       setQuery("");
     }
+
+
+    const remainingUsers = mentionedUsers.filter((user) => inputValue.includes(`${user}`));
+    setMentionedUsers(remainingUsers);
   };
 
   useEffect(() => {
@@ -60,10 +65,9 @@ const MentionInput = () => {
 
   const handleUserClick = (selectedUsername) => {
     const user = mentionedUsers.some((u) => u === selectedUsername);
-    if(!user){
-        setMentionedUsers((prev) => [...prev, selectedUsername]);
+    if (!user) {
+      setMentionedUsers((prev) => [...prev, selectedUsername]);
     }
-  
 
     const nextSpaceIndex = text.indexOf(" ", mentionStartIndex);
 
@@ -76,53 +80,28 @@ const MentionInput = () => {
       selectedUsername +
       text.slice(insertionIndex);
 
-    setText(updatedText.trim()); // Trim to remove any leading/trailing whitespace
+    setText(updatedText.trim());
     setMentionStartIndex(null);
     setUsers([]);
-    inputRef.current.focus();
+    ref.current.focus();
   };
 
-  useEffect(() => {
-    // Calculate position when mentionStartIndex changes
-    if (mentionStartIndex !== null && users.length > 0 && inputRef.current) {
-      const inputRect = inputRef.current.getBoundingClientRect();
-      const inputTop = inputRect.top + window.scrollY;
-      const inputBottom = inputRect.bottom + window.scrollY;
-      const spaceAbove = inputTop;
-      const spaceBelow = window.innerHeight - inputBottom;
-
-      const newPosition = {
-        left: inputRect.left + window.scrollX,
-      };
-
-      if (spaceAbove > spaceBelow) {
-        newPosition.top = inputTop - 200; // Adjust the offset as needed
-      } else {
-        newPosition.top = inputBottom; // Adjust the offset as needed
-      }
-
-      setPosition(newPosition);
-    }
-  }, [mentionStartIndex, users]);
-
-  console.log(mentionedUsers);
-
   return (
-    <div className="bg-slate-950">
-      <div>
-        <textarea
-          type="text"
-          onChange={handleInputChange}
-          value={text}
-          className="bg-transparent w-full"
-          ref={inputRef}
-        />
-      </div>
+    <div className="w-full">
+      <textarea
+        type="text"
+        onChange={handleInputChange}
+        value={text}
+        className="bg-transparent p-2 border-none w-full h-full focus:outline-none resize-none "
+        ref={ref}
+        rows={1}
+        placeholder={placeholder}
+        onClick={onClick}
+        onBlur={onBlur}
+      />
+
       {mentionStartIndex !== null && users.length > 0 && (
-        <div
-          className="p-2 divide-y-2"
-          style={{ top: `${position.top}px`, left: `${position.left}px` }}
-        >
+        <div className="p-2 absolute divide-y-2 z-10 w-96 mt-2 bg-zinc-950 rounded-md h-auto min-h-fit max-h-52 overflow-y-scroll">
           {users.map((u) => (
             <div
               className="p-1"
@@ -138,4 +117,4 @@ const MentionInput = () => {
   );
 };
 
-export default MentionInput;
+export default forwardRef(MentionInput);

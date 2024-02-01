@@ -43,7 +43,7 @@ const Post = ({ post },ref) => {
   return (
     <div ref={ref && ref} className="relative group w-full h-[270px] flex items-center rounded shadow-xl justify-center">
       <img
-        src={post.imageUrl}
+        src={post.imageUrl[0]}
         alt=""
         className="object-cover w-full h-full rounded group-hover:opacity-80"
         onClick={handleSetPost}

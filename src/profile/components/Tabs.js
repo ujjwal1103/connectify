@@ -86,7 +86,7 @@ const Tabs = ({ userId, username, setClose, tab }) => {
               <li key={following._id} className="flex gap-3 p-2 items-center">
                 <div className="w-10 h-10 rounded-full overflow-clip">
                   <img
-                    src={following.profilePicture || avatar}
+                    src={following.avatar || avatar}
                     alt=""
                     className="w-10 h-10"
                   />

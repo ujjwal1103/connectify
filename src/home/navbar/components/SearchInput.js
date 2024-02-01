@@ -1,7 +1,6 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import Input from "../../../common/InputFields/Input";
 import { makeRequest } from "../../../config/api.config";
-import { Link } from "react-router-dom";
 import blackUser from "../../../assets/no_avatar.png";
 import { Search } from "../../../icons";
 import UsernameLink from "../../../shared/UsernameLink";
@@ -38,7 +37,7 @@ const SearchInput = () => {
   };
 
   return (
-    <div className="w-96 relative  lg:block">
+    <div className="w-96 relative lg:block">
       <Input
         type="search"
         onChange={handleSearch}
@@ -54,7 +53,7 @@ const SearchInput = () => {
       />
 
       {showSearchResults && searchResults.length > 0 && (
-        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-scroll bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
+        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-y-scroll bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
           {searchResults?.map((result) => (
             <div
               onClick={() => {
@@ -64,7 +63,7 @@ const SearchInput = () => {
               className="flex gap-6 items-center"
             >
               <img
-                src={result?.profilePicture || blackUser}
+                src={result?.avatar || blackUser}
                 alt=""
                 className="w-10 h-10 rounded-full object-contain bg-gray-400 "
               />

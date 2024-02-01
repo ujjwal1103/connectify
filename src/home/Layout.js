@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import Navbar from "./navbar/Navbar";
 import { Outlet } from "react-router-dom";
-import { FooterThree } from "../common/Footer";
+// import { FooterThree } from "../common/Footer";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
+import Logo from "../icons/Logo";
 
 const Layout = () => {
   const { socket, setUsers } = useSocket();
@@ -15,13 +16,14 @@ const Layout = () => {
       });
     }
   }, [socket]);
+
   useEffect(() => {
     if (socket) {
       socket.on("allusers", (data) => {
         setUsers(data);
       });
     }
-  }, [socket]);
+  }, [socket,setUsers]);
 
   useEffect(() => {
     if (socket) {
@@ -34,9 +36,14 @@ const Layout = () => {
 
   return (
     <>
+      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit bg-slate-950  ">
+        <div className="flex justify-center items-center">
+          <Logo className="fill-white llg:hidden" size={"40%"} />
+        </div>
+      </header>
       <Navbar />
       <Outlet />
-      <FooterThree />
+      {/* <FooterThree /> */}
     </>
   );
 };

@@ -49,7 +49,7 @@ const Story = () => {
           className="flex flex-col items-center gap-2 dark:text-white "
         >
           <img
-            src={story?.user?.profilePicture || avatar}
+            src={story?.user?.avatar || avatar}
             alt=""
             className="w-20 h-20 outline outline-offset-2 outline-violet-500 rounded-full"
             onClick={() => handleStory(story)}

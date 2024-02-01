@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "./constant";
+import { getCurrentUserAndAccessToken } from "../utils/getCurrentUserId";
 
 const handleUnauthorizedAccess = () => {
   toast.error("Unauthorized Access");
@@ -14,12 +15,12 @@ const makeRequest = axios.create({
 
 makeRequest.interceptors.request.use(
   (config) => {
-    const userData = localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : null;
+    const { user, accessToken } = getCurrentUserAndAccessToken();
 
-    if (userData && userData.accessToken) {
-      config.headers.Authorization = userData.accessToken;
+  
+
+    if (user && accessToken) {
+      config.headers.Authorization = accessToken;
     }
     return config;
   },

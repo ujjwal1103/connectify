@@ -5,22 +5,24 @@ const initialState = {
   posts: [],
   loading: true,
   error: null,
-  hasNextPage: true,
+  hasNext: false,
   page: 1,
-  totalPages: 0,
 };
 
 const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
+    // setPosts: (state, action) => {
+    //   state.loading = false;
+
+    //   const newPosts = action.payload.posts?.filter(
+    //     (post) => !state.posts.some((p) => p._id === post._id)
+    //   );
+    //   state.posts = [...state.posts, ...newPosts];
+    // },
     setPosts: (state, action) => {
-      state.loading = false;
-      const newPosts = action.payload.posts.filter(
-        (post) => !state.posts.some((p) => p._id === post._id)
-      );
-      state.posts = [...state.posts, ...newPosts];
-      state.totalPages = action.payload.totalPages;
+      state.posts = [...state.posts, ...action.payload];
     },
     addPost: (state, action) => {
       state.posts.push(action.payload);
@@ -77,13 +79,16 @@ const postSlice = createSlice({
     setPage: (state, action) => {
       state.page = action.payload;
     },
+    setHasNext: (state, action) => {
+      state.hasNext = action.payload;
+    },
     resetState: (state, action) => {
-      state = {
-        post: {},
-        posts: [],
-        loading: true,
-        error: null,
-      };
+      return initialState;
+    },
+    resetPosts: (state, action) => {
+      state.loading = true;
+      state.posts = action.payload;
+      state.hasNext = false;
     },
   },
 });
@@ -99,6 +104,8 @@ export const {
   unlikePost,
   setPage,
   setLoading,
+  resetPosts,
+  setHasNext,
 } = postSlice.actions;
 
 export default postSlice.reducer;

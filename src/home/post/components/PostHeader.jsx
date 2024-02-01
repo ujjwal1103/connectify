@@ -8,7 +8,7 @@ const PostHeader = ({ post }) => {
       <div className="flex gap-6 items-center">
         <div>
           <ProfilePicture
-            url={post?.user?.profilePicture}
+            src={post?.user?.avatar}
             className="rounded-full w-10 h-10 object-cover"
           />
         </div>

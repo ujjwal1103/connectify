@@ -10,9 +10,10 @@ import { setFeed } from "../../redux/services/feedSlice";
 import Modal from "../../shared/Modal";
 import platform from "platform";
 import { useNavigate } from "react-router-dom";
+import { getCurrentUserId } from "../../utils/getCurrentUserId";
 
 const Post = ({ post }, ref) => {
-  const { user } = JSON.parse(localStorage.getItem("user"));
+  const userId = getCurrentUserId();
   const { feed, feeds } = useSelector((state) => state.feed);
   const [showPost, setShowPost] = useState(false);
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Post = ({ post }, ref) => {
     } else {
       showCurrentPost();
       dispatch(setFeed(post));
-    } 
+    }
   };
 
   const showCurrentPost = () => {
@@ -32,20 +33,20 @@ const Post = ({ post }, ref) => {
   };
 
   return (
-    <div
+    <article
       id={post._id}
       ref={ref && ref}
       className="border bg-gray-50 h-fit dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
     >
-      <div className="p-3">
+      <div className="lg:p-3 md:p-3 p-2">
         <PostHeader post={post} />
         <PostContent contentUrl={post?.imageUrl} onClick={handleSetPost} />
         <PostActions
           post={post}
-          userId={user._id}
+          userId={userId}
           showCurrentPost={handleSetPost}
         />
-        <PostInteraction user={user} post={post} />
+        <PostInteraction post={post} />
       </div>
       {showPost && (
         <Modal onClose={showCurrentPost}>
@@ -57,7 +58,7 @@ const Post = ({ post }, ref) => {
           />
         </Modal>
       )}
-    </div>
+    </article>
   );
 };
 

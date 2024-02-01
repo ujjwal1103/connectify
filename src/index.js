@@ -15,21 +15,22 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <AuthProvider>
-      <BrowserRouter>
-        <App />
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme={document.body.classList.contains("dark") ? "dark" : "light"}
-        />
-      </BrowserRouter>
+      
+        <BrowserRouter>
+          <App />
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme={document.body.classList.contains("dark") ? "dark" : "light"}
+          />
+        </BrowserRouter>
     </AuthProvider>
   </Provider>
 );

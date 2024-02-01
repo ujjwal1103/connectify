@@ -5,7 +5,7 @@ import { setPosts } from "../redux/services/postSlice";
 
 export const getPostsPage = async (page = 1, userId, options = {}) => {
   const response = await makeRequest.get(
-    `/posts/${userId || "user"}?page=${page}&limit=9`,
+    `/posts/${userId || "user"}?page=${page}&limit=3`,
     options
   );
   return response;

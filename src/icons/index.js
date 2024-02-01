@@ -21,7 +21,7 @@ import {
   BsEmojiSmile as EmojiSmile,
   BsCamera as Camera,
   BsBookmark as BookMark,
-  BsBookmarkFill as BookMarkFill
+  BsBookmarkFill as BookMarkFill,
 } from "react-icons/bs";
 import {
   AiOutlineLoading as OutlineLoading,
@@ -50,6 +50,10 @@ import {
   IoChevronForward as ChevronForward,
   IoChevronBack as ChevronBack,
 } from "react-icons/io5";
+import {
+  FaRegCircleDot as CircleDot,
+  FaRegCircle as Circle,
+} from "react-icons/fa6";
 import { AiOutlineMenuFold as OutlineMenuFold } from "react-icons/ai";
 export {
   AngleLeft,
@@ -58,6 +62,8 @@ export {
   BookMarkFill,
   Camera,
   Chat,
+  CircleDot,
+  Circle,
   ChevronBackCircle,
   ChevronForwardCircle,
   ChevronBack,

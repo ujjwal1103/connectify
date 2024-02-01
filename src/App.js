@@ -13,6 +13,7 @@ import { Messenger } from "./messenger";
 import AuthRoutes from "./protectedRoutes/AuthRoutes";
 import ChatWindow from "./messenger/component/ChatWindow.js";
 import Post from "./module/post/Post.jsx";
+import Exp from "./exp/Exp.jsx";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         </Route>
       </Route>
       <Route path="/unauthorized" element={<UnAuthorized />} />
+      <Route path="exp" element={<Exp />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

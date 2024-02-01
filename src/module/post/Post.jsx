@@ -27,7 +27,7 @@ const Post = () => {
     <div className="h-screen p-3 ">
       <div className="flex p-2 items-center gap-3">
         <ProfilePicture
-          url={post?.user?.profilePicture}
+          src={post?.user?.avatar}
           className="rounded-full w-10 h-10 object-cover"
         />
         <div>

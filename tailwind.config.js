@@ -6,7 +6,10 @@ module.exports = {
     extend: {
       height: {
         page: "calc(100vh - 6.5rem)",
+        like: "calc(100vh - 3rem)",
+        post: "calc(100vh - 37.54px)",
       },
+
       backgroundImage: {
         "hero-pattern":
           "url('https://img.freepik.com/free-vector/realistic-style-technology-particle-background_23-2148426704.jpg?size=626&ext=jpg')",
@@ -21,5 +24,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };

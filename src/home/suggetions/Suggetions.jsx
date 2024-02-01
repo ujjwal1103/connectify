@@ -14,7 +14,7 @@ const Suggetions = () => {
   );
 
   return (
-    <div className="hidden lg:block">
+    <div className="hidden md:block lg:block">
       <Self />
       {suggestedusers?.length > 0 && (
         <div className="p-2 mx-2 flex justify-between dark:text-gray-100">

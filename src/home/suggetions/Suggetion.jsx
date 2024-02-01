@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
-// import { sendFriendRequest } from "../../profile/services/postServices";
-import { useDispatch } from "react-redux";
 
 import ProfilePicture from "../../common/ProfilePicture";
 import { useState } from "react";
 import { followUser } from "../../profile/services/postServices";
 
 const Suggetion = ({ user }) => {
-  const { _id: userId, profilePicture, username, name } = user;
+  const { _id: userId, avatar, username, name } = user;
   const [follow, setFollow] = useState(false);
 
   const handleFollowRequest = async () => {
@@ -23,7 +21,7 @@ const Suggetion = ({ user }) => {
       <div className="flex items-center dark:bg-slate-800 justify-between space-x-2  duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg w-80 mx-auto">
         <div className="flex items-center space-x-2">
           <ProfilePicture
-            url={profilePicture}
+            src={avatar}
             className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
           />
           <Link to={`/${username}`} className="flex flex-col">

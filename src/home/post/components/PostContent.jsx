@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import VideoPlayer from "../../components/VideoPlayer";
+import { ImageSlider } from "../../../common/ImageSlider/ImageSlider";
 
 const PostContent = ({ contentUrl, onClick, type = "video" }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -10,19 +11,14 @@ const PostContent = ({ contentUrl, onClick, type = "video" }) => {
   // }
 
   return (
-    <div className=" w-full rounded-md " onClick={onClick}>
-      <div className="relative w-full min-h-fit max-h-[500px]">
-        <img
-          src={contentUrl}
-          onLoad={() => setIsLoading(false)}
-          alt=""
-          loading="lazy"
-          height={500}
-          className=" object-contain w-full max-h-[500px] rounded-2xl bg-black "
-        />
-        {isLoading && (
+    <div className=" w-full rounded-md ">
+      <div className="relative w-full min-h-fit max-h-[500px] ">
+        <div className="overflow-hidden bg-clip-content">
+          <ImageSlider images={contentUrl}  />
+        </div>
+        {/* {isLoading && (
           <div className="bg-slate-800 top-0 bottom-0 absolute w-full animate-pulse  "></div>
-        )}
+        )} */}
       </div>
     </div>
   );

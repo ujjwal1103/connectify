@@ -2,14 +2,11 @@ import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import { useNavigate, useParams } from "react-router-dom";
 import { followUser, unfollowUser } from "./services/postServices";
-import Followers from "./components/Followers";
-import Following from "./components/Following";
-import { useState, useEffect, useCallback } from "react";
+
+import { useEffect, useCallback } from "react";
 import ProfileCard from "./components/ProfileCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addChat } from "../redux/services/chatSlice";
-import Loading from "../common/Loading";
-import ProfilePicture from "../common/ProfilePicture";
 import UserLoading from "./components/UserLoading";
 import {
   profileState,
@@ -17,21 +14,22 @@ import {
   setOtherUser,
 } from "../redux/services/profileSlice";
 import PageNotFound from "../PageNotFound/PageNotFound";
+import { resetState } from "../redux/services/postSlice";
 
-const images = [
-  "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
-  "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
-  "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
-  "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
-  "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
-  "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
-  "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
-  "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
-  "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
-  "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
-  "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
-  "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
-];
+// const images = [
+//   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
+//   "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
+// ];
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -46,7 +44,7 @@ const UserProfile = () => {
     } catch (error) {
       dispatch(setError(error));
     }
-  }, [username]);
+  }, [dispatch, username]);
 
   const handleFollowRequest = async () => {
     dispatch(
@@ -57,15 +55,8 @@ const UserProfile = () => {
       })
     );
     const data = await followUser(user?._id);
-
-    console.log("RESPONSE", data);
     if (data.follow) {
-      dispatch(
-        setOtherUser({
-          ...user,
-          isFollow: true,
-        })
-      );
+      getUser();
     }
   };
 
@@ -78,18 +69,8 @@ const UserProfile = () => {
       })
     );
     const data = await unfollowUser(user?._id);
-    console.log("RESPONSE", data);
-
     if (data.unfollow) {
-      dispatch(setOtherUser({ ...user, isFollow: !data.unfollow }));
-    } else {
-      dispatch(
-        setOtherUser({
-          ...user,
-          isFollow: true,
-          followers: Number(user.followers) + 1,
-        })
-      );
+      getUser();
     }
   };
 
@@ -122,10 +103,10 @@ const UserProfile = () => {
   return (
     <div
       className=" 
-      w-full flex h-page px-4 pt-4 lg:flex-row flex-col gap-4 items-center lg:items-start "
+      w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-slate-950 px-4 pt-4 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
-      <div className=" sticky top-2  w-[450px] flex-col lg:mx-auto flex justify-center  items-center ">
-        <ProfileCard user={user}>
+      <div className=" lg:sticky top-2 lg:w-[450px] w-72 flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
+        <ProfileCard user={user} canOpen={user?.isPrivate && !user?.isFollow}>
           <div className="flex gap-3 justify-center items-center">
             {user?.isFollow ? (
               <button
@@ -153,8 +134,17 @@ const UserProfile = () => {
           </div>
         </ProfileCard>
       </div>
-
-      <Posts userId={user?._id} />
+          
+      {(user?.isPrivate && !user?.isFollow) ? (
+        <div className="lg:flex-1 w-full border border-white h-52 lg:mt-3 rounded-xl grid place-content-center">
+          <div className="flex flex-col gap-5 text-center">
+            <span>This Account is Private</span>
+            <span>Follow to see their photos and videos.</span>
+          </div>
+        </div>
+      ) : (
+        <Posts userId={user?._id} />
+      )}
     </div>
   );
 };

@@ -4,7 +4,7 @@ const ChatHeader = ({ otherUser }) => {
   return (
     <div className="w-full flex bg-gray-50 dark:bg-slate-950 items-center p-2">
       <ProfilePicture
-        url={otherUser?.profilePicture}
+        url={otherUser?.avatar}
         className="inline-block h-10 w-10 rounded-full hover:scale-90 duration-500 object-cover"
       />
       <div className="mx-2 dark:text-gray-50">

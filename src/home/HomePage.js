@@ -1,10 +1,9 @@
 import Post from "./post/Post";
 import Suggetions from "./suggetions/Suggetions";
-import Story from "./story/Story";
 import Sidebar from "./components/Sidebar";
 import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
-import MentionInput from "../shared/MentionInput/MentionInput";
+import NoPosts from "../profile/components/NoPosts";
 
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
@@ -53,20 +52,16 @@ const HomePage = () => {
   });
 
   return (
-    <div className=" flex w-full p-4 lg:gap-10 flex-col z-10">
-      <div className=" hidden  justify-start px-2">
+    <main className=" flex w-full p-4 lg:gap-10 flex-col z-10 h-post md:h-screen lg:h-page overflow-y-scroll">
+      {/* <div className="hidden justify-start px-2">
         <Story />
-      </div>
-
-      <div className="">
-        <MentionInput />
-      </div>
-
+      </div> */}
       <div className="flex lg:gap-10">
         <Sidebar />
-        <div className="flex flex-1  gap-10 justify-between z-10">
-          <div className=" grid grid-cols-1 flex-1 flex-col  gap-5 ">
+        <section className="flex flex-1 gap-10 justify-between z-10">
+          <div className="grid grid-cols-1 flex-1 flex-col  gap-5 ">
             {content}
+
             {isLoading && (
               <div className="text-center text-white">
                 <div className=" grid grid-cols-1 flex-1 flex-col  gap-5">
@@ -91,12 +86,18 @@ const HomePage = () => {
                 </div>
               </div>
             )}
+            {feeds.length === 0 && (
+              <div className="bg-slate-800 rounded-lg">
+                <NoPosts />
+              </div>
+            )}
+            <section className="invisible relative overflow-hidden bg-white lg:py-8 py-7 dark:bg-transparent dark:text-white"></section>
           </div>
 
           <Suggetions />
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 

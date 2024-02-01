@@ -1,5 +1,3 @@
-import { storage } from "../config/firebase.config";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Resizer from "react-image-file-resizer";
 
 export const resizeFile = (file, type) =>
@@ -10,21 +8,10 @@ export const resizeFile = (file, type) =>
       300,
       "jpg",
       100,
-      0,  
+      0,
       (uri) => {
         resolve(uri);
       },
       type
     );
   });
-
-export const imageFileUpload = async (file, folderName) => {
-  const resizedImage = await resizeFile(file);
-  const fileRef = ref(storage, `${folderName}/${resizedImage.name}`);
-  const res = await uploadBytes(fileRef, resizedImage);
-  if (res) {
-    const url = await getDownloadURL(fileRef);
-    return url;
-  }
-  return null;
-};

@@ -114,7 +114,7 @@ const Stories = ({ setClose }) => {
           <div className=" w-full p-2 flex  items-center justify-between">
             <div className="flex items-center gap-6">
               <img
-                src={story?.user?.profilePicture}
+                src={story?.user?.avatar}
                 alt=""
                 className="w-12 h-12 rounded-full "
               />

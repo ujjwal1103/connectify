@@ -1,36 +1,15 @@
 import { useState } from "react";
-import { makeRequest } from "../../../config/api.config";
-import { EmojiSmile } from "../../../icons";
+
 import UsernameLink from "./../../../shared/UsernameLink";
 import Modal from "../../../shared/Modal";
 import Likes from "./Likes";
+import CommentInput from "./CommentInput";
 
 const PostInteraction = ({ post: { _id, user, like, caption } }) => {
-  const [commentText, setCommentText] = useState(null);
   const [openLikes, setOpenLikes] = useState(false);
-  const handleChange = (e) => {
-    if (e.target.value.startsWith("@")) {
-      console.log("show users");
-    }
-    setCommentText(e.target.value);
-  };
-
-  const sendComment = async () => {
-    try {
-      const { data } = await makeRequest.post(`/comment`, {
-        post: _id,
-        comment: commentText,
-      });
-      if (data.isSuccess) {
-        setCommentText("");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
-    <div className="flex flex-col py-2  dark:text-gray-50">
+    <div className="flex flex-col py-2 justify-center  dark:text-gray-50">
       <button className="text-left" onClick={() => setOpenLikes(true)}>
         {like === 0 ? "" : `${like} ${like?.length === 1 ? "like" : "likes"}`}
       </button>
@@ -52,18 +31,9 @@ const PostInteraction = ({ post: { _id, user, like, caption } }) => {
         </span>
       </span>
 
-      <div className="flex justify-between gap-3 items-center">
-        <input
-          onChange={handleChange}
-          type="text"
-          className="bg-transparent border-none p-1  w-full focus:border-none outline-none focus:ring-0"
-          placeholder="Add a comment..."
-          value={commentText}
-        />
-        {commentText && <button onClick={sendComment}> post </button>}
-        <button>
-          <EmojiSmile />
-        </button>
+      <div className="pt-2">
+        
+        <CommentInput postId={_id} />
       </div>
 
       {openLikes && (
