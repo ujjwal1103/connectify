@@ -14,6 +14,7 @@ import AuthRoutes from "./protectedRoutes/AuthRoutes";
 import ChatWindow from "./messenger/component/ChatWindow.js";
 import Post from "./module/post/Post.jsx";
 import Exp from "./exp/Exp.jsx";
+import Peoples from "./module/People/index.js";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="profile" element={<Profile />} />
           <Route path=":username" element={<UserProfile />} />
           <Route path="search" element={<Search />} />
+          <Route path="expore/people" element={<Peoples/>} />
         </Route>
         <Route path="messenger" element={<Messenger />}>
           <Route path=":chatId" element={<ChatWindow />} />

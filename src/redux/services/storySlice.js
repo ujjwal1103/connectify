@@ -37,10 +37,11 @@ const storySlice = createSlice({
 
       state.story = state.stories[index + 1];
     },
+    reset: () => initialState,
   },
 });
 
-export const { setStories, setStory, setPreviousStory, setNextStory } =
+export const { setStories, setStory, setPreviousStory, setNextStory, reset } =
   storySlice.actions;
 
 export default storySlice.reducer;

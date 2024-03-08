@@ -5,11 +5,13 @@ import {
   likePost as likeCurrentPost,
   unlikePost as dislikeCurrentPost,
 } from "../../../redux/services/feedSlice";
-import { Chat, Heart, HeartFill, Send } from "../../../icons";
+import { BookMark, BookMarkFill, Chat, Heart, HeartFill, Send } from "../../../icons";
 import { useSocket } from "../../../context/SocketContext";
 import { sendNotification } from "../../notification/Services";
+import { useState } from "react";
 
 const PostActions = ({ post, userId, showCurrentPost }) => {
+  const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
 
   const { socket, isUserOnline } = useSocket();
@@ -61,11 +63,11 @@ const PostActions = ({ post, userId, showCurrentPost }) => {
         />
         <Send size={24} className="hover:text-gray-600 dark:text-gray-50" />
       </div>
-      <Save
-        size={24}
-        fill={true}
-        className="hover:text-gray-600 dark:text-gray-50"
-      />
+      {isBookMarked ? (
+        <BookMarkFill size={24} onClick={() => setIsBookMarked(false)} />
+      ) : (
+        <BookMark size={24} color="" onClick={() => setIsBookMarked(true)} />
+      )}
     </div>
   );
 };

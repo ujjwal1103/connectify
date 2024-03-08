@@ -1,24 +1,22 @@
 import { forwardRef } from "react";
 
-const MultiLineInput = ({ setText, value, className }, ref) => {
+const MultiLineInput = ({ onChange, value, className, name }, ref) => {
   const handleChange = (e) => {
     const lines = e.target.value.split("\n").slice(0, 5);
-    setText(lines.join("\n"));
+    e.target.value = lines.join("\n");
+    console.log(e);
+    onChange(e);
   };
 
   return (
-    <div className="flex-1">
-      <textarea
-        cols="3"
-        value={value}
-        onChange={handleChange}
-        placeholder="write a caption... "
-        className={
-          className 
-         
-        }
-      />
-    </div>
+    <textarea
+      cols="5"
+      value={value}
+      onChange={handleChange}
+      placeholder="write a caption... "
+      className={className}
+      name="bio"
+    />
   );
 };
 

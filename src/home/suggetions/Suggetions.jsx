@@ -3,11 +3,12 @@ import Self from "../self/Self";
 import { setSuggetions } from "../../redux/services/suggetionSlice";
 import { useFetchData } from "../../utils/useFetchData";
 import UserLoading from "../../common/loading/UserLoading";
+import { Link } from "react-router-dom";
 
 const Suggetions = () => {
   const { user } = JSON.parse(localStorage.getItem("user"));
   const { suggestedusers, loading } = useFetchData(
-    "users",
+    "users?limit=5",
     "users",
     "suggetions",
     setSuggetions
@@ -19,7 +20,7 @@ const Suggetions = () => {
       {suggestedusers?.length > 0 && (
         <div className="p-2 mx-2 flex justify-between dark:text-gray-100">
           <span>Suggested for you</span>
-          <span>see all</span>
+          <Link to="/expore/people">see all</Link>
         </div>
       )}
       {loading && (
@@ -29,14 +30,15 @@ const Suggetions = () => {
           ))}
         </div>
       )}
-      {!loading && suggestedusers?.map((u) => (
-        <Suggetion
-          key={u?._id}
-          user={u}
-          username={user?.username}
-          userId={user?._id}
-        />
-      ))}
+      {!loading &&
+        suggestedusers?.map((u) => (
+          <Suggetion
+            key={u?._id}
+            user={u}
+            username={user?.username}
+            userId={user?._id}
+          />
+        ))}
     </div>
   );
 };

@@ -18,7 +18,7 @@ const Suggetion = ({ user }) => {
 
   return (
     <div className="">
-      <div className="flex items-center dark:bg-slate-800 justify-between space-x-2  duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg w-80 mx-auto">
+      <div className="flex items-center dark:bg-zinc-900 justify-between space-x-2  duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg w-80 mx-auto">
         <div className="flex items-center space-x-2">
           <ProfilePicture
             src={avatar}

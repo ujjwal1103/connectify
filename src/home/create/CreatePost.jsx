@@ -1,152 +1,177 @@
 import React, { useState } from "react";
-import avatar from "../../assets/man.png";
-import { makeRequest } from "../../config/api.config";
+import imageIcon from "../../assets/gallery.png";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
-import { useDispatch, useSelector } from "react-redux";
+import { makeRequest } from "../../config/api.config";
+
+import { motion } from "framer-motion";
+import { EmojiSmile } from "../../icons";
+import ImageCrop from "../../shared/ImageCrop";
+import { blobToFile } from "../../utils/blobToFile";
+import { useDispatch } from "react-redux";
 import { addPost } from "../../redux/services/postSlice";
-import { resizeFile } from "../../services/postServices";
-import { addPostToUser } from "../../redux/services/authSlice";
-import EditImage from "./EditImage/EditImage";
-import { ImageFill, OutlineLoading3Quarters } from "../../icons";
+import { useLocation } from "react-router-dom";
 
 const CreatePost = ({ onClose }) => {
   const [imageUrl, setImageUrl] = useState();
   const [caption, setCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [editImage, setEditImage] = useState(false);
-  const { user } = useSelector((state) => state.auth);
   const [newFile, setNewFile] = useState();
-
+  const [selectedFile, setSelectedFile] = useState();
+  const [openC, setOpenC] = useState(false);
+  const [editCaption, setEditCaption] = useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
   const handleImagePick = async (e) => {
     setIsLoading(true);
     let file = e.target.files[0];
-    file = await resizeFile(file, "file");
-    setNewFile(file);
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      let dataURL = reader.result;
-      setImageUrl(dataURL);
-      setIsLoading(false);
-    };
+    setSelectedFile(file);
+    const dataURL = await readFileAsDataURL(file);
+    setImageUrl(dataURL);
+    setIsLoading(false);
+    setOpenC(true);
+  };
+
+  const readFileAsDataURL = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   };
 
   const handlePost = async () => {
-    if (imageUrl) {
+    if (!imageUrl) {
+      alert("Please select an image");
+    }
+    try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append("postImage", newFile);
       formData.append("caption", caption || "");
-      try {
-        const data = await makeRequest.post("/post", formData);
-
-        if (data?.isSuccess) {
-
-          onClose();
-        }
-      } catch (error) {
-        console.log(error);
+      const data = await makeRequest.post("/post", formData);
+      if (data?.isSuccess) {
+        location.pathname === "/profile" && dispatch(addPost(data.post));
+        onClose();
+        setIsLoading(false);
       }
-    } else {
-      alert("Please select an image");
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
     }
   };
 
   return (
-    <div className="">
-      <div className="bg-white rounded-2xl dark:bg-gray-600">
-        <div className="h-[83%]">
-          <div className="p-3 flex dark:text-gray-50  items-center justify-between">
-            <h1>Create Post</h1>
+    <motion.div
+      transition={{ duration: 1 }}
+      className="w-auto flex justify-center items-center overflow-clip bg-zinc-950 rounded-md"
+    >
+      {!openC && !editCaption && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2 }}
+          className="text-white justify-center min-w-[24rem]  min-h-[24rem] max-h-[24rem] h-[24rem] items-center  flex flex-col gap-4 "
+        >
+          <div>
+            <img src={imageIcon} alt="" srcset="" className="w-24 h-24" />
+          </div>
+          <label
+            htmlFor="imagePicker"
+            className="cursor-pointer bg-zinc-900 p-2 rounded-md"
+          >
+            Select Photos
+          </label>
+          <input
+            type="file"
+            name="imagePicker"
+            id="imagePicker"
+            hidden
+            onChange={handleImagePick}
+          />
+        </motion.div>
+      )}
+      {editCaption && !openC && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2 }}
+          className="dark:text-white flex w-auto flex-col "
+        >
+          <div className="p-2 flex justify-between">
+            <button
+              className="middle none center rounded-lg bg-slate-800 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              data-ripple-light="true"
+              onClick={() => {
+                setEditCaption(false);
+                setOpenC(true);
+              }}
+              disabled={!imageUrl}
+            >
+              Back
+            </button>
             {isLoading ? (
-              <div className="mx-3 text-violet-800  dark:text-gray-50 font-semibold animate-spin">
-                <OutlineLoading3Quarters />
-              </div>
+              <button
+                className="middle none center rounded-lg bg-slate-900 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                data-ripple-light="true"
+              >
+                Uploading...
+              </button>
             ) : (
-              <div className="flex flex-end gap-2">
-                <button
-                  className="middle none center rounded-lg py-3 px-6 font-sans text-xs font-bold uppercase text-slate-900 transition-all hover:bg-slate-900/10 active:bg-slate-900/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                  data-ripple-dark="true"
-                  onClick={() => setEditImage(true)}
-                  disabled={!imageUrl}
-                >
-                  Edit
-                </button>
-                <button
-                  className="middle none center rounded-lg bg-slate-900 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                  data-ripple-light="true"
-                  onClick={handlePost}
-                  disabled={!imageUrl}
-                >
-                  Post
-                </button>
-              </div>
+              <button
+                className="middle none center rounded-lg bg-slate-900 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                data-ripple-light="true"
+                onClick={handlePost}
+                disabled={!imageUrl}
+              >
+                Post
+              </button>
             )}
           </div>
-
-          <hr />
-
-          <div className="flex flex-col h-full">
-            <div className="p-2 m-2 border border-gray-800 rounded-lg flex items-start">
-              <img
-                src={user?.avatar || avatar}
-                alt=""
-                width={40}
-                className="rounded-full"
-              />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2 }}
+            className="flex relative h-fit"
+          >
+            <div className="flex justify-center items-center  gap-5">
+              <img src={imageUrl} className="h-80  object-contain " />
+            </div>
+            <div className="w-96 h-80">
               <MultiLineInput
                 text={caption}
                 setText={setCaption}
                 className={
-                  "!ring-0 resize-none outline-none border-none w-full dark:bg-transparent p-2 dark:text-gray-100"
+                  "!ring-0 resize-none border outline-none border-none w-full h-full dark:bg-neutral-800 p-2 dark:text-gray-100"
                 }
               />
-              {/* <input type="text" placeholder='caption ' className='border-none !ring-0 mx-2 flex-1' value={caption} onChange={(e) => setCaption(e.target.value)} /> */}
-              <div className="mx-2 hover:text-violet-950 flex justify-center items-center">
-                <label htmlFor="postImage">
-                  <ImageFill className="dark:text-gray-50" />
-                </label>
-                <input
-                  type="file"
-                  name=""
-                  id="postImage"
-                  hidden
-                  accept="image/png, image/gif, image/jpeg"
-                  onChange={handleImagePick}
-                  className="dark:bg-transparent"
-                />
+              <div className="absolute flex justify-center items-center bottom-2 right-2 z-10">
+                <button
+                  className=" bg-slate-950 justify-center items-center flex w-10 h-10 rounded-full "
+                  // onClick={() => setShowEmojiPicker(true)}
+                >
+                  <EmojiSmile size={24} />
+                </button>
               </div>
             </div>
-            <div className=" h-full p-2 m-2 flex flex-col justify-center items-center transition-transform duration-300">
-              {!imageUrl ? (
-                <div className="border-2 border-dashed border-gray-500 rounded-xl p-8 text-center dark:text-gray-50">
-                  Drag and Drop Images here
-                </div>
-              ) : (
-                <div className="w-full h-full relative">
-                  <img
-                    src={imageUrl}
-                    className="w-full h-full max-h-[400px] rounded-lg"
-                    alt="hiii"
-                  />
-                  {/* <canvas ref={canvasref}></canvas> */}
-                  {isLoading && (
-                    <div className="absolute top-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 rounded-lg">
-                      <div className="mx-3 text-violet-100 font-semibold ">
-                        <OutlineLoading3Quarters
-                          className="animate-spin"
-                          size={23}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      {editImage && <EditImage imageUrl={imageUrl} />}
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {openC && (
+        <ImageCrop
+          image={imageUrl}
+          name={selectedFile.name}
+          onCrop={(file, imageUrl) => {
+            setImageUrl(imageUrl);
+            setNewFile(file);
+            setEditCaption(true);
+            setOpenC(false);
+          }}
+          onClose={() => setOpenC(false)}
+        />
+      )}
+    </motion.div>
   );
 };
 

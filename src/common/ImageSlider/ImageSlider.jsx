@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./image-slider.css";
 import { ChevronBack, ChevronForward, CircleDot, Circle } from "../../icons";
 
-export function ImageSlider({ images, className }) {
+export function ImageSlider({ images }) {
+  const [currentImages, setCurrentImages] = useState();
   const [imageIndex, setImageIndex] = useState(0);
-  const [singleImage, _] = useState(images.length === 1);
+  const [singleImage, setSingleImage] = useState(currentImages?.length === 1);
+
+  useEffect(() => {
+    setCurrentImages(images);
+    setSingleImage(images.length === 1);
+  }, [images]);
+
   function showNextImage() {
     setImageIndex((index) => {
-      if (index === images.length - 1) return 0;
+      if (index === currentImages.length - 1) return 0;
       return index + 1;
     });
   }
 
   function showPrevImage() {
     setImageIndex((index) => {
-      if (index === 0) return images.length - 1;
+      if (index === 0) return currentImages.length - 1;
       return index - 1;
     });
   }
@@ -34,13 +41,13 @@ export function ImageSlider({ images, className }) {
           overflow: "hidden",
         }}
       >
-        {images.map((url, index) => (
+        {currentImages?.map((url, index) => (
           <img
             key={url}
             src={url}
             alt={url}
             aria-hidden={imageIndex !== index}
-            className={'img-slider-img overflow-hidden' }
+            className={"img-slider-img overflow-hidden"}
             style={{ translate: `${-100 * imageIndex}%` }}
           />
         ))}
@@ -78,7 +85,7 @@ export function ImageSlider({ images, className }) {
             gap: ".25rem",
           }}
         >
-          {images.map((_, index) => (
+          {currentImages?.map((_, index) => (
             <button
               key={index}
               className="img-slider-dot-btn"

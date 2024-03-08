@@ -4,21 +4,22 @@ import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/services/authSlice";
 import { setUser, profileState } from "../redux/services/profileSlice";
-import { resetState } from "../redux/services/postSlice";
-import { resetFeedState } from "../redux/services/feedSlice";
-import { useNavigate } from "react-router-dom";
+
 import ProfileCard from "./components/ProfileCard";
+import LogoutBtn from "../shared/Buttons/LogoutBtn";
+import { Edit } from "../icons";
+import Modal from "../shared/Modal";
 
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector(profileState);
-  const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(resetState());
-  }, []);
+
+  const setCurrentUser = (data) => {
+    dispatch(setUser(data));
+  };
+
   const toggleEdit = () => {
     setEdit((prev) => !prev);
     window.scrollTo({
@@ -29,7 +30,7 @@ const Profile = () => {
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
-      dispatch(setUser(response.user));
+      setCurrentUser(response.user);
     } catch (error) {
       console.log("error", error.message);
     }
@@ -37,15 +38,7 @@ const Profile = () => {
 
   useEffect(() => {
     getUser();
-  }, [edit, getUser]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(resetState());
-    dispatch(resetFeedState());
-    localStorage.clear();
-    navigate("/");
-  };
+  }, [getUser]);
 
   if (!user) {
     return <div className="w-screen h-screen fixed inset-0">loading</div>;
@@ -54,21 +47,21 @@ const Profile = () => {
   return (
     <div
       className=" 
-      w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-slate-950 px-4 pt-4 lg:flex-row flex-col gap-4 items-center  lg:items-start "
+      w-full flex grid-cols-2  lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-zinc-950 p-3  gap-4 items-center  lg:items-start "
     >
       <div className=" lg:hidden bg-gray-950 mb-2 flex justify-end">
         <div className="w-fit">
-          <button onClick={handleLogout}>Logout</button>
+          <LogoutBtn />
         </div>
       </div>
-      <div className="lg:sticky top-2 lg:w-[450px] w-72 flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
+      <div className="lg:sticky top-0 w-[40%] flex-col h-full flex rounded-xl justify-center items-center ">
         <ProfileCard toggleEdit={toggleEdit} user={user} isPrivate={false}>
-          <div className="flex justify-center items-center">
+          <div className="flex absolute top-2 right-2 justify-center items-center">
             <button
               onClick={toggleEdit}
-              className=" p-2 rounded-xl   bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
+              className=" p-2 rounded-xl bg-[#620C45] hover:bg-[#3e092c] transition-colors delay-200"
             >
-              Edit profile
+              <Edit />
             </button>
           </div>
         </ProfileCard>
@@ -77,7 +70,13 @@ const Profile = () => {
       <Posts />
 
       {edit && (
-        <EditProfile user={user} setClose={toggleEdit} setUser={setUser} />
+        <Modal
+          onClose={() => setEdit(false)}
+          shouldCloseOutsideClick={false}
+          showCloseButton={false}
+        >
+          <EditProfile user={user} setUser={setCurrentUser} />
+        </Modal>
       )}
     </div>
   );

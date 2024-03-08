@@ -1,24 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../common/InputFields/Input";
 import { PersonFill, OutlineLoading, Google, PasswordLock } from "../../icons";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/services/authSlice";
 import { makeRequest } from "../../config/api.config";
 import getGoogleUrl from "../../config/getGoogleUri";
 import { useAuth } from "../../context/AuthProvider";
-import Logo from "../../icons/Logo";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Connectify from "./components/Connectify";
 import { saveUserAndTokenLocalstorage } from "../../utils/getCurrentUserId";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
+import ConnectifyIcon from "../../icons/Connectify";
+import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 
 const Login = () => {
   const navigator = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const { login: loginUser } = useAuth();
   const {
     register,
@@ -31,6 +31,7 @@ const Login = () => {
     userSignIn(data);
   };
   const userSignIn = async (data) => {
+    setLoading(true);
     try {
       const res = await makeRequest.post("/login", {
         username: data.username,
@@ -42,8 +43,13 @@ const Login = () => {
           res.accessToken,
           res.refreshToken
         );
+
+        toast(`Welcome Back!!`, {
+          icon: <ConnectifyIcon size={34} />,
+        });
       }
       loginUser(res?.user);
+      setLoading(false);
       dispatch(login({ isAuthenticated: true, user: res?.user }));
       navigator("/");
     } catch (error) {
@@ -52,7 +58,10 @@ const Login = () => {
         type: error?.error?.statusCode,
         message: error?.message,
       });
-      toast.error(error?.message);
+      setLoading(false);
+      toast.error(error?.message,{
+        position:"top-center"
+      });
       setTimeout(() => {
         clearErrors();
       }, 5000);
@@ -75,7 +84,7 @@ const Login = () => {
             className="flex flex-col justify-center items-center  mx-10  gap-5"
           >
             <h1 className="mb-3 text-bold flex justify-center items-center lg:hidden">
-              <Logo className="fill-black dark:fill-white " size={"100%"} />
+              <ConnectifyLogoText />
             </h1>
             <div className="flex 4 flex-col gap-5 dark:text-white text-4xl font-bold">
               Welcome!
@@ -104,17 +113,23 @@ const Login = () => {
             />
 
             <div className="flex justify-between w-full items-center">
-              <button
-                type="submit"
-                disabled={isSubmitting || !isValid}
-                className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white text-2x hover:bg-black"
-              >
-                {isSubmitting ? (
-                  <OutlineLoading className="animate-spin" />
-                ) : (
-                  "Login"
-                )}
-              </button>
+              {loading ? (
+                <button disabled className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  ">
+                  <OutlineLoading className="animate-spin" size={20}/>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !isValid}
+                  className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  hover:bg-black"
+                >
+                  {isSubmitting ? (
+                    <OutlineLoading className="animate-spin" />
+                  ) : (
+                    "Login"
+                  )}
+                </button>
+              )}
             </div>
 
             <p className="text-white">

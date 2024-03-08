@@ -20,9 +20,10 @@ const suggetionSlice = createSlice({
         user.isFollowed = true;
       }
     },
+    reset: () => initialState,
   },
 });
 
-export const { setSuggetions, followUser } = suggetionSlice.actions;
+export const { setSuggetions, followUser, reset } = suggetionSlice.actions;
 
 export default suggetionSlice.reducer;

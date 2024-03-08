@@ -1,61 +1,28 @@
-// src/components/PostList.js
-import React, { useCallback, useRef } from "react";
-import useInfinitePosts from "../hooks/useInfinitePosts";
-import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "../redux/services/postSlice";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 const Exp = () => {
-  const { posts, loading, hasNext, page } = useInfinitePosts();
-  const dispatch = useDispatch();
-
-
-  const observer = useRef();
-  const lastPost = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNext) {
-          dispatch(setPage(page + 1))
-        }
-      });
-
-      if (node) observer?.current.observe(node);
-      console.log(node);
-    },
-    [loading, hasNext]
-  );
-
   return (
-    <div className="p-3 h-screen overflow-hidden">
-      <div className=" border p-2 overflow-y-scroll h-full">
-        {posts?.map((post, index) => {
-          console.log(posts.length === index + 1);
-          if (posts.length === index + 1) {
-            return (
-              <div
-                ref={lastPost}
-                key={post.id}
-                className="py-10 h-96 bg-red-400 mb-3 w-96 mx-auto"
-              >
-                <h2>{post.caption}</h2>
-                <p></p>
-              </div>
-            );
-          } else {
-            return (
-              <div
-                key={post.id}
-                className="py-10 h-96 bg-red-400 mb-3 w-96 mx-auto"
-              >
-                <h2>{post.caption}</h2>
-                <p></p>
-              </div>
-            );
-          }
-        })}
-        {loading && <p>Loading...</p>}
-      </div>
+    <div className="h-screen bg-gray-50 flex justify-center items-center ">
+      <section className="border bg-black">
+        <ScrollToBottom className={"w-[400px] h-[600px]  p-3"}>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur
+          in omnis delectus saepe eaque cum distinctio fuga molestias temporibus
+          voluptatibus, eos magni ratione fugit dicta sit laboriosam debitis et
+          sunt. Incidunt minima quae, nemo et officiis animi vel debitis ratione
+          quas, saepe doloribus eius suscipit illo iste maiores autem voluptate
+          ex optio nesciunt, dolore possimus ipsa. Quam perspiciatis amet
+          temporibus porro earum, itaque ad aperiam adipisci quae. Mollitia
+          ipsam possimus voluptatum odit sed asperiores eaque aspernatur ullam
+          odio. Corporis molestias perferendis quae expedita necessitatibus,
+          error ducimus eveniet consequuntur dolorem unde non dolore enim
+          distinctio, officiis maxime minus nam rem sit pariatur culpa magnam
+          odit. Ipsum fuga, eveniet inventore perspiciatis ipsa non, est harum
+          quisquam odit illum architecto esse quasi provident delectus labore
+          temporibus rerum nesciunt obcaecati eum voluptatum optio ex eos
+          repellendus? Vel animi accusamus consequuntur, praesentium quos
+          architecto at asperiores? lorem4
+        </ScrollToBottom>
+      </section>
     </div>
   );
 };

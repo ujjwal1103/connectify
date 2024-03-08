@@ -7,13 +7,14 @@ import { makeRequest } from "../../config/api.config";
 import { toast } from "react-toastify";
 import getGoogleUrl from "../../config/getGoogleUri";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Connectify from "./components/Connectify";
-import Logo from "../../icons/Logo";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
+import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 
 const Register = () => {
   const navigator = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -26,6 +27,7 @@ const Register = () => {
   };
 
   const userSignUp = async (data) => {
+    setLoading(true);
     try {
       const res = await makeRequest.post("/register", {
         username: data.username,
@@ -34,10 +36,12 @@ const Register = () => {
       });
 
       if (res.isSuccess) {
+        setLoading(false);
         toast.success(res.message);
         navigator("/login");
       }
     } catch (error) {
+      setLoading(false);
       setError("root.serverError", {
         type: error?.error?.statusCode,
         message: error?.message,
@@ -60,13 +64,12 @@ const Register = () => {
       <Connectify />
       <div className=" lg:flex-1 flex justify-center items-center h-screen w-screen  bg-[#470047] border-violet-950 p-8 backdrop-blur-sm  lg:rounded-tl-[200px]">
         <FadeInAnimation>
-          {" "}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center items-center gap-5 "
           >
             <h1 className="mb-3 text-bold flex justify-center items-center lg:hidden">
-              <Logo className="fill-black dark:fill-white " size={"100%"} />
+              <ConnectifyLogoText />
             </h1>
             <div className="flex flex-col gap-5 dark:text-white text-4xl font-bold">
               Welcome!
@@ -103,17 +106,26 @@ const Register = () => {
             />
 
             <div className="flex justify-between w-full items-center">
-              <button
-                type="submit"
-                disabled={isSubmitting || !isValid}
-                className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white text-2x hover:bg-black"
-              >
-                {isSubmitting ? (
-                  <OutlineLoading className="animate-spin" />
-                ) : (
-                  "Register"
-                )}
-              </button>
+              {loading ? (
+                <button
+                  disabled
+                  className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  "
+                >
+                  <OutlineLoading className="animate-spin" size={22} />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !isValid}
+                  className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white text-2x hover:bg-black"
+                >
+                  {isSubmitting ? (
+                    <OutlineLoading className="animate-spin" />
+                  ) : (
+                    "Register"
+                  )}
+                </button>
+              )}
             </div>
 
             <p className="text-white">

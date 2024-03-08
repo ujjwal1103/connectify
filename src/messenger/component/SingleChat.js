@@ -23,7 +23,7 @@ const SingleChat = ({ chat }) => {
 
   return (
     <div
-      className="w-full flex  gap-4 p-2 items-center dark:text-gray-50"
+      className="w-full flex  gap-4 p-2 items-center dark:text-gray-50 border-b-[0.5px] border-zinc-800 last:border-0"
       onClick={selectThisChat}
     >
       <ProfilePicture
@@ -49,20 +49,23 @@ const SingleChat = ({ chat }) => {
         onMouseEnter={handleOptions}
         onMouseLeave={handleOptions}
       >
-        <span className="">
-          <DotsNine />
+        <span className="hidden lg:block">
+          <DotsNine className="fill-zinc-200" />
         </span>
 
         {options && (
-          <div className="absolute bg-white origin-bottom-right top-1/2 right-0 py-2 rounded-md">
-            <ul className="text-sm w-20 text-center">
-              <li className="py-2 hover:bg-gray-100 ">
+          <div
+            className="absolute  bg-white z-50 dark:bg-zinc-900 shadow-2xl origin-bottom-right top-1/2 right-0 p-1  rounded-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ul className="text-sm w-28 text-center">
+              <li className="py-2 dark:text-gray-50 rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
                 <button>Archive</button>
               </li>
-              <li className="py-2 hover:bg-gray-100 ">
+              <li className="py-2 dark:text-gray-50 rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
                 <button>Delete</button>
               </li>
-              <li className="py-2 hover:bg-gray-100 ">
+              <li className="py-2 dark:text-gray-50 rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
                 <button>Mute</button>
               </li>
             </ul>

@@ -29,6 +29,7 @@ const notificationsSlice = createSlice({
     clearNotifications: (state) => {
       state.notifications = [];
     },
+    reset: () => initialState,
   },
 });
 
@@ -38,6 +39,7 @@ export const {
   removeNotification,
   clearNotifications,
   setNotifications,
+  reset,
 } = notificationsSlice.actions;
 
 // Export selectors

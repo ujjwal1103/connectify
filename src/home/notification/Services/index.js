@@ -4,7 +4,6 @@ import {
 } from "../../../utils/getCurrentUserId";
 
 export const sendNotification = async (userId, action, socket) => {
-  console.log(userId, getCurrentUserId());
   if (userId && getCurrentUserId()) {
     switch (action) {
       case "Post Like": {
@@ -12,6 +11,13 @@ export const sendNotification = async (userId, action, socket) => {
           to: userId,
           from: getCurrentUserId(),
           notification: `${getCurrentUsername()} Liked Your Post`,
+        });
+      }
+      case "Send Message": {
+        socket.emit("Send Message", {
+          to: userId,
+          from: getCurrentUserId(),
+          notification: `${getCurrentUsername()} send you a Message`,
         });
       }
     }

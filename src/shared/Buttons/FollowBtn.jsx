@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { followUser } from "../../profile/services/postServices";
+import { followUser, unfollowUser } from "../../profile/services/postServices";
 import { isCurrentUser } from "../../utils/getCurrentUserId";
+import Button from "../Components/Button";
 
 const FollowBtn = ({ userId, callBack, isFollow }) => {
   const [follow, setFollow] = useState(isFollow);
@@ -16,6 +17,12 @@ const FollowBtn = ({ userId, callBack, isFollow }) => {
 
   const handleUnfollow = async () => {
     if (!follow) return;
+    const data = await unfollowUser(userId);
+    if (data.unfollow) {
+      setFollow(false);
+      callBack(data);
+    }
+    console.log(userId);
   };
 
   if (isCurrentUser(userId)) {
@@ -24,22 +31,24 @@ const FollowBtn = ({ userId, callBack, isFollow }) => {
 
   if (follow) {
     return (
-      <button
+      <Button
         className="text-xs bg-gradient-to-l from-violet-900 to-blue-900 px-2 rounded-xl text-sky-100 py-1"
         onClick={handleUnfollow}
+        size={"small"}
       >
         Following
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
-      className="text-xs  bg-gradient-to-l from-sky-900 to-indigo-900 px-2 rounded-xl text-sky-100 py-1"
+    <Button
+      className=" bg-gradient-to-l from-sky-900 to-indigo-900 px-2  text-sky-100 "
       onClick={handleFollowRequest}
+      size={"small"}
     >
       Follow
-    </button>
+    </Button>
   );
 };
 

@@ -76,8 +76,7 @@ const CommentInput = ({ postId }) => {
       />
       {commentText && (
         <button className="text-blue-400" onClick={sendComment}>
-          {" "}
-          Post{" "}
+          Post
         </button>
       )}
       <button className="pr-2" onClick={() => setShowEmojiPicker(true)}>
@@ -85,7 +84,7 @@ const CommentInput = ({ postId }) => {
       </button>
 
       {showEmojiPicker && (
-        <div ref={emojiRef} className="absolute z-10 right-0 top-12">
+        <div ref={emojiRef} className="absolute z-10 right-0 bottom-0">
           <Picker onEmojiClick={onEmojiClick} emojiStyle="apple" />
         </div>
       )}

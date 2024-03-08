@@ -17,10 +17,10 @@ const ProfileCard = ({ user, children, canOpen }) => {
       setShowFollowing((prev) => !prev);
     }
   };
-  
+
   return (
     <>
-      <div className="p-2 h-fit w-full bg-slate-900 rounded-xl">
+      <div className="p-2 h-full w-full bg-zinc-900 dark:border-zinc-500/30 shadow-2xl  rounded-xl">
         <div className="flex justify-center items-center my-3">
           <span className=" px-5  text-xl">{user?.username}</span>
         </div>
@@ -42,20 +42,20 @@ const ProfileCard = ({ user, children, canOpen }) => {
         </div>
         {children}
         <div className="grid grid-cols-3  gap-3  my-2">
-          <button className="flex flex-col rounded-lg justify-center items-center bg-slate-800">
+          <button className="flex flex-col rounded-lg justify-center items-center bg-zinc-800">
             <span className="">Posts</span>
             <span className="text-xl">{user?.posts}</span>
           </button>
           <button
             onClick={toggleShow}
-            className="flex flex-col rounded-lg justify-center items-center  bg-slate-800"
+            className="flex flex-col rounded-lg justify-center items-center  bg-zinc-800"
           >
             <span className="">Followers</span>
             <span className="text-xl">{user?.followers}</span>
           </button>
           <button
             onClick={toggleShowFollowing}
-            className="flex flex-col    rounded-lg justify-center items-center  bg-slate-800"
+            className="flex flex-col    rounded-lg justify-center items-center  bg-zinc-800"
           >
             <span className="">Following</span>
             <span className="text-xl">{user?.following}</span>

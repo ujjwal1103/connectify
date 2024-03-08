@@ -6,7 +6,6 @@ export function groupMessagesByDate(messages) {
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
       const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  
       const isToday = (
         messageDate.getDate() === today.getDate() &&
         messageDate.getMonth() === today.getMonth() &&
@@ -72,4 +71,4 @@ export function getReadableTime(adate) {
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
   
     return `${formattedHours}:${formattedMinutes} ${amOrPm}`;
-  }
+}

@@ -17,8 +17,6 @@ makeRequest.interceptors.request.use(
   (config) => {
     const { user, accessToken } = getCurrentUserAndAccessToken();
 
-  
-
     if (user && accessToken) {
       config.headers.Authorization = accessToken;
     }
@@ -39,10 +37,10 @@ makeRequest.interceptors.response.use(
       handleUnauthorizedAccess();
     }
     const myerror = {
-      ...error.response?.data,
+      ...error?.response?.data,
       message:
-        error.response?.data.error.message ||
-        error.message ||
+        error.response?.data?.error?.message ||
+        error?.message ||
         "something went wrong",
     };
     return Promise.reject(myerror);

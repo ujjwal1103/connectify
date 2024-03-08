@@ -3,7 +3,12 @@ import ReactDOM from "react-dom";
 import FocusTrap from "./FocusTrap";
 import { useClickOutside } from "@react-hookz/web";
 
-const Modal = ({ onClose, children }) => {
+const Modal = ({
+  onClose,
+  children,
+  shouldCloseOutsideClick = true,
+  showCloseButton = true,
+}) => {
   const elRef = useRef(null);
   const modalRef = useRef(null);
 
@@ -26,7 +31,12 @@ const Modal = ({ onClose, children }) => {
     e.stopPropagation();
   };
 
-  useClickOutside(modalRef, () => onClose());
+  useClickOutside(modalRef, () => {
+    if (shouldCloseOutsideClick) {
+      console.log("model cliked", modalRef);
+      onClose();
+    }
+  });
 
   const childrenWithProps = React.Children.map(children, (child) => {
     return React.cloneElement(child, { onClose: onClose });
@@ -40,12 +50,14 @@ const Modal = ({ onClose, children }) => {
             {childrenWithProps}
           </div>
 
-          <button
-            onClick={onClose}
-            className="absolute lg:right-10 right-3 top-3 lg:top-10 lg:p-2 p-1 rounded-md border lg:text-base text-xs text-white"
-          >
-            Close
-          </button>
+          {showCloseButton && (
+            <button
+              onClick={onClose}
+              className="absolute lg:right-10 right-3 top-3 lg:top-10 lg:p-2 p-1 rounded-md border lg:text-base text-xs text-white"
+            >
+              Close
+            </button>
+          )}
         </div>
       </FocusTrap>
     </div>,

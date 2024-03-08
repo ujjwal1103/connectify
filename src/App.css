@@ -1,17 +1,23 @@
-* {
+*,
+::before,
+::afte {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
- 
 }
 
 html {
   overflow: hidden;
 }
 
+@media only screen and (max-width: 300px) {
+  html {
+    font-size: 10px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 0;
-  background-color: rgb(129, 1, 1);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -26,15 +32,9 @@ html {
 }
 
 body {
-  overflow: overlay;
-  background: "red";
   width: 100%;
-  min-height: 100vh;
-}
-
-input:-internal-autofill-selected {
-  -webkit-background-color: red;
-  background-color: red;
+  height: 100dvh;
+  min-height: 100dvh;
 }
 
 input:-webkit-autofill {
@@ -42,7 +42,6 @@ input:-webkit-autofill {
 }
 
 input:-webkit-autofill:focus {
-  background-color: red;
   -webkit-box-shadow: 0 0 0 1000px transparent inset;
 }
 
@@ -51,12 +50,11 @@ input {
   background-color: transparent;
 }
 
-input:focus-visible{
+input:focus-visible {
   outline: none;
 }
 
-dialog{
- 
+dialog {
   background-color: blue;
   bottom: 0;
   top: 0;
@@ -64,16 +62,18 @@ dialog{
   right: 0;
 }
 
-
-dialog::backdrop{
- background-color: red;
- 
- 
+dialog::backdrop {
+  background-color: red;
 }
 
-progress{
+progress {
   accent-color: unset;
   accent-color: red;
   border: 2px solid red;
   color: red;
+}
+
+.color {
+  background-color: #4d003cb5;
+  background-color: rgba(200, 71, 0, 0.71);
 }

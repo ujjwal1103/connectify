@@ -7,11 +7,17 @@ import { getCurrentUserId } from "../../utils/getCurrentUserId";
 const Messages = () => {
   const { messages } = useSelector((state) => state.chat);
   const [groupedMessages, setGroupedMessages] = useState([]);
-  const messagesRef = useRef(null);
-
+  const messagesContainerRef = useRef(null);
   useEffect(() => {
     setGroupedMessages(groupMessagesByDate(messages));
-    messagesRef && messagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      setTimeout(() => {
+        messagesContainerRef.current.scrollTop =
+          messagesContainerRef.current.scrollHeight;
+      }, 1000);
+    }
   }, [messages]);
 
   if (!messages || messages?.length === 0)
@@ -23,23 +29,25 @@ const Messages = () => {
 
   return (
     <div
-      ref={messagesRef}
-      className="h-full flex flex-col flex-1 gap-3  overflow-y-scroll mb-4 p-2 "
+      ref={messagesContainerRef}
+      className="h-full flex flex-col scroll-smooth flex-1 gap-3  overflow-y-scroll mb-4 p-2 "
     >
-      {Object.keys(groupedMessages).map((date) => (
-        <div key={date} className="flex flex-col gap-3">
-          <h3 className="text-center text-xs  text-gray-200 w-fit self-center p-1 rounded-xl bg-gray-600">
-            {date}
-          </h3>
-          {groupedMessages[date].map((message) => (
-            <Message
-              key={message._id}
-              currentUserMessage={message.from === getCurrentUserId()}
-              message={message}
-            />
-          ))}
-        </div>
-      ))}
+      <div>
+        {Object.keys(groupedMessages).map((date) => (
+          <div key={date} className="flex flex-col gap-3">
+            <h3 className="text-center text-[10px]  text-gray-200 w-fit self-center p-1 rounded-xl bg-neutral-950">
+              {date}
+            </h3>
+            {groupedMessages[date].map((message) => (
+              <Message
+                key={message._id}
+                currentUserMessage={message.from === getCurrentUserId()}
+                message={message}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

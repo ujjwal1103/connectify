@@ -1,12 +1,8 @@
-import {  useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
-import { useDispatch } from "react-redux";
-import { logout } from "../../redux/services/authSlice";
-import { resetState } from "../../redux/services/postSlice";
-import { resetFeedState } from "../../redux/services/feedSlice";
+
 import Notification from "../notification/Notification";
-// import { socket } from "../../config/socket.io";
 import SearchInput from "./components/SearchInput";
 import {
   Chat,
@@ -24,33 +20,27 @@ import {
 } from "../../icons";
 import { useClickOutside } from "@react-hookz/web";
 import Modal from "../../shared/Modal";
+import { AnimatePresence } from "framer-motion";
+import LogoutBtn from "../../shared/Buttons/LogoutBtn";
+import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenNotification, setIsOpenNotification] = useState(false);
   const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const location = useLocation()
   const modelRef = useRef();
 
   const toggleCreatePost = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
   };
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(true);
   };
   useClickOutside(modelRef, () => setIsOpen(false));
 
   const toggleNotification = () => {
     setIsOpenNotification((prev) => !prev);
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(resetState());
-    dispatch(resetFeedState());
-    localStorage.clear();
-    navigate("/");
   };
 
   const handleDarkMode = () => {
@@ -61,71 +51,97 @@ const Navbar = () => {
     }
   };
   return (
-    <header className="p-4 lg:sticky left-0 z-50 fixed bottom-0 right-0">
-      <nav className="bg-violet-700 bg-opacity-70  dark:bg-opacity-70 backdrop-blur-lg p-4 flex justify-between gap-10 dark:bg-slate-700  rounded-lg sticky  ">
+    <header className="px-3 pt-3 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
+      <nav className="bg-violet-700 bg-opacity-70 shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
         <div className="hidden lg:block">
+          <ConnectifyLogoText size={44} showShadow={false} />
+        </div>
+        <div className="hidden lg:flex flex-1 items-center">
           <SearchInput />
         </div>
         <div className="text-white flex lg:w-60  items-center justify-between w-full">
           <div>
-            <Link to={""}>
+            <NavLink
+              to={""}
+              className={({ isActive, isPending }) =>
+                isActive ? "text-[#620C45] font-extrabold" : ""
+              }
+            >
               <HouseDoor size={24} />
-            </Link>
+            </NavLink>
           </div>
           <div className="lg:hidden">
-            <Link to={"/search"}>
+            <NavLink
+              to={"/search"}
+              className={({ isActive, isPending }) =>
+                isActive ? "text-[#620C45] font-extrabold" : ""
+              }
+            >
               <Search size={24} />
-            </Link>
+            </NavLink>
           </div>
           <div>
-            <Link to={"/messenger"}>
+            <NavLink
+              to={"/messenger"}
+              state={location.pathname}
+              className={({ isActive }) =>
+                isActive ? "text-[#620C45] font-extrabold" : ""
+              }
+            >
               <Chat size={24} />
-            </Link>
+            </NavLink>
           </div>
           <div className="">
-            <Link onClick={toggleCreatePost}>
+            <NavLink onClick={toggleCreatePost}>
               <PlusSquare size={24} />
-            </Link>
+            </NavLink>
           </div>
           <div onClick={toggleNotification}>
             <Heart size={24} />
           </div>
           <div>
-            <Link to={"/profile"}>
+            <NavLink
+              to={"/profile"}
+              className={({ isActive, isPending }) =>
+                isActive ? "text-[#620C45] font-extrabold" : ""
+              }
+            >
               <PersonCircle size={24} />
-            </Link>
+            </NavLink>
           </div>
 
           <div className="lg:relative hidden lg:inline-block text-left dropdown-menu-button">
             <button
               onClick={toggleDropdown}
-              className={`p-2 focus:outline-none ${isOpen && "text-gray-900"}`}
+              className={`p-2 focus:outline-none  ${
+                isOpen && "text-[#620C45]"
+              }`}
             >
               <EllipsisV className="w-6 h-6" />
             </button>
             {isOpen && (
               <div
                 ref={modelRef}
-                className="origin-top-right absolute lg:right-0 mt-2 lg:w-52 w-full  bg-white border dark:text-white dark:bg-slate-800 dark:border-slate-500/30 rounded-lg shadow-lg"
+                className="origin-top-right absolute lg:right-0 mt-2 lg:w-52 w-full  bg-white border dark:text-white dark:bg-zinc-900 dark:border-zinc-500/30 rounded-lg shadow-lg"
               >
-                <ul className="py-1">
+                <ul className="py-1 ">
                   <li>
-                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
+                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-red-400">
                       <Cog className="mr-2" />
                       Settings
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
+                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <QuestionCircle className="mr-2" />
                       Help
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
+                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <Phone className="mr-2" />
                       Contact Us
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
                     <button
@@ -136,14 +152,11 @@ const Navbar = () => {
                       DarkMode
                     </button>
                   </li>
-                  <li className="border-t border-slate-500/30"></li>
+                  <li className="border-t border-zinc-500/30"></li>
                   <li>
-                    <button
-                      onClick={handleLogout}
-                      className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700"
-                    >
+                    <button className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <SignOutAlt className="mr-2" />
-                      Log Out
+                      <LogoutBtn />
                     </button>
                   </li>
                 </ul>
@@ -151,11 +164,13 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        {isOpenCreatePost && (
-          <Modal onClose={() => setIsOpenCreatePost(false)}>
-            <CreatePost />
-          </Modal>
-        )}
+        <AnimatePresence>
+          {isOpenCreatePost && (
+            <Modal onClose={() => setIsOpenCreatePost(false)}>
+              <CreatePost />
+            </Modal>
+          )}
+        </AnimatePresence>
         {isOpenNotification && <Notification setClose={toggleNotification} />}
       </nav>
     </header>

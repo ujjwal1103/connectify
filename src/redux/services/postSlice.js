@@ -13,19 +13,11 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    // setPosts: (state, action) => {
-    //   state.loading = false;
-
-    //   const newPosts = action.payload.posts?.filter(
-    //     (post) => !state.posts.some((p) => p._id === post._id)
-    //   );
-    //   state.posts = [...state.posts, ...newPosts];
-    // },
     setPosts: (state, action) => {
       state.posts = [...state.posts, ...action.payload];
     },
     addPost: (state, action) => {
-      state.posts.push(action.payload);
+      state.posts = [action.payload, ...state.posts];
       state.loading = false;
     },
     setError: (state, action) => {
@@ -82,14 +74,7 @@ const postSlice = createSlice({
     setHasNext: (state, action) => {
       state.hasNext = action.payload;
     },
-    resetState: (state, action) => {
-      return initialState;
-    },
-    resetPosts: (state, action) => {
-      state.loading = true;
-      state.posts = action.payload;
-      state.hasNext = false;
-    },
+    reset: () => initialState,
   },
 });
 
@@ -99,12 +84,11 @@ export const {
   setError,
   setPost,
   deletePost,
-  resetState,
   likePost,
   unlikePost,
   setPage,
   setLoading,
-  resetPosts,
+  reset,
   setHasNext,
 } = postSlice.actions;
 

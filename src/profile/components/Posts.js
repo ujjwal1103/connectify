@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import NoPosts from "./NoPosts";
 import Post from "./Post";
 import { useDispatch } from "react-redux";
-import { resetState, setPage } from "../../redux/services/postSlice";
+import { reset, setPage } from "../../redux/services/postSlice";
 import { PostLoading } from "./UserLoading";
 import useInfinitePosts from "../../hooks/useInfinitePosts";
 
@@ -10,7 +10,13 @@ const Posts = ({ userId }) => {
   const { posts, loading, hasNext, page } = useInfinitePosts(userId);
   const dispatch = useDispatch();
 
-  
+  useEffect(() => {
+    console.log("mount");
+    return () => {
+      console.log("unmount");
+      dispatch(reset());
+    };
+  }, [userId]);
 
   const observer = useRef();
   const lastPost = useCallback(
@@ -42,7 +48,7 @@ const Posts = ({ userId }) => {
 
   return (
     <div
-      className={`flex flex-1 flex-col lg:overflow-y-scroll ${
+      className={`lg:overflow-y-scroll  ${
         posts?.length <= 6 ? "lg:h-full xl:h-auto" : "xl:h-full h-full"
       }`}
     >

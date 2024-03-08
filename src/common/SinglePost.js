@@ -85,7 +85,7 @@ const SinglePost = ({ post, posts }) => {
   };
 
   return (
-    <div className="w-[70%] m-auto lg:h-post   overflow-y-auto shadow-xl flex flex-col lg:flex-row bg-white dark:bg-gray-700">
+    <div className="max-w-[70%] min-w-[1024px] w-[900px]  m-auto lg:h-post   overflow-y-auto shadow-2xl grid grid-cols-2 flex-col lg:flex-row bg-white dark:bg-zinc-900">
       {posts.length > 0 && (
         <button
           className="absolute top-1/2 left-10 text-3xl text-white hidden lg:block "
@@ -102,14 +102,14 @@ const SinglePost = ({ post, posts }) => {
           <ChevronForward />
         </button>
       )}
-      <div className="lg:w-1/2 bg-gray-900 overflow-hidden flex justify-center items-center">
+      <div className=" bg-zinc-950 flex justify-center items-center">
         <ImageSlider
           images={currPost.imageUrl}
-          className={"w-full h-[70%] object-contain"}
+          className={"w-full "}
         />
       </div>
 
-      <div className="flex flex-col flex-1 dark:text-gray-50">
+      <div className="flex flex-col  dark:text-gray-50">
         <div className="hidden lg:flex  justify-between items-center">
           <div className="flex items-center justify-center  p-3 gap-5">
             <ProfilePicture

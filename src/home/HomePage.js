@@ -52,42 +52,21 @@ const HomePage = () => {
   });
 
   return (
-    <main className=" flex w-full p-4 lg:gap-10 flex-col z-10 h-post md:h-screen lg:h-page overflow-y-scroll">
+    <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">
       {/* <div className="hidden justify-start px-2">
         <Story />
       </div> */}
-      <div className="flex lg:gap-10">
+      <div className="flex lg:gap-3">
+        <div className="hidden md:hidden lg:block lg:w-fit">
         <Sidebar />
-        <section className="flex flex-1 gap-10 justify-between z-10">
-          <div className="grid grid-cols-1 flex-1 flex-col  gap-5 ">
+        </div>
+        <section className="flex flex-1 gap-3 justify-between ">
+          <div className="grid grid-cols-1 flex-1 flex-col gap-5 ">
             {content}
 
-            {isLoading && (
-              <div className="text-center text-white">
-                <div className=" grid grid-cols-1 flex-1 flex-col  gap-5">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="border  p-2 bg-gray-50 h-96 w-full dark:border-slate-950 rounded-lg shadow-md dark:bg-slate-800 relative"
-                    >
-                      <div className="bg-zinc-950 w-full h-14 rounded-md">
-                        <div className="flex h-full px-2 items-center">
-                          <div className="w-10 h-10 bg-zinc-800 rounded-full"></div>
-                          <div className="flex flex-col gap-1 px-2">
-                            <span className="w-20 h-4 p-2 bg-zinc-800"></span>
-                            <span className="w-10 h-2 p-2 bg-zinc-800"></span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="h-52 mt-3 bg-zinc-950 rounded-md w-full"></div>
-                      <div className="h-20 mt-3 bg-zinc-950 rounded-md w-full"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {feeds.length === 0 && (
-              <div className="bg-slate-800 rounded-lg">
+            {isLoading  && <FeedLoading />}
+            {feeds.length === 0 && !isLoading && (
+              <div className="bg-zinc-800 rounded-lg">
                 <NoPosts />
               </div>
             )}
@@ -102,3 +81,30 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+const FeedLoading = () => {
+  return (
+    <div className=" h-full ">
+      <div className=" grid grid-cols-1 flex-1 flex-col  gap-5">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="border dark:border-zinc-500/30 p-2 bg-zinc-900  w-full  rounded-lg shadow-md relative"
+          >
+            <div className="bg-zinc-950 w-full h-14 rounded-md">
+              <div className="flex h-full px-2 items-center">
+                <div className="w-10 h-10 bg-zinc-800 rounded-full"></div>
+                <div className="flex flex-col gap-1 px-2">
+                  <span className="w-20 h-4 p-2 bg-zinc-800 rounded-2xl"></span>
+                  <span className="w-10 h-2 p-2 bg-zinc-800 rounded-2xl"></span>
+                </div>
+              </div>
+            </div>
+            <div className="h-64 mt-3 bg-zinc-950 rounded-md w-full"></div>
+            <div className="h-20 mt-  3 bg-zinc-950 rounded-md w-full"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

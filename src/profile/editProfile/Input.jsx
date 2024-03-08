@@ -1,17 +1,37 @@
 import React from "react";
+import MultiLineInput from "../../common/InputFields/MultiLineInput";
 
-const Input = ({ value, placeholder, setState, label }) => {
+const inputClasses =
+  "peer h-full w-full border-2   bg-zinc-800 dark:text-gray-50 focus:  dark:border-zinc-600 focus:dark:border-[#620C45] focus p-2 font-sans text-sm font-normal text-blue-gray-700 transition-all  disabled:border-0 rounded  disabled:bg-blue-gray-50  ";
+
+const labelClasses =
+  "after:content[' '] py-1 dark:text-white pointer-events-none  left-1 top-1 flex h-full w-full select-none text-sm font-normal leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-[#620C45] after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-[#620C45] peer-focus:after:scale-x-100 peer-focus:after:border-[#620C45] peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500";
+
+const Input = ({ value, placeholder, onChange, label, multiLine,name }) => {
   return (
-    <div className="relative h-11 w-full min-w-[200px]">
-      <input
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => setState(e.target.value)}
-        className="peer h-full w-full border-b border-gray-400 dark:border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-violet-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-      />
-      <label className="after:content[' '] pointer-events-none absolute left-0 -top-2.5 flex h-full w-full select-none text-sm font-normal leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-pink-500 after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:after:scale-x-100 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-        {label}
-      </label>
+    <div className=" w-full min-w-[200px] flex flex-col-reverse ">
+      {multiLine ? (
+        <MultiLineInput
+        name={name}
+          type="text"
+          onChange={onChange}
+          className={
+            inputClasses +
+            "min-h-[100px] focus-visible:outline-none focus-visible:ring-3"
+          }
+          value={value}
+        
+        />
+      ) : (
+        <input
+          name={name}
+          value={value}
+          placeholder={placeholder}
+          onChange={onChange}
+          className={inputClasses}
+        />
+      )}
+      <label className={labelClasses}>{label}</label>
     </div>
   );
 };

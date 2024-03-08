@@ -31,6 +31,7 @@ const chatSlice = createSlice({
     setMessageChatId: (state, action) => {
       state.messageChatId = action.payload;
     },
+    reset: () => initialState,
   },
 });
 
@@ -40,6 +41,7 @@ export const {
   setMessages,
   addChat,
   setMessageChatId,
+  reset
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

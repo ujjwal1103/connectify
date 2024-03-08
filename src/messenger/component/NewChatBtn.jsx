@@ -36,11 +36,7 @@ const AddNewUser = ({ onClose }) => {
   const getAllUsers = useCallback(async () => {
     try {
       const res = await makeRequest.get(`/following/${getCurrentUserId()}`);
-      setUsers([
-        ...res.followings.slice(0, 5),
-        ...res.followings.slice(0, 5),
-        ...res.followings.slice(0, 5),
-      ]);
+      setUsers([...res.followings.slice(0, 5)]);
     } catch (error) {
       console.log(error);
     }
@@ -74,24 +70,24 @@ const AddNewUser = ({ onClose }) => {
   };
   return (
     <div className="  ">
-      <div className="w-96 h-96 overflow-hidden  bg-slate-950 shadow-lg rounded-xl p-2">
+      <div className="w-96 h-96 overflow-hidden  bg-zinc-950 shadow-lg rounded-xl p-2">
         <div className="p-2 bg-zinc-950 mb-2 rounded-sm shadow-lg text-gray-50">
           <h1>New Chat</h1>
         </div>
-        <div className="">
+        <div className="px-2">
           <input
             type="text"
             value={searchTerm}
             placeholder="Search Friend"
             onChange={handleChange}
-            className="border-none shadow-inner w-full rounded-3xl dark:text-black"
+            className="border-none shadow-inner w-full bg-zinc-800 mb-2  rounded-3xl dark:text-black"
           />
         </div>
         <div className="overflow-y-scroll h-full pb-10">
           {users?.map((user) => {
             return (
               <div
-                className="flex group items-center  p-2 gap-3 m-2 bg-slate-800 rounded-xl"
+                className="flex group items-center  p-2 gap-3 m-2 bg-zinc-900 rounded-xl"
                 key={user._id}
               >
                 <ProfilePicture

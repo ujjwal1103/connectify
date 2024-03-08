@@ -36,7 +36,7 @@ const Post = ({ post }, ref) => {
     <article
       id={post._id}
       ref={ref && ref}
-      className="border bg-gray-50 h-fit dark:border-slate-500/30 rounded-lg shadow-md dark:bg-slate-800 relative"
+      className=" bg-gray-50  dark:border-zinc-500/30 rounded-lg overflow-clip shadow-md dark:bg-zinc-900 relative"
     >
       <div className="lg:p-3 md:p-3 p-2">
         <PostHeader post={post} />

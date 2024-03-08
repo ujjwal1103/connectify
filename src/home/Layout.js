@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
 import Logo from "../icons/Logo";
+import ConnectifyLogoText from "../icons/ConnectifyLogoText";
 
 const Layout = () => {
   const { socket, setUsers } = useSocket();
@@ -36,9 +37,9 @@ const Layout = () => {
 
   return (
     <>
-      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit bg-slate-950  ">
+      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit bg-black  ">
         <div className="flex justify-center items-center">
-          <Logo className="fill-white llg:hidden" size={"40%"} />
+          <ConnectifyLogoText className="fill-white llg:hidden" size={"40%"} />
         </div>
       </header>
       <Navbar />

@@ -58,9 +58,7 @@ const profilleSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
-    resetState: () => {
-      return initialState;
-    },
+    reset: () => initialState,
   },
 });
 
@@ -73,7 +71,7 @@ export const {
   removeFollowing,
   setError,
   setLoading,
-  resetState,
+  reset,
 } = profilleSlice.actions;
 
 export default profilleSlice.reducer;

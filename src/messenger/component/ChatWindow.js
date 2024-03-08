@@ -6,11 +6,12 @@ import { useCallback, useEffect } from "react";
 import { makeRequest } from "../../config/api.config";
 import { setMessages } from "../../redux/services/chatSlice";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
+import { useSocket } from "../../context/SocketContext";
 
 const ChatWindow = () => {
   const { selectedChat } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
-
+  const { socket, isUserOnline } = useSocket();
   const getAllMessages = useCallback(async () => {
     try {
       const data = await makeRequest(`messages/${selectedChat._id}`);
@@ -26,13 +27,20 @@ const ChatWindow = () => {
     getAllMessages();
   }, [getAllMessages]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("Receive Message", (data) => {
+        getAllMessages();
+      });
+    }
+  }, [socket]);
+
   return (
-    <div className="flex-1 bg-slate-900 h-screen overflow-hidden flex flex-col">
+    <div className="flex-1 bg-zinc-900 h-screen overflow-hidden flex flex-col">
       <ChatHeader otherUser={selectedChat?.friend} />
-      <hr />
 
       <Messages />
-      <div className="bg-gray-500">
+      <div className="bg-zinc-950 border-t-[0.5px] border-zinc-700">
         <MessageInput
           userId={selectedChat?.friend?._id}
           currentUserId={getCurrentUserId()}

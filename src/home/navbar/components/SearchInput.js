@@ -12,7 +12,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
-      if (searchQuery.trim() !== "") {
+      if (searchQuery?.trim() !== "") {
         try {
           const res = await makeRequest(`/users/search?query=${searchQuery}`);
           if (res.isSuccess) {
@@ -37,23 +37,17 @@ const SearchInput = () => {
   };
 
   return (
-    <div className="w-96 relative lg:block">
+    <div className="w-full z-[9999] relative lg:block">
       <Input
         type="search"
         onChange={handleSearch}
         value={searchQuery}
-        placeholder="search your friends"
-        className="w-full rounded-lg border-none outline-none focus:border-none dark:bg-slate-500 dark:placeholder:text-white dark:text-gray-50"
-        sufix={
-          <Search
-            className="text-black dark:text-white"
-            onClick={handleSearch}
-          />
-        }
+        placeholder="Search your friends"
+        className="peer w-full rounded-lg border-none placeholder:text-red-500 outline-none focus:border-none dark:bg-zinc-800 dark:placeholder:text-white dark:text-gray-50 focus-visible:ring-2 focus-visible:ring-[#620C45] "
+        sufix={<Search className="text-lg" onClick={handleSearch} />}
       />
-
       {showSearchResults && searchResults.length > 0 && (
-        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-y-scroll bg-white dark:bg-slate-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
+        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-y-scroll z-[100] bg-white dark:bg-zinc-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
           {searchResults?.map((result) => (
             <div
               onClick={() => {

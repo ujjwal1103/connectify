@@ -103,9 +103,9 @@ const UserProfile = () => {
   return (
     <div
       className=" 
-      w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-slate-950 px-4 pt-4 lg:flex-row flex-col gap-4 items-center  lg:items-start "
+      w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-zinc-950 p-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
-      <div className=" lg:sticky top-2 lg:w-[450px] w-72 flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
+      <div className=" lg:sticky top-0 left-0 lg:w-[400px] w-72 flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
         <ProfileCard user={user} canOpen={user?.isPrivate && !user?.isFollow}>
           <div className="flex gap-3 justify-center items-center">
             {user?.isFollow ? (
@@ -118,7 +118,7 @@ const UserProfile = () => {
             ) : (
               <button
                 onClick={handleFollowRequest}
-                className=" p-2 rounded-xl   bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
+                className=" p-2 rounded-xl  w-24 bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
               >
                 Follow
               </button>
@@ -136,7 +136,7 @@ const UserProfile = () => {
       </div>
           
       {(user?.isPrivate && !user?.isFollow) ? (
-        <div className="lg:flex-1 w-full border border-white h-52 lg:mt-3 rounded-xl grid place-content-center">
+        <div className="lg:flex-1 w-full border border-white h-52  rounded-xl grid place-content-center">
           <div className="flex flex-col gap-5 text-center">
             <span>This Account is Private</span>
             <span>Follow to see their photos and videos.</span>

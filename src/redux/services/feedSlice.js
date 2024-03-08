@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  feed: {
-    
-  },
+  feed: {},
   feeds: [],
   loading: true,
   error: null,
@@ -59,23 +57,12 @@ const feedSlice = createSlice({
         }
       }
     },
-    resetFeedState: (state) => {
-      state.feeds = [];
-      state.feed = {};
-      state.loading = true;
-      state.error = null;
-    },
+    reset: () => initialState,
   },
 });
 
-export const {
-  setFeeds,
-  setError,
-  likePost,
-  unlikePost,
-  resetFeedState,
-  setFeed,
-} = feedSlice.actions;
+export const { setFeeds, setError, likePost, unlikePost, reset, setFeed } =
+  feedSlice.actions;
 
 export default feedSlice.reducer;
 

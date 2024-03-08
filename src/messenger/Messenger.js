@@ -2,17 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import CurrentUserInfo from "./component/CurrentUserInfo";
 import SingleChat from "./component/SingleChat";
 import { useDispatch, useSelector } from "react-redux";
-import ChatWindow from "./component/ChatWindow";
 import { makeRequest } from "../config/api.config";
 import { setChats } from "../redux/services/chatSlice";
 import Search from "./component/Search";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { MessengerLine } from "../icons";
 import NewChatBtn from "./component/NewChatBtn";
 
 const NoSelectedChat = () => {
   return (
-    <div className="flex-1 dark:bg-gray-900 hidden bg-gray-50 dark:text-gray-50 t h-screen lg:flex justify-center items-center">
+    <div className="flex-1 dark:bg-zinc-900 hidden bg-gray-50 dark:text-gray-50 t h-screen lg:flex justify-center items-center">
       <div className="flex flex-col justify-center items-center">
         <div className="w-20 h-20 border-2 border-white rounded-full flex justify-center items-center">
           <MessengerLine size={60} />
@@ -67,15 +66,15 @@ const Messenger = () => {
   }, [fetchAllChats]);
 
   return (
-    <div className="bg-gray-100  dark:bg-slate-950 flex h-screen ">
+    <main className="bg-gray-100  dark:bg-zinc-950 flex h-screen ">
       <div
         className={`lg:flex-[0.5] md:flex-[0.5] xl:flex-[0.5] flex-1 ${
           chatId && "hidden lg:block "
-        } bg-gray-950 overflow-auto  xl:block md:block`}
+        } bg-zinc-950 overflow-auto  xl:block md:block border-r border-zinc-700`}
       >
         <CurrentUserInfo user={currentUser} />
-        <hr />  
-        <div className="bg-gray-950">
+       
+        <div className="dark:bg-zinc-950 h-full">
           <Search searchTerm={searchTerm} onChange={handleChange} />
           {!searchTerm &&
             chats?.map((chat) => {
@@ -87,7 +86,7 @@ const Messenger = () => {
         </div>
       </div>
       {selectedChat && chatId ? <Outlet /> : <NoSelectedChat />}
-    </div>
+    </main>
   );
 };
 

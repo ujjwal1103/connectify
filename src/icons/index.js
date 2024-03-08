@@ -29,6 +29,7 @@ import {
   AiOutlineLoading3Quarters as OutlineLoading3Quarters,
 } from "react-icons/ai";
 import { MdDarkMode as DarkMode } from "react-icons/md";
+import { BiZoomIn as ZoomIn } from "react-icons/bi";
 import {
   FaAngleLeft as AngleLeft,
   FaEllipsisV as EllipsisV,
@@ -44,7 +45,7 @@ import {
   IoChevronBackCircle as ChevronBackCircle,
 } from "react-icons/io5";
 import { IoIosLock as PasswordLock, IoMdList as MdList } from "react-icons/io";
-import { RiMessengerLine as MessengerLine } from "react-icons/ri";
+import { RiMessengerLine as MessengerLine,  RiCheckboxBlankLine as CheckBoxBlankLine  } from "react-icons/ri";
 import { FiEdit as Edit } from "react-icons/fi";
 import {
   IoChevronForward as ChevronForward,
@@ -101,5 +102,5 @@ export {
   Search,
   Send,
   SignOutAlt,
-  ThreeDots,
+  ThreeDots,CheckBoxBlankLine,ZoomIn
 };
