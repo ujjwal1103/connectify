@@ -8,17 +8,21 @@ const GOOGLE_PROD_OAUTH_REDIRECT_URI =
   process.env.REACT_APP_PROD_GOOGLE_OAUTH_REDIRECT_URI;
 const GOOGLE_DEV_OAUTH_REDIRECT_URI =
   process.env.REACT_APP_DEV_GOOGLE_OAUTH_REDIRECT_URI;
-const NODE_ENV =  process.env.NODE_ENV;
-const PROD = "Production";
+const NODE_ENV = process.env.NODE_ENV;
+const PROD = "production";
+console.log(process.env);
 
 const BASE_URL = NODE_ENV === PROD ? PROD_BASE_URL : DEV_BASE_URL;
-const SOCKET_SERVER_URL = NODE_ENV === PROD ? process.env.REACT_APP_PROD_SOCKET_URL : process.env.REACT_APP_DEV_SOCKET_URL;
+const SOCKET_SERVER_URL =
+  NODE_ENV === PROD
+    ? process.env.REACT_APP_PROD_SOCKET_URL
+    : process.env.REACT_APP_DEV_SOCKET_URL;
 
 const GOOGLE_OAUTH_REDIRECT_URI =
   NODE_ENV === PROD
     ? GOOGLE_PROD_OAUTH_REDIRECT_URI
     : GOOGLE_DEV_OAUTH_REDIRECT_URI;
- 
+
 export {
   PROD_BASE_URL,
   DEV_BASE_URL,
