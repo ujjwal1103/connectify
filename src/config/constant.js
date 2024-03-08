@@ -10,7 +10,6 @@ const GOOGLE_DEV_OAUTH_REDIRECT_URI =
   process.env.REACT_APP_DEV_GOOGLE_OAUTH_REDIRECT_URI;
 const NODE_ENV = process.env.NODE_ENV;
 const PROD = "production";
-console.log(process.env);
 
 const BASE_URL = NODE_ENV === PROD ? PROD_BASE_URL : DEV_BASE_URL;
 const SOCKET_SERVER_URL =
