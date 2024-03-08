@@ -4,7 +4,6 @@ const MultiLineInput = ({ onChange, value, className, name }, ref) => {
   const handleChange = (e) => {
     const lines = e.target.value.split("\n").slice(0, 5);
     e.target.value = lines.join("\n");
-    console.log(e);
     onChange(e);
   };
 

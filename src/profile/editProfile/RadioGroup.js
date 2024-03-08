@@ -12,7 +12,7 @@ const RadioGroup = ({ values, selectedValue, onChange, name }) => {
             <div className="inline-flex items-center" key={value}>
               <label
                 className="relative flex cursor-pointer items-center dark:text-gray-50 rounded-full p-3"
-                for="ripple-on"
+                htmlFor="ripple-on"
                 data-ripple-dark="true"
               >
                 <input
@@ -36,7 +36,7 @@ const RadioGroup = ({ values, selectedValue, onChange, name }) => {
               </label>
               <label
                 className="mt-px cursor-pointer select-none font-light dark:text-gray-50"
-                for="ripple-on"
+                htmlFor="ripple-on"
               >
                 {value}
               </label>

@@ -38,9 +38,9 @@ const Posts = ({ userId }) => {
 
   const renderPosts = posts?.map((post, index) => {
     if (posts.length === index + 1) {
-      return <Post ref={lastPost} key={post.id} post={post} />;
+      return <Post ref={lastPost} key={post._id} post={post} />;
     } else {
-      return <Post key={post.id} post={post} />;
+      return <Post key={post._id} post={post} />;
     }
   });
 

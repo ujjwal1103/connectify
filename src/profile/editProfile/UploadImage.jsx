@@ -8,7 +8,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useClickOutside } from "@react-hookz/web";
 import ProfilePicture from "../../common/ProfilePicture";
 
-const UploadImage = ({ value, onChange, setImage, name, image }) => {
+const UploadImage = ({
+  value,
+  onChange,
+  setImage,
+  name,
+  image,
+  uploadMyProfilePicture,
+  loading,
+}) => {
   const [openModal, setOpenModal] = useState(false);
   const [cropper, setCropper] = useState(false);
 
@@ -31,6 +39,7 @@ const UploadImage = ({ value, onChange, setImage, name, image }) => {
   const handleRemoveProfilePicture = () => {
     setOpenModal(false);
     onChange({ target: { value: "", name: name } });
+    uploadMyProfilePicture("", true);
     setImage("");
   };
 
@@ -71,13 +80,16 @@ const UploadImage = ({ value, onChange, setImage, name, image }) => {
   return (
     <div className="flex flex-col ">
       <div
-        onClick={() => setOpenModal(true)}
+        onClick={() => {
+          !loading && setOpenModal(true);
+        }}
         className="flex justify-center items-center relative "
       >
         <ProfilePicture
           src={value}
           className="w-20 h-20 rounded-full object-cover"
           alt=""
+          loading={loading}
         />
         <AnimatePresence>
           {openModal && (
@@ -91,7 +103,7 @@ const UploadImage = ({ value, onChange, setImage, name, image }) => {
             >
               <label
                 htmlFor="profilePic"
-                className="flex justify-center items-center p-3  dark:bg-zinc-900 dark:hover:bg-zinc-950 rounded-full"
+                className="flex justify-center items-center p-3 cursor-pointer  dark:bg-zinc-900 dark:hover:bg-zinc-950 rounded-full"
               >
                 <ImageFill />
               </label>
@@ -123,6 +135,7 @@ const UploadImage = ({ value, onChange, setImage, name, image }) => {
                 onCrop={(file, imageUrl) => {
                   setImage(file);
                   onChange({ target: { value: imageUrl, name: name } });
+                  uploadMyProfilePicture(imageUrl, false);
                   setOpenModal(false);
                   setCropper(false);
                 }}

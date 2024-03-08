@@ -10,10 +10,11 @@ const initialState = {
 };
 
 const profilleSlice = createSlice({
-  name: "auth",
+  name: "profile",
   initialState,
   reducers: {
     setUser: (state, action) => {
+      console.log("setUser called", action.payload);
       state.error = null;
       state.user = action.payload;
       state.loading = false;

@@ -14,6 +14,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
   });
 
   const [submitDisabled, setSubmitDisabled] = useState(true);
+  const [uploadingProfile, setSetUploadingProfile] = useState(false);
   const [image, setImage] = useState(user?.avatar);
 
   useEffect(() => {
@@ -46,9 +47,6 @@ const EditProfile = ({ user, onClose, setUser }) => {
           formData.append(field, userData[field] || "");
         }
       });
-      if (image || userData.avatar === "" || image === "") {
-        formData.append("avatar", image ?? "");
-      }
 
       const result = await makeRequest.putForm("/user/edit", formData);
       setUser({ ...user, ...result.updatedData });
@@ -65,6 +63,25 @@ const EditProfile = ({ user, onClose, setUser }) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageUploadAndRemove = async (avatar, removeProfilePicture) => {
+    setSetUploadingProfile(true);
+    if (removeProfilePicture) {
+      const result = await makeRequest.delete("/profilePicture/remove");
+      if (result.isSuccess) {
+        setUser({ ...user, avatar: "", avatarSmall: "" });
+        onClose();
+        return;
+      }
+    }
+
+    const formData = new FormData();
+    formData.append("avatar", image ?? "");
+    console.log(formData.get("avatar"), removeProfilePicture);
+    const result = await makeRequest.patchForm("/profilePicture", formData);
+    setUser({ ...user, ...result.avatars });
+    onClose();
+  };
+
   return (
     <div className=" p-2 lg:rounded-lg rounded-lg lg:m-0 h-full border-2 bg-zinc-900 border-zinc-800 ">
       <div className="p-4">
@@ -78,9 +95,11 @@ const EditProfile = ({ user, onClose, setUser }) => {
             <UploadImage
               value={userData.avatar}
               onChange={handleDataChange}
+              uploadMyProfilePicture={handleImageUploadAndRemove}
               setImage={setImage}
               image={image}
               name={"avatar"}
+              loading={uploadingProfile}
             />
           </div>
           <Input
@@ -113,7 +132,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
           />
           <div className="flex  gap-5">
             <button
-              disabled={submitDisabled}
+              disabled={submitDisabled || uploadingProfile}
               type="submit"
               className="middle none center mr-3 rounded-lg bg-[#620C45] py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-[#620C45]/20 transition-all hover:shadow-lg hover:shadow-[#620C45]/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"

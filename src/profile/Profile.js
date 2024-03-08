@@ -18,9 +18,6 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(profileState);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const setCurrentUser = (data) => {
-    
-  };
 
   const toggleEdit = () => {
     setEdit((prev) => !prev);
@@ -31,12 +28,12 @@ const Profile = () => {
   };
   const getUser = useCallback(async () => {
     try {
-      const response = await makeRequest("/user");
-      dispatch(setUser(response.data));
+      const data = await makeRequest("/user");
+      dispatch(setUser(data.user));
     } catch (error) {
       console.log("error", error.message);
     }
-  },[dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     getUser();
@@ -80,7 +77,12 @@ const Profile = () => {
           shouldCloseOutsideClick={false}
           showCloseButton={false}
         >
-          <EditProfile user={user} setUser={setCurrentUser} />
+          <EditProfile
+            user={user}
+            setUser={(data) => {
+              dispatch(setUser(data));
+            }}
+          />
         </Modal>
       )}
       <AnimatePresence>
@@ -109,7 +111,7 @@ const Drawer = ({ onClose }) => {
         <ul className="p-2">
           <li className="px-2 py-1 flex items-center gap-3 text-xl ">
             <span>
-              <BiLogOut size={24}/>
+              <BiLogOut size={24} />
             </span>
             <LogoutBtn>Logout</LogoutBtn>
           </li>
