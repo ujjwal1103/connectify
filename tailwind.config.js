@@ -5,9 +5,9 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        page: "calc(100vh - 5.5rem)",
-        like: "calc(100vh - 3rem)",
-        post: "calc(100vh - 37.54px)",
+        page: "calc(100dvh - 5.5rem)",
+        like: "calc(100dvh - 3rem)",
+        post: "calc(100dvh - 37.54px)",
       },
 
       backgroundImage: {
