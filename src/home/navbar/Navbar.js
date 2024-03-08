@@ -51,7 +51,7 @@ const Navbar = () => {
     }
   };
   return (
-    <header className="px-3 pt-3 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
+    <header className="px-3 py-3 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
       <nav className="bg-violet-700 bg-opacity-70 shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
         <div className="hidden lg:block">
           <ConnectifyLogoText size={44} showShadow={false} />
@@ -156,7 +156,7 @@ const Navbar = () => {
                   <li>
                     <button className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <SignOutAlt className="mr-2" />
-                      <LogoutBtn />
+                      <LogoutBtn >Logout</LogoutBtn>
                     </button>
                   </li>
                 </ul>

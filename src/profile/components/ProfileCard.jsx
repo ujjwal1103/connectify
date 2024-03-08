@@ -7,6 +7,7 @@ import Modal from "../../shared/Modal";
 const ProfileCard = ({ user, children, canOpen }) => {
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+
   const toggleShow = () => {
     if (user?.followers > 0 && !canOpen) {
       setShow((prev) => !prev);
@@ -20,7 +21,7 @@ const ProfileCard = ({ user, children, canOpen }) => {
 
   return (
     <>
-      <div className="p-2 h-full w-full bg-zinc-900 dark:border-zinc-500/30 shadow-2xl  rounded-xl">
+      <div className="p-2 h-full w-full bg-zinc-900 dark:border-zinc-500/30 shadow-2xl relative rounded-xl">
         <div className="flex justify-center items-center my-3">
           <span className=" px-5  text-xl">{user?.username}</span>
         </div>
@@ -76,5 +77,6 @@ const ProfileCard = ({ user, children, canOpen }) => {
     </>
   );
 };
+
 
 export default ProfileCard;

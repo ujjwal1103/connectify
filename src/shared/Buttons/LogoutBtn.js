@@ -3,7 +3,7 @@ import Button from "../Components/Button";
 import useResetStore from "../../hooks/useResetStore";
 import { useNavigate } from "react-router-dom";
 
-const LogoutBtn = () => {
+const LogoutBtn = ({children}) => {
   const  reset  = useResetStore();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -15,7 +15,7 @@ const LogoutBtn = () => {
 
   return (
     <Button onClick={handleLogout} unsetStyle={true}>
-      Logout
+      {children}
     </Button>
   );
 };

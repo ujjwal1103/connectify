@@ -1,10 +1,10 @@
 import React from "react";
 
-const ConnectifyLogoText = (_) => {
+const ConnectifyLogoText = ({w='300',h='60'}) => {
   return (
     <svg
-      width="300"
-      height="60"
+      width={w}
+      height={h}
       viewBox="0 0 400 60"
       xmlns="http://www.w3.org/2000/svg"
     >

@@ -11,9 +11,7 @@ const Posts = ({ userId }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("mount");
     return () => {
-      console.log("unmount");
       dispatch(reset());
     };
   }, [userId]);
