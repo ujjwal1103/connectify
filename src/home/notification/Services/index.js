@@ -12,6 +12,7 @@ export const sendNotification = async (userId, action, socket) => {
           from: getCurrentUserId(),
           notification: `${getCurrentUsername()} Liked Your Post`,
         });
+        break;
       }
       case "Send Message": {
         socket.emit("Send Message", {
@@ -19,6 +20,10 @@ export const sendNotification = async (userId, action, socket) => {
           from: getCurrentUserId(),
           notification: `${getCurrentUsername()} send you a Message`,
         });
+        break;
+      }
+      default : {
+        break;
       }
     }
   }

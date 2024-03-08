@@ -5,18 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { makeRequest } from "../config/api.config";
 import { setChats } from "../redux/services/chatSlice";
 import Search from "./component/Search";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { MessengerLine } from "../icons";
 import NewChatBtn from "./component/NewChatBtn";
 
 const NoSelectedChat = () => {
   return (
-    <div className="flex-1 dark:bg-zinc-900 hidden bg-gray-50 dark:text-gray-50 t h-screen lg:flex justify-center items-center">
-      <div className="flex flex-col justify-center items-center">
-        <div className="w-20 h-20 border-2 border-white rounded-full flex justify-center items-center">
+    <div className="flex-1 bg-red-400  hidden  dark:text-gray-50 t h-screen lg:flex md:flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center bg-red-400">
+        <div className="w-20 h-20 border-2 border-white rounded-full flex justify-center items-center dark:text-gray-50 ">
           <MessengerLine size={60} />
+        
         </div>
-        <h1>Your Messages</h1>
+        <h1 className="dark:text-gray-50">Your Messages</h1>
         <p>Send private photos and messages to a friend or group</p>
         <NewChatBtn
           title="Send Messages"
@@ -30,14 +31,16 @@ const Messenger = () => {
   const [searchTerm, setSearchTerm] = useState();
   const [searchResults, setSearchResults] = useState([]);
   const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
-  const { chats, selectedChat, messageChatId } = useSelector(
+  const { chats, selectedChat } = useSelector(
     (state) => state.chat
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
+  const navigate = useNavigate(); 
   const { chatId } = useParams();
 
   const fetchAllChats = useCallback(async () => {
+
     try {
       const data = await makeRequest("chats");
       if (data.isSuccess) {
@@ -46,7 +49,7 @@ const Messenger = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [dispatch, messageChatId]);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
@@ -64,6 +67,14 @@ const Messenger = () => {
   useEffect(() => {
     fetchAllChats();
   }, [fetchAllChats]);
+
+
+  useEffect(()=>{
+    if(!selectedChat && chatId){
+      navigate('/messenger',{replace:true})
+    }
+
+  },[selectedChat, chatId, navigate])
 
   return (
     <main className="bg-gray-100  dark:bg-zinc-950 flex h-screen ">

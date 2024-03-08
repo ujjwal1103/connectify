@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { makeRequest } from "../../config/api.config";
-import { useDispatch } from "react-redux";
 import ProfilePicture from "../../common/ProfilePicture";
 import UsernameLink from "../../shared/UsernameLink";
 import NewChatBtn from "./NewChatBtn";
 import { ChevronBack, Edit } from "../../icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CurrentUserInfo = () => {
   const [user, setUser] = useState();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
@@ -19,7 +16,7 @@ const CurrentUserInfo = () => {
     } catch (error) {
       console.log("error", error);
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     getUser();

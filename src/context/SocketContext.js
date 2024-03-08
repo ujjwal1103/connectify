@@ -1,7 +1,6 @@
 // SocketContext.js
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -37,7 +36,7 @@ export const SocketProvider = ({ children }) => {
     if (socket) {
       socket.emit("addUser", user);
     }
-  }, [socket, newSocket]);
+  }, [socket, newSocket, user]);
 
   const isUserOnline = (userId) => {
     return users && users.some((user) => user._id === userId);

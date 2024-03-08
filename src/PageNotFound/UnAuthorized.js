@@ -6,7 +6,7 @@ const UnAuthorized = () => {
   const navigate = useNavigate();
   return (
     <div className="w-screen h-screen flex justify-center flex-col items-center dark:bg-slate-950 dark:text-white ">
-      <img src={Unauthorized} className=" drop-shadow-lg"/>
+      <img src={Unauthorized} className=" drop-shadow-lg" alt="drop-shadow-lg"/>
       <button
         onClick={() => {
           localStorage.clear();

@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useSocket } from "../../context/SocketContext";
 import UsernameLink from "../../shared/UsernameLink";
 import { isCurrentUser } from "../../utils/getCurrentUserId";
@@ -34,7 +33,11 @@ const Sidebar = () => {
                   </li>
                 );
               }
-            })}
+
+              return ''
+            }
+            )}
+           
           </ul>
         </div>
       </aside>

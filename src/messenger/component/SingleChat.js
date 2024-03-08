@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import noDp from "../../assets/no_avatar.png";
 import { useDispatch } from "react-redux";
 import { setSelectedChat } from "../../redux/services/chatSlice";
 import { DotsNine } from "../../icons";
 import ProfilePicture from "../../common/ProfilePicture";
-import UsernameLink from "../../shared/UsernameLink";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUserId, isCurrentUser } from "../../utils/getCurrentUserId";
+import {  isCurrentUser } from "../../utils/getCurrentUserId";
 
 const SingleChat = ({ chat }) => {
   const [options, setOptions] = useState(false);

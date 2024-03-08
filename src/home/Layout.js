@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import Navbar from "./navbar/Navbar";
 import { Outlet } from "react-router-dom";
-// import { FooterThree } from "../common/Footer";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
-import Logo from "../icons/Logo";
 import ConnectifyLogoText from "../icons/ConnectifyLogoText";
 
 const Layout = () => {

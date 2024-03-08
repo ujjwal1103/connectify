@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 import UsernameLink from "../../shared/UsernameLink";
-import Button from "../../shared/Components/Button";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { makeRequest } from "../../config/api.config";
-import Loading from "../../profile/components/Loading";
 
 const Peoples = () => {
   const [peoples, setPeoples] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const fetchPeoples = async (p) => {
+  const fetchPeoples = useCallback(async (p) => {
     if (page === 1) {
       setLoading(true);
     }
@@ -20,11 +18,11 @@ const Peoples = () => {
     setPeoples([...peoples, ...res?.users]);
     setHasMore(res?.pagination?.hasMore);
     setLoading(false);
-  };
+  },[page, peoples]);
 
   useEffect(() => {
     fetchPeoples(page);
-  }, [page]);
+  }, [page, fetchPeoples]);
 
   if (loading) {
     return (

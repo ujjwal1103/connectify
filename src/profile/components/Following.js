@@ -1,11 +1,8 @@
 import { makeRequest } from "../../config/api.config";
-import { useCallback, useEffect, useState } from "react";
-import avatar from "../../assets/man.png";
+import {  useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
-import FollowButton from "../../shared/FollowButton";
-import { unfollowUser } from "../services/postServices";
 import { useDispatch, useSelector } from "react-redux";
 import { profileState, setFollowing } from "../../redux/services/profileSlice";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
@@ -25,7 +22,7 @@ const Following = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const getFollowing = async (p) => {
+  const getFollowing =useCallback( async (p) => {
     if (p === 1) {
       setLoading(true);
     }
@@ -43,11 +40,11 @@ const Following = ({ userId }) => {
     } catch (error) {
       setLoading(false);
     }
-  };
+  },[userId, dispatch, followings, query]);
 
   useEffect(() => {
     getFollowing(page);
-  }, [userId, dispatch, query, page]);
+  }, [getFollowing, page]);
 
   const navigateToUser = (username) => {
     if (username === currentUser?.username) {
@@ -57,17 +54,17 @@ const Following = ({ userId }) => {
     }
   };
 
-  const handleFollowButtonClick = async (userId) => {
-    const data = await unfollowUser(userId);
-    if (data.isSuccess) {
-    }
-  };
+  // const handleFollowButtonClick = async (userId) => {
+  //   const data = await unfollowUser(userId);
+  //   if (data.isSuccess) {
+  //   }
+  // };
 
   useEffect(() => {
     return () => {
       dispatch(setFollowing([]));
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <FadeInAnimation>

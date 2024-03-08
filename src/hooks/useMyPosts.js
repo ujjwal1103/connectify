@@ -55,7 +55,7 @@ const useMyPosts = (pageNum = 1, userId) => {
       controller.abort();
     };
 
-  }, [pageNum, userId]);
+  }, [pageNum, userId, dispatch, isLoading,totalPages]);
 
   return {
     isLoading,

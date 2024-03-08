@@ -6,7 +6,6 @@ import { makeRequest } from "../../config/api.config";
 import { motion } from "framer-motion";
 import { EmojiSmile } from "../../icons";
 import ImageCrop from "../../shared/ImageCrop";
-import { blobToFile } from "../../utils/blobToFile";
 import { useDispatch } from "react-redux";
 import { addPost } from "../../redux/services/postSlice";
 import { useLocation } from "react-router-dom";
@@ -135,7 +134,7 @@ const CreatePost = ({ onClose }) => {
             className="flex relative h-fit"
           >
             <div className="flex justify-center items-center  gap-5">
-              <img src={imageUrl} className="h-80  object-contain " />
+              <img src={imageUrl} className="h-80  object-contain " alt="imagess"/>
             </div>
             <div className="w-96 h-80">
               <MultiLineInput

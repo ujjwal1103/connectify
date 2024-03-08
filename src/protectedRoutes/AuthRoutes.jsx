@@ -12,7 +12,7 @@ const AuthRoutes = () => {
     if (isLoggedIn) {
       navigate("/", { replace: true });
     }
-  }, [user, accessToken]);
+  }, [user, accessToken, isLoggedIn, navigate]);
 
   return !isLoggedIn && <Outlet />;
 };

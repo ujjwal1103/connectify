@@ -11,7 +11,7 @@ import { useSocket } from "../../context/SocketContext";
 const ChatWindow = () => {
   const { selectedChat } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
-  const { socket, isUserOnline } = useSocket();
+  const { socket } = useSocket();
   const getAllMessages = useCallback(async () => {
     try {
       const data = await makeRequest(`messages/${selectedChat._id}`);
@@ -33,7 +33,7 @@ const ChatWindow = () => {
         getAllMessages();
       });
     }
-  }, [socket]);
+  }, [socket, getAllMessages]);
 
   return (
     <div className="flex-1 bg-zinc-900 h-screen overflow-hidden flex flex-col">

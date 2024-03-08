@@ -14,7 +14,7 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
   const [openDial, setOpenDial] = useState(false);
   const speedDialRef = useRef();
   const dispatch = useDispatch();
-  const { socket, isUserOnline } = useSocket();
+  const { socket } = useSocket();
   const handleTextChange = (e) => {
     setMessageText(e.target.value);
   };
@@ -25,15 +25,12 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
       to: userId,
     };
 
-   
-
     const response = await makeRequest.post(`message/${chatId}`, newMessage);
     if (response.isSuccess) {
-      console.log(response);
       getMessages();
       setMessageText("");
       await sendNotification(userId, "Send Message", socket);
-      // dispatch(setMessageChatId(response.chatId));
+      dispatch(setMessageChatId(response.chatId));
     }
   };
 
@@ -103,7 +100,7 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
               2
             </motion.button>
             <motion.button
-              transition={{ duration: 0, duration: 0.5 }}
+              transition={{ delay: 0, duration: 0.5 }}
               initial="hidden"
               animate="visible"
               exit="hidden"

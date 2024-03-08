@@ -43,7 +43,7 @@ const feedSlice = createSlice({
       }
     },
     unlikePost: (state, action) => {
-      const { postId, userId } = action.payload;
+      const { postId } = action.payload;
       const unlikedPostIndex = state.feeds.findIndex(
         (post) => post._id === postId
       );

@@ -14,11 +14,11 @@ const Post = () => {
       const res = await makeRequest.get(`/post/${postId}`);
       setPost(res?.post);
     } catch (error) {}
-  }, []);
+  }, [postId]);
 
   useEffect(() => {
     getPost();
-  }, []);
+  }, [getPost]);
 
   if (!post) {
     return <h1>Loading</h1>;
@@ -35,7 +35,7 @@ const Post = () => {
         </div>
       </div>
       <div className="py-2">
-        <img src={post?.imageUrl} className="w-96" />
+        <img src={post?.imageUrl} className="w-96" alt="images" />
       </div>
 
       <PostActions post={post} userId={getCurrentUserId()} />

@@ -14,7 +14,7 @@ const Posts = ({ userId }) => {
     return () => {
       dispatch(reset());
     };
-  }, [userId]);
+  }, [userId, dispatch,page]);
 
   const observer = useRef();
   const lastPost = useCallback(
@@ -29,7 +29,7 @@ const Posts = ({ userId }) => {
 
       if (node) observer?.current.observe(node);
     },
-    [loading, hasNext]
+    [loading, hasNext, dispatch, page]
   );
 
   if (!loading && posts.length === 0) {

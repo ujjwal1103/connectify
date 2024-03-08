@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
@@ -12,7 +12,6 @@ import { Edit } from "../icons";
 import Modal from "../shared/Modal";
 import { BiLogOut } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
-import { useClickOutside } from "@react-hookz/web";
 import { AnimatePresence, motion } from "framer-motion";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
@@ -20,7 +19,7 @@ const Profile = () => {
   const { user } = useSelector(profileState);
   const [openDrawer, setOpenDrawer] = useState(false);
   const setCurrentUser = (data) => {
-    dispatch(setUser(data));
+    
   };
 
   const toggleEdit = () => {
@@ -33,11 +32,11 @@ const Profile = () => {
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest("/user");
-      setCurrentUser(response.user);
+      dispatch(setUser(response.data));
     } catch (error) {
       console.log("error", error.message);
     }
-  }, [dispatch]);
+  },[dispatch]);
 
   useEffect(() => {
     getUser();

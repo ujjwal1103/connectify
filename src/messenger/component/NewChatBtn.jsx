@@ -44,7 +44,7 @@ const AddNewUser = ({ onClose }) => {
 
   useEffect(() => {
     getAllUsers();
-  }, []);
+  }, [getAllUsers]);
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);

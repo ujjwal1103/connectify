@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../common/InputFields/Input";
 import {
   profileState,
-  resetState,
   setFollower,
 } from "../../redux/services/profileSlice";
 import { useDispatch, useSelector } from "react-redux";

@@ -10,7 +10,7 @@ const FollowButton = ({ className, isFollow, onClick, btnText, canRemove }) => {
     } else {
       setBtnTitle("follow");
     }
-  }, []);
+  }, [canRemove,isFollow]);
   return (
     <button className={className} onClick={onClick}>
       {btnTitle}

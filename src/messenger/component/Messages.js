@@ -12,10 +12,10 @@ const Messages = () => {
     setGroupedMessages(groupMessagesByDate(messages));
   }, [messages]);
   useEffect(() => {
-    if (messagesContainerRef.current) {
+    if (messagesContainerRef?.current) {
       setTimeout(() => {
         messagesContainerRef.current.scrollTop =
-          messagesContainerRef.current.scrollHeight;
+          messagesContainerRef.current?.scrollHeight;
       }, 1000);
     }
   }, [messages]);

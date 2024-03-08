@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
     if (!(user && accessToken)) {
       navigate("/login", { replace: true });
     }
-  }, [user, accessToken]);
+  }, [user, accessToken, navigate]);
 
   return (
     user && accessToken && (

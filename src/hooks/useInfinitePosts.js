@@ -22,7 +22,7 @@ const useInfinitePosts = (userId) => {
       dispatch(setLoading(false));
     };
     fetchPost();
-  }, [page, userId]);
+  }, [page, userId, dispatch]);
 
   return { posts, loading, hasNext, page };
 };

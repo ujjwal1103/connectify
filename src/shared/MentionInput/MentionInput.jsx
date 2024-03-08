@@ -1,5 +1,5 @@
 import { useDebouncedState } from "@react-hookz/web";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { makeRequest } from "../../config/api.config";
 
 const MentionInput = (

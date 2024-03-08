@@ -43,7 +43,7 @@ const usePosts = (pageNum = 1) => {
     return () => {
       controller.abort();
     };
-  }, [pageNum]);
+  }, [pageNum, dispatch, totalPages]);
 
   return { isLoading, isError, error, feeds, hasNextPage };
 };

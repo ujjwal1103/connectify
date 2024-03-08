@@ -37,7 +37,6 @@ const Input = (props, ref) => {
     <div className="flex items-center relative w-full">
       <span className="absolute px-2 dark:text-white ">{prefix}</span>
       <input
-      autoSave={false}
         ref={ref}
         value={value}
         {...props}

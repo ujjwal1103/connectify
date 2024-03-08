@@ -14,7 +14,6 @@ import {
   setOtherUser,
 } from "../redux/services/profileSlice";
 import PageNotFound from "../PageNotFound/PageNotFound";
-import { resetState } from "../redux/services/postSlice";
 
 // const images = [
 //   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
