@@ -7,6 +7,7 @@ const ChatHeader = ({ otherUser }) => {
     <div className="w-full flex bg-gray-50 dark:bg-zinc-950 border-b dark:border-zinc-700  items-center p-2">
         <Link
         to={'/messenger'}
+        className="lg:hidden"
         >
           <ChevronBack size={24} />
         </Link>

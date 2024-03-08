@@ -11,8 +11,8 @@ import NewChatBtn from "./component/NewChatBtn";
 
 const NoSelectedChat = () => {
   return (
-    <div className="flex-1 bg-red-400  hidden  dark:text-gray-50 t h-screen lg:flex md:flex justify-center items-center">
-      <div className="flex flex-col justify-center items-center bg-red-400">
+    <div className="flex-1  hidden  dark:text-gray-50 t h-screen lg:flex md:flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center ">
         <div className="w-20 h-20 border-2 border-white rounded-full flex justify-center items-center dark:text-gray-50 ">
           <MessengerLine size={60} />
         

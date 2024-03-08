@@ -36,7 +36,7 @@ const ChatWindow = () => {
   }, [socket, getAllMessages]);
 
   return (
-    <div className="flex-1 bg-zinc-900 h-screen overflow-hidden flex flex-col">
+    <div className="flex-1 bg-zinc-900 h-dvh overflow-hidden flex flex-col">
       <ChatHeader otherUser={selectedChat?.friend} />
 
       <Messages />
