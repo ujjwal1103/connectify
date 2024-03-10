@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import { toast } from "react-toastify";
 import ConnectifyLogoText from "../icons/ConnectifyLogoText";
+import { getCurrentUserId } from "../utils/getCurrentUserId";
 
 const Layout = () => {
   const { socket, setUsers } = useSocket();
@@ -19,7 +20,8 @@ const Layout = () => {
   useEffect(() => {
     if (socket) {
       socket.on("allusers", (data) => {
-        setUsers(data);
+        console.log(data)
+        setUsers(data.filter((u) => u.userId !== getCurrentUserId()));
       });
     }
   }, [socket, setUsers]);

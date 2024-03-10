@@ -40,11 +40,13 @@ const ChatWindow = () => {
     getAllMessages();
   }, [getAllMessages]);
 
+
   useEffect(() => {
     if (socket) {
       const handleMessage = (data) => {
+        console.log("message received", data);
         if (data.from === selectedChat?.friend?._id) {
-          setPage(1);
+          console.log('called get messages')
           getAllMessages();
         }
       };

@@ -7,7 +7,7 @@ const Sidebar = () => {
 
   if (!users) {
     return (
-      <div className={!users ? "invisible" : "visible min-h-[400px]"}>
+      <div className={"visible min-h-[400px]"}>
         <aside className="hidden lg:flex  w-64 flex-col overflow-y-scroll rounded-md bg-white px-2 pt-2 dark:bg-slate-800">
           <div className=" flex flex-1 flex-col justify-between">
             NO USERS ONLINE

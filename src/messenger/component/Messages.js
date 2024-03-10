@@ -5,17 +5,24 @@ import { groupMessagesByDate } from "../../utils/groupMessagesByDate";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
 import { BiLoader } from "react-icons/bi";
 
-const Messages = ({ loading, handlePageChange, hasMore }) => {
+const Messages = ({
+  loading,
+  handlePageChange,
+  hasMore,
+  scrollIntoView
+}) => {
   const { messages } = useSelector((state) => state.chat);
   const [groupedMessages, setGroupedMessages] = useState([]);
   const messagesContainerRef = useRef(null);
   useEffect(() => {
     setGroupedMessages(groupMessagesByDate(messages));
-    console.log(messagesContainerRef);
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollIntoView();
+      messagesContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
-  }, [loading]);
+  }, [loading, messages]);
 
   if (loading) {
     return (
@@ -61,7 +68,7 @@ const Messages = ({ loading, handlePageChange, hasMore }) => {
           </div>
         ))}
 
-        <div ref={messagesContainerRef} className=""></div>
+        <div ref={messagesContainerRef} className="p-2 bg-red-400"></div>
       </div>
     </div>
   );

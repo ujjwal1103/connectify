@@ -24,6 +24,7 @@ export const SocketProvider = ({ children }) => {
     () =>
       io.connect(SOCKET_SERVER_URL, {
         query: { user: JSON.stringify(user) },
+        auth: { name: user?.name, username: user?.username, userId: user?._id },
       }),
     []
   );
@@ -38,11 +39,9 @@ export const SocketProvider = ({ children }) => {
     return () => newSocket.disconnect();
   }, [newSocket]);
 
-
   const isUserOnline = (userId) => {
-    return users && users.some((user) => user._id === userId);
+    return users && users.some((user) => user.userId === userId);
   };
-
 
   return (
     <SocketContext.Provider value={{ socket, users, isUserOnline, setUsers }}>
