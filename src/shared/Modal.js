@@ -33,7 +33,6 @@ const Modal = ({
 
   useClickOutside(modalRef, () => {
     if (shouldCloseOutsideClick) {
-      console.log("model cliked", modalRef);
       onClose();
     }
   });

@@ -22,12 +22,12 @@ const Layout = () => {
         setUsers(data);
       });
     }
-  }, [socket,setUsers]);
+  }, [socket, setUsers]);
 
   useEffect(() => {
     if (socket) {
       socket.on("Receive", (data) => {
-        console.log(data);
+        console.log("liked post", Date.now());
         toast(data);
       });
     }
@@ -37,7 +37,7 @@ const Layout = () => {
     <>
       <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit bg-black  ">
         <div className="flex justify-center items-center sticky top-10">
-          <ConnectifyLogoText className="fill-white lg:hidden" w="200" h='20' />
+          <ConnectifyLogoText className="fill-white lg:hidden" w="200" h="20" />
         </div>
       </header>
       <Navbar />

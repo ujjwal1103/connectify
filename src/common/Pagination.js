@@ -8,7 +8,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         pageNumbers.push(i);
     }
 
-    console.log(uuid())
+    
     const renderPageNumbers = () => {
         const pagesToRender = [];
 

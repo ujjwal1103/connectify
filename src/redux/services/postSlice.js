@@ -14,7 +14,17 @@ const postSlice = createSlice({
   initialState,
   reducers: {
     setPosts: (state, action) => {
-      state.posts = [...state.posts, ...action.payload];
+      // Assuming action.payload is an array of new posts
+      const newPosts = action.payload;
+
+      // Filter out duplicates based on a unique identifier (e.g., post ID)
+      const uniqueNewPosts = newPosts.filter(
+        (newPost) =>
+          !state.posts.some((existingPost) => existingPost._id === newPost._id)
+      );
+
+      // Update the state with unique new posts
+      state.posts = [...state.posts, ...uniqueNewPosts];
     },
     addPost: (state, action) => {
       state.posts = [action.payload, ...state.posts];

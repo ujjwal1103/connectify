@@ -44,7 +44,6 @@ export const saveUserAndTokenLocalstorage = (
   accessToken,
   refressToken
 ) => {
-  console.log(user, accessToken, refressToken);
   localStorage.setItem("user", JSON.stringify(user));
   localStorage.setItem("accessToken", accessToken);
   localStorage.setItem("refressToken", refressToken);

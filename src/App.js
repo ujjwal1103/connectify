@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import {Login, Register} from "./module/Auth";
+import { Login, Register } from "./module/Auth";
 import HomePage from "./home/HomePage";
 import PageNotFound from "./PageNotFound/PageNotFound";
 import UnAuthorized from "./PageNotFound/UnAuthorized.js";
@@ -15,8 +15,16 @@ import ChatWindow from "./messenger/component/ChatWindow.js";
 import Post from "./module/post/Post.jsx";
 import Exp from "./exp/Exp.jsx";
 import Peoples from "./module/People/index.js";
+import { useEffect } from "react";
+import { makeRequest } from "./config/api.config.js";
 
 const App = () => {
+
+  useEffect(() => {
+    const res = makeRequest("/healthCheck");
+    console.log(res);
+  }, []);
+
   return (
     <Routes>
       {/* Authentication Routes */}
@@ -33,7 +41,7 @@ const App = () => {
           <Route path="profile" element={<Profile />} />
           <Route path=":username" element={<UserProfile />} />
           <Route path="search" element={<Search />} />
-          <Route path="expore/people" element={<Peoples/>} />
+          <Route path="expore/people" element={<Peoples />} />
         </Route>
         <Route path="messenger" element={<Messenger />}>
           <Route path=":chatId" element={<ChatWindow />} />

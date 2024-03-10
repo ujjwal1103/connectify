@@ -1,5 +1,5 @@
 import { makeRequest } from "../../config/api.config";
-import {  useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
@@ -22,29 +22,33 @@ const Following = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const getFollowing =useCallback( async (p) => {
-    if (p === 1) {
+  const getFollowing = useCallback(async () => {
+    if (page === 1) {
       setLoading(true);
     }
-    let url = `/following/${userId}?page=${p}`;
+    let url = `/following/${userId}?page=${page}`;
     if (query) {
       url = url + `&username=${query}`;
     }
     try {
       const data = await makeRequest.get(url);
       if (data.isSuccess) {
-        dispatch(setFollowing([...followings, ...data.followings]));
+        setHasMore(data.hasMore);
+        if (page === 1) {
+          dispatch(setFollowing(data.followings));
+        } else {
+          dispatch(setFollowing([...followings, ...data.followings]));
+        }
         setLoading(false);
-        setHasMore(data?.followings?.length !== 0);
       }
     } catch (error) {
       setLoading(false);
     }
-  },[userId, dispatch, followings, query]);
+  }, [userId, page]);
 
   useEffect(() => {
-    getFollowing(page);
-  }, [getFollowing, page]);
+    getFollowing();
+  }, [getFollowing]);
 
   const navigateToUser = (username) => {
     if (username === currentUser?.username) {
@@ -60,11 +64,12 @@ const Following = ({ userId }) => {
   //   }
   // };
 
-  useEffect(() => {
-    return () => {
-      dispatch(setFollowing([]));
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   return () => {
+  //     console.log("unmounting");
+  //     dispatch(setFollowing([]));
+  //   };
+  // }, []);
 
   return (
     <FadeInAnimation>
@@ -131,12 +136,11 @@ const Following = ({ userId }) => {
                           ""
                         ) : (
                           <FollowBtn
-                            callBack={(data)=>{
-                              console.log(data)
+                            callBack={(data) => {
+                              console.log(data);
                             }}
                             userId={user?._id}
                             isFollow={user?.isFollow}
-                            
                           />
                         )}
                       </div>

@@ -73,7 +73,6 @@ const UploadImage = ({
   };
 
   useClickOutside(pickerRef, () => {
-    console.log("model picker");
     setOpenModal(false);
   });
 

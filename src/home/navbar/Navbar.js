@@ -28,7 +28,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenNotification, setIsOpenNotification] = useState(false);
   const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
-  const location = useLocation()
+  const location = useLocation();
   const modelRef = useRef();
 
   const toggleCreatePost = () => {
@@ -51,7 +51,7 @@ const Navbar = () => {
     }
   };
   return (
-    <header className="px-3 py-3 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
+    <header className="px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
       <nav className="bg-violet-700 bg-opacity-70 shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
         <div className="hidden lg:block">
           <ConnectifyLogoText size={44} showShadow={false} />
@@ -80,25 +80,30 @@ const Navbar = () => {
               <Search size={24} />
             </NavLink>
           </div>
-          <div>
-            <NavLink
-              to={"/messenger"}
-              state={location.pathname}
-              className={({ isActive }) =>
-                isActive ? "text-[#620C45] font-extrabold" : ""
-              }
-            >
-              <Chat size={24} />
-            </NavLink>
-          </div>
+          <Badge count={5}>
+            {" "}
+            <div>
+              <NavLink
+                to={"/messenger"}
+                state={location.pathname}
+                className={({ isActive }) =>
+                  isActive ? "text-[#620C45] font-extrabold" : ""
+                }
+              >
+                <Chat size={24} />
+              </NavLink>
+            </div>
+          </Badge>
           <div className="">
             <NavLink onClick={toggleCreatePost}>
               <PlusSquare size={24} />
             </NavLink>
           </div>
-          <div onClick={toggleNotification}>
-            <Heart size={24} />
-          </div>
+          <Badge count={10}>
+            <button onClick={toggleNotification}>
+              <Heart size={24} />
+            </button>
+          </Badge>
           <div>
             <NavLink
               to={"/profile"}
@@ -156,7 +161,7 @@ const Navbar = () => {
                   <li>
                     <button className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700">
                       <SignOutAlt className="mr-2" />
-                      <LogoutBtn >Logout</LogoutBtn>
+                      <LogoutBtn>Logout</LogoutBtn>
                     </button>
                   </li>
                 </ul>
@@ -171,10 +176,30 @@ const Navbar = () => {
             </Modal>
           )}
         </AnimatePresence>
-        {isOpenNotification && <Notification setClose={toggleNotification} />}
+        <AnimatePresence>
+          {!isOpenNotification && (
+            <Modal
+              onClose={toggleNotification}
+              showCloseButton={false}
+            >
+              <Notification setClose={toggleNotification} />
+            </Modal>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );
 };
 
 export default Navbar;
+
+const Badge = ({ children, count }) => {
+  return (
+    <div className="h-4 relative">
+      <span className="absolute -right-1 -top-1 text-[8px] bg-red-600 size-3 rounded-full flex justify-center items-center">
+        {count}
+      </span>
+      {children}
+    </div>
+  );
+};

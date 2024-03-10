@@ -50,7 +50,7 @@ const Likes = ({ like, postId }) => {
                 <FollowBtn
                   isFollow={l.isFollow}
                   userId={l._id}
-                  callBack={(d) => console.log(d)}
+                  callBack={() =>{}}
                   
                 />
               </li>

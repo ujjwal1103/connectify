@@ -23,8 +23,8 @@ const CurrentUserInfo = () => {
   }, [getUser]);
 
   return (
-    <div className="w-full flex gap-4 p-2 border-b dark:border-zinc-700 justify-between items-center dark:text-gray-50">
-      <div className="flex gap-4 p-2 dark:text-gray-50">
+    <div className="w-full box-border  flex gap-4 p-1 lg:p-2 border-b dark:border-zinc-700 justify-between items-center dark:text-gray-50">
+      <div className="flex gap-4 p-2 items-center  dark:text-gray-50">
         <button
           onClick={() => {
             navigate('/',{replace:true});
@@ -34,11 +34,11 @@ const CurrentUserInfo = () => {
         </button>
         <ProfilePicture
           src={user?.avatar}
-          className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
+          className="inline-block lg:size-12 size-7 rounded-full hover:scale-90 duration-500 object-cover"
         />
-        <div className="">
-          <h4 className="font-semibold">{user?.name}</h4>
-          <UsernameLink username={user?.username} />
+        <div className="text-base">
+          <h4 className="font-semibold text-xs lg:text-base">{user?.name}</h4>
+          <UsernameLink username={user?.username} className="text-xs lg:text-base"/>
         </div>
       </div>
       <NewChatBtn title={<Edit />} />

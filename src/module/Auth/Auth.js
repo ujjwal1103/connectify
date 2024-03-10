@@ -42,8 +42,6 @@ const Auth = () => {
         email: user.email,
       });
       setLoading(false);
-      console.log(res);
-
       res && localStorage.setItem("user", JSON.stringify(res));
 
       dispatch(login({ isAuthenticated: true, user: res?.user }));

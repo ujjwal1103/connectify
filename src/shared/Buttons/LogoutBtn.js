@@ -7,7 +7,6 @@ const LogoutBtn = ({children}) => {
   const  reset  = useResetStore();
   const navigate = useNavigate();
   const handleLogout = () => {
-    console.log(reset)
     reset();
     localStorage.clear();
     navigate("/");

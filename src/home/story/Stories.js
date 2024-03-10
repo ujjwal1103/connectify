@@ -70,8 +70,6 @@ const Stories = ({ setClose }) => {
     return () => clearInterval(countdown);
   }, [timer]);
 
-  console.log(story);
-
   const handleList = () => {
     setMenu(!menu);
   };

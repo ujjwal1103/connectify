@@ -30,13 +30,14 @@ export default NewChatBtn;
 const AddNewUser = ({ onClose }) => {
   const [searchTerm, setSearchTerm] = useState();
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const getAllUsers = useCallback(async () => {
     try {
       const res = await makeRequest.get(`/following/${getCurrentUserId()}`);
-      setUsers([...res.followings.slice(0, 5)]);
+      setUsers([...res.followings]);
     } catch (error) {
       console.log(error);
     }
@@ -58,6 +59,7 @@ const AddNewUser = ({ onClose }) => {
   };
   const handleUserSelect = async (userId) => {
     try {
+      setLoading(true);
       const response = await makeRequest.post("/chat", { to: userId });
       if (response.isSuccess) {
         dispatch(addChat(response.chat));
@@ -69,21 +71,28 @@ const AddNewUser = ({ onClose }) => {
     }
   };
   return (
-    <div className="  ">
-      <div className="w-96 h-96 overflow-hidden  bg-zinc-950 shadow-lg rounded-xl p-2">
-        <div className="p-2 bg-zinc-950 mb-2 rounded-sm shadow-lg text-gray-50">
+    <div className=" overflow-hidden  rounded-xl">
+      <div className="w-96 bg-zinc-950 shadow-lg p-2">
+        <div className="p-2 mb-2 rounded-sm shadow-lg text-gray-50">
           <h1>New Chat</h1>
         </div>
-        <div className="px-2">
+        <div className="px-2 bg-transparent">
           <input
             type="text"
             value={searchTerm}
             placeholder="Search Friend"
             onChange={handleChange}
-            className="border-none shadow-inner w-full bg-zinc-800 mb-2  rounded-3xl dark:text-black"
+            className="border-none shadow-inner dark:text-white w-full bg-zinc-800 mb-2  rounded-3xl "
           />
         </div>
-        <div className="overflow-y-scroll h-full pb-10">
+        {users.length === 0 && (
+          <div className="flex items-center p-4 gap-3 m-2 bg-slate-800 rounded-xl">
+            no user found
+          </div>
+        )}
+        <div
+          className={`overflow-y-scroll ${users.length === 0 ? "" : "h-96"}`}
+        >
           {users?.map((user) => {
             return (
               <div
@@ -101,8 +110,9 @@ const AddNewUser = ({ onClose }) => {
 
                 <div className="flex-1 flex justify-end w-full">
                   <button
+                    disabled={loading}
                     onClick={() => handleUserSelect(user?._id)}
-                    className="bg-blue-600 overflow-hidden text-gray-50 text-xs  rounded-lg w-0 p-0  group-hover:w-auto group-hover:p-1 group-hover:transition-all transition-all"
+                    className="bg-blue-600 disabled:opacity-65 overflow-hidden text-gray-50 text-xs  rounded-lg w-0 p-0  group-hover:w-auto group-hover:p-1 group-hover:transition-all transition-all"
                   >
                     Chat
                   </button>
@@ -111,12 +121,6 @@ const AddNewUser = ({ onClose }) => {
             );
           })}
         </div>
-
-        {users.length === 0 && (
-          <div className="flex items-center p-4 gap-3 m-2 bg-slate-800 rounded-xl">
-            no user found
-          </div>
-        )}
       </div>
     </div>
   );

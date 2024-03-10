@@ -24,7 +24,7 @@ const CreateStory = ({ setClose }) => {
     const data = new FormData();
     data.append("story", file);
 
-    console.log(data);
+    
     if (data) {
       try {
         const res = await makeRequest.post("/story", data);

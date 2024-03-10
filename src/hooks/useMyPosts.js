@@ -19,13 +19,12 @@ const useMyPosts = (pageNum = 1, userId) => {
   const [hasNextPage, setHasNextPage] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(isLoading, "loading")
+  
 
   useEffect(() => {
     setIsLoading(true);
     setIsError(false);
     setError({});
-    console.log(isLoading, "loading")
 
     const controller = new AbortController();
     const { signal } = controller;
@@ -38,20 +37,14 @@ const useMyPosts = (pageNum = 1, userId) => {
         dispatch(setPosts(data));
         setHasNextPage(Boolean(data.hasNextPage));
         setIsLoading(false);
-        console.log(isLoading, "loading")
       })
       .catch((e) => {
-        console.log(e);
         setIsLoading(false);
         if (signal.aborted) return;
         setIsError(true);
         setError({ message: e.message });
       });
-
-      console.log(isLoading, "loading")
-
     return () => {
-      console.log("returning");
       controller.abort();
     };
 

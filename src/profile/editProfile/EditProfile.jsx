@@ -76,7 +76,6 @@ const EditProfile = ({ user, onClose, setUser }) => {
 
     const formData = new FormData();
     formData.append("avatar", image ?? "");
-    console.log(formData.get("avatar"), removeProfilePicture);
     const result = await makeRequest.patchForm("/profilePicture", formData);
     setUser({ ...user, ...result.avatars });
     onClose();

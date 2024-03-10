@@ -10,7 +10,6 @@ const Suggetion = ({ user }) => {
 
   const handleFollowRequest = async () => {
     const data = await followUser(userId);
-    console.log("RESPONSE", data);
     if (data.follow) {
       setFollow(data.follow);
     }

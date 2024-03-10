@@ -18,7 +18,7 @@ const Peoples = () => {
     setPeoples([...peoples, ...res?.users]);
     setHasMore(res?.pagination?.hasMore);
     setLoading(false);
-  },[page, peoples]);
+  },[page]);
 
   useEffect(() => {
     fetchPeoples(page);

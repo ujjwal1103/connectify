@@ -76,10 +76,8 @@ const UserProfile = () => {
   const handleSendMessage = async () => {
     try {
       const response = await makeRequest.post("/chat", { to: user._id });
-      console.log(response.chat._id);
       if (response.isSuccess) {
         dispatch(addChat(response.chat));
-        console.log(response.chat._id);
         navigate(`/messenger/${response.chat._id}`);
       }
     } catch (error) {
@@ -110,7 +108,7 @@ const UserProfile = () => {
             {user?.isFollow ? (
               <button
                 onClick={handleUnfollow}
-                className=" p-2 rounded-xl   bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
+                className=" p-2 rounded-xl ring  ring-blue-600 hover:bg-zinc-800 transition-colors delay-200"
               >
                 Following
               </button>
@@ -125,9 +123,9 @@ const UserProfile = () => {
             {user?.isFollow && (
               <button
                 onClick={handleSendMessage}
-                className=" p-2 rounded-xl   bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
+                className=" p-2 rounded-xl ring  ring-blue-600  bg-blue-600 hover:bg-blue-800 hover:ring-blue-800 transition-colors delay-200"
               >
-                Send Message
+                Message
               </button>
             )}
           </div>

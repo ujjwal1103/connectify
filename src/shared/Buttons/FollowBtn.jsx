@@ -8,7 +8,6 @@ const FollowBtn = ({ userId, callBack, isFollow }) => {
 
   const handleFollowRequest = async () => {
     const data = await followUser(userId);
-    console.log("RESPONSE", data);
     if (data.follow) {
       setFollow(data.follow);
       callBack(data);
@@ -22,7 +21,6 @@ const FollowBtn = ({ userId, callBack, isFollow }) => {
       setFollow(false);
       callBack(data);
     }
-    console.log(userId);
   };
 
   if (isCurrentUser(userId)) {

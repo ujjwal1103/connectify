@@ -14,7 +14,7 @@ const Posts = ({ userId }) => {
     return () => {
       dispatch(reset());
     };
-  }, [userId, dispatch,page]);
+  }, []);
 
   const observer = useRef();
   const lastPost = useCallback(
@@ -51,7 +51,7 @@ const Posts = ({ userId }) => {
       }`}
     >
       <div
-        className={`grid lg:grid-cols-2 xl:grid-cols-3 md:grid-cols-2 gap-4 pb-5 `}
+        className={`grid lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 gap-4  `}
       >
         {renderPosts}
       </div>

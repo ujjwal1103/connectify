@@ -24,7 +24,6 @@ const ImageCrop = ({
   };
 
   const cropImage = async () => {
-    console.log("cliked next", Date.now());
     try {
       const { file, url } = await getCroppedImage(
         image,

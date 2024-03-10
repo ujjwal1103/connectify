@@ -131,15 +131,15 @@ const CreatePost = ({ onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2 }}
-            className="flex relative h-fit"
+            className="flex relative h-fit flex-col lg:flex-row"
           >
             <div className="flex justify-center items-center  gap-5">
-              <img src={imageUrl} className="h-80  object-contain " alt="imagess"/>
+              <img src={imageUrl} className="lg:h-80 h-44 object-contain " alt="imagess"/>
             </div>
-            <div className="w-96 h-80">
+            <div className="lg:w-96 w-auto lg:h-80 h-44">
               <MultiLineInput
                 text={caption}
-                setText={setCaption}
+                onChange={(e)=>setCaption(e.target.value )}
                 className={
                   "!ring-0 resize-none border outline-none border-none w-full h-full dark:bg-neutral-800 p-2 dark:text-gray-100"
                 }

@@ -37,7 +37,7 @@ const SearchInput = () => {
   };
 
   return (
-    <div className="w-full z-[2000] lg:h-auto h-96  relative lg:block">
+    <div className="w-full z-[1000] lg:h-auto h-96  relative lg:block">
       <Input
         type="search"
         onChange={handleSearch}

@@ -29,7 +29,7 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
     if (response.isSuccess) {
       getMessages();
       setMessageText("");
-      await sendNotification(userId, "Send Message", socket);
+      await sendNotification(userId, "Send Message", socket, chatId);
       dispatch(setMessageChatId(response.chatId));
     }
   };

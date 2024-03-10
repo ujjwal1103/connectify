@@ -55,7 +55,6 @@ const SinglePost = ({ post, posts }) => {
   const handleRightClick = () => {
     const index = posts.findIndex((p) => p?._id === currPost?._id);
 
-    console.log(posts[index + 1]);
     if (index === posts.length - 1) {
       return;
     }
@@ -80,7 +79,6 @@ const SinglePost = ({ post, posts }) => {
 
   const handleFollowRequest = async () => {
     const data = await followUser(currPost?._id);
-    console.log("RESPONSE", data);
     setCurrentPost((prev) => ({ ...prev, isFollow: true }));
   };
 
@@ -103,10 +101,7 @@ const SinglePost = ({ post, posts }) => {
         </button>
       )}
       <div className=" bg-zinc-950 flex justify-center items-center">
-        <ImageSlider
-          images={currPost.imageUrl}
-          className={"w-full "}
-        />
+        <ImageSlider images={currPost.imageUrl} className={"w-full "} />
       </div>
 
       <div className="flex flex-col  dark:text-gray-50">

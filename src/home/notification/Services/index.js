@@ -3,7 +3,7 @@ import {
   getCurrentUsername,
 } from "../../../utils/getCurrentUserId";
 
-export const sendNotification = async (userId, action, socket) => {
+export const sendNotification = async (userId, action, socket, chatId) => {
   if (userId && getCurrentUserId()) {
     switch (action) {
       case "Post Like": {
@@ -17,6 +17,7 @@ export const sendNotification = async (userId, action, socket) => {
       case "Send Message": {
         socket.emit("Send Message", {
           to: userId,
+          chat: chatId,
           from: getCurrentUserId(),
           notification: `${getCurrentUsername()} send you a Message`,
         });

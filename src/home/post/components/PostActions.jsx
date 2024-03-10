@@ -26,8 +26,6 @@ const PostActions = ({ post, userId, showCurrentPost }) => {
 
       if (isOnline) {
         await sendNotification(post?.user?._id, "Post Like", socket);
-      } else {
-        console.log("user is not online");
       }
     } catch (error) {
       dispatch(dislikeCurrentPost({ postId: post._id, userId }));

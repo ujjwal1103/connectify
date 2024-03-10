@@ -16,7 +16,6 @@ const notificationsSlice = createSlice({
     },
     // set notification
     setNotifications: (state, action) => {
-      console.log(action);
       state.notifications = action.payload;
     },
     // Action to remove a notification by its ID

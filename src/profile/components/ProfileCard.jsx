@@ -21,47 +21,43 @@ const ProfileCard = ({ user, children, canOpen }) => {
 
   return (
     <>
-      <div className="p-2 h-full w-full bg-zinc-900 dark:border-zinc-500/30 shadow-2xl relative rounded-xl">
-        <div className="flex justify-center items-center my-3">
-          <span className=" px-5  text-xl">{user?.username}</span>
-        </div>
-        <div className="flex justify-center items-center">
-          <div className=" bg-gray-500 rounded-full">
-            <ProfilePicture
-              src={user?.avatar}
-              className="h-32 w-32 object-cover rounded-full shadow-sm"
-            />
+      <div className="bg-zinc-900 relative rounded-md p-2">
+        <div className="flex md:px-10 md:pt-10 lg:p-0 items-center lg:justify-center justify-center md:justify-start md:gap-10">
+          <div className="flex justify-center items-center  flex-col gap-4 py-2 md:bg-red- ">
+            <span className="text-xl md:hidden lg:block">{user?.username}</span>
+            <div className=" bg-gray-500 rounded-full">
+              <ProfilePicture
+                src={user?.avatar}
+                className="size-28 md:size-20 object-cover rounded-full shadow-sm"
+              />
+            </div>
+            <span className="text-xl">{user.name}</span>
           </div>
+         <div> <span className="text-xl hidden md:block lg:hidden">{user?.username}</span>
+          <CountGrid
+          className="md:grid grid-cols-3 gap-2 my-2 hidden lg:hidden"
+          posts={user?.posts}
+          followers={user?.followers}
+          following={user?.following}
+          toggleShow={toggleShow}
+          toggleShowFollowing={toggleShowFollowing}
+        /></div>
         </div>
-        <div className="flex justify-center items-center ">
-          <span className="text-xl px-10 py-2">{user.name}</span>
-        </div>
-        <div className="text-center pb-2">
+
+        <div className="pb-2 md:px-10 lg:p-0">
           <div className="">
             <pre>{user?.bio}</pre>
           </div>
         </div>
         {children}
-        <div className="grid grid-cols-3  gap-3  my-2">
-          <button className="flex flex-col rounded-lg justify-center items-center bg-zinc-800">
-            <span className="">Posts</span>
-            <span className="text-xl">{user?.posts}</span>
-          </button>
-          <button
-            onClick={toggleShow}
-            className="flex flex-col rounded-lg justify-center items-center  bg-zinc-800"
-          >
-            <span className="">Followers</span>
-            <span className="text-xl">{user?.followers}</span>
-          </button>
-          <button
-            onClick={toggleShowFollowing}
-            className="flex flex-col    rounded-lg justify-center items-center  bg-zinc-800"
-          >
-            <span className="">Following</span>
-            <span className="text-xl">{user?.following}</span>
-          </button>
-        </div>
+        <CountGrid
+          className="grid grid-cols-3 gap-2 my-2 md:hidden lg:grid"
+          posts={user?.posts}
+          followers={user?.followers}
+          following={user?.following}
+          toggleShow={toggleShow}
+          toggleShowFollowing={toggleShowFollowing}
+        />
       </div>
 
       {show && (
@@ -78,5 +74,36 @@ const ProfileCard = ({ user, children, canOpen }) => {
   );
 };
 
-
 export default ProfileCard;
+
+const CountGrid = ({
+  posts,
+  following,
+  followers,
+  toggleShow,
+  toggleShowFollowing,
+  className,
+}) => {
+  return (
+    <div className={className}>
+      <button className="flex flex-col rounded-lg justify-center items-center bg-zinc-800">
+        <span className="">Posts</span>
+        <span className="">{posts}</span>
+      </button>
+      <button
+        onClick={toggleShow}
+        className="flex flex-col rounded-lg justify-center items-center  bg-zinc-800"
+      >
+        <span className="">Followers</span>
+        <span className="">{followers}</span>
+      </button>
+      <button
+        onClick={toggleShowFollowing}
+        className="flex flex-col px-2 rounded-lg justify-center items-center  bg-zinc-800"
+      >
+        <span className="">Following</span>
+        <span className="">{following}</span>
+      </button>
+    </div>
+  );
+};

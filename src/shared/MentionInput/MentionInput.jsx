@@ -13,8 +13,6 @@ const MentionInput = (
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
 
-    console.log(inputValue);
-
     if (inputValue.trim() === "") {
       setMentionedUsers([]);
     }
