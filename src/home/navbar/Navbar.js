@@ -177,7 +177,7 @@ const Navbar = () => {
           )}
         </AnimatePresence>
         <AnimatePresence>
-          {!isOpenNotification && (
+          {isOpenNotification && (
             <Modal
               onClose={toggleNotification}
               showCloseButton={false}

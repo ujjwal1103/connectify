@@ -12,34 +12,6 @@ const Message = ({
     setShowMore(!showMore);
   };
 
-  // if (type === "image") {
-  //   return (
-  //     <div
-  //       className={`
-      
-  //     max-w-md w-fit p-2 duration-700 transition-all rounded-xl ${
-  //       currentUserMessage
-  //         ? "self-end bg-zinc-800 rounded-br-none"
-  //         : "    bg-black rounded-bl-none"
-  //     } text-gray-50 shadow-2xl
-  //   `}
-  //     >
-  //       <div className="rounded-xl p-2">
-  //         <img
-  //           className="rounded-xl w-64 h-96"
-  //           src={
-  //             "https://images.pexels.com/photos/20412064/pexels-photo-20412064/free-photo-of-portofino.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-  //           }
-  //         />
-  //       </div>
-
-  //       <span className="text-[10px] block text-right text-gray-300">
-  //         {getReadableTime(createdAt)}
-  //       </span>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div
       className={`
