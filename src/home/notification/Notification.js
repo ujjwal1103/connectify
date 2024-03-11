@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import avatar from "../../assets/man.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,10 +10,13 @@ import { AngleLeft } from "../../icons";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ProfilePicture from "../../common/ProfilePicture";
+import UserProfile from "../../profile/UserProfile";
+import UsernameLink from "../../shared/UsernameLink";
 
 const Notification = ({ setClose, onClose }) => {
   const dispatch = useDispatch();
   const notifications = [...data];
+  const [showFollowRequests, setShowFollowRequest] = useState();
   const getAllNotifications = useCallback(async () => {
     try {
       const res = await makeRequest.get("notifications");
@@ -30,34 +33,114 @@ const Notification = ({ setClose, onClose }) => {
     getAllNotifications();
   }, [getAllNotifications]);
 
+  const [request, setRequest] = useState();
+
+  const getAllFollowRequestForUser = useCallback(async () => {
+    const res = await makeRequest("/followRequests");
+    console.log(res);
+    setRequest(res?.followRequest || []);
+  }, []);
+
+  useEffect(() => {
+    getAllFollowRequestForUser();
+  }, []);
+
+  const handleAccept = (requestId, accept) => {
+    if (accept) {
+      console.log("follow request accepted", requestId);
+      return;
+    }
+    console.log("follow request declined", requestId);
+  };
+
   return (
     <motion.div
       className=" bg-transparent
-      h-screen w-screen hidden lg:flex justify-end"
+      h-screen w-screen flex lg:flex justify-end"
     >
-      <div className="flex-1" onClick={onClose} />
+      <div className="lg:flex-1 hidden lg:block " onClick={onClose} />
       <motion.div
         initial={{ x: 400 }}
         animate={{ x: 0 }}
         transition={{ duration: 0.5 }}
         exit={{ x: 500 }}
-        className="w-96 dark:bg-zinc-900  overflow-y-scroll border-l-2 bottom-0 h-full"
+        className="w-96 dark:bg-zinc-900  overflow-y-scroll lg:border-l-2 bottom-0 h-full"
       >
-        <div className="p-4 pb-2 flex justify-between">
-          <h1 className="text-2xl font-semibold dark:text-gray-50 flex items-center gap-4">
-            <button className="text-2xl" onClick={setClose}>
-              <AngleLeft />
-            </button>
-            Notifications
-          </h1>
-        </div>
-        <ul className="p-2 flex flex-col gap-2 text-white">
-          {notifications?.map((n) => (
-            <>
-              <Noti n={n} />
-            </>
-          ))}
-        </ul>
+        {!showFollowRequests && (
+          <>
+            <div className="p-4 pb-2 flex justify-between">
+              <h1 className="text-2xl font-semibold dark:text-gray-50 flex items-center gap-4">
+                <button className="text-2xl" onClick={setClose}>
+                  <AngleLeft />
+                </button>
+                Notifications
+              </h1>
+            </div>
+            <div className="px-4">
+              <button
+                onClick={() => setShowFollowRequest(true)}
+                className="dark:text-white"
+              >
+                Follow Requests
+              </button>
+            </div>
+            <ul className="p-2 flex flex-col gap-2 text-white">
+              {notifications?.map((n) => (
+                <>
+                  <Noti n={n} />
+                </>
+              ))}
+            </ul>
+          </>
+        )}
+        {showFollowRequests && (
+          <>
+            <div className="p-4 pb-2 flex justify-between">
+              <h1 className="text-2xl font-semibold dark:text-gray-50 flex items-center gap-4">
+                <button
+                  className="text-2xl"
+                  onClick={() => setShowFollowRequest(false)}
+                >
+                  <AngleLeft />
+                </button>
+                Follow Request
+              </h1>
+            </div>
+            <ul className="p-2 flex flex-col gap-2 text-white">
+              {request?.map((n) => (
+                <>
+                  <li className="flex items-center gap-4">
+                    <ProfilePicture
+                      src={n.requestedBy.avatar}
+                      className={"size-9 rounded-full"}
+                    />
+                    <UsernameLink
+                      onClick={() => {
+                        onClose();
+                      }}
+                      className="flex-1"
+                      username={n.requestedBy.username}
+                    />
+                    <div className="flex gap-3">
+                      <button
+                        className="text-xs bg-blue-600 px-2 rounded-xl text-sky-100 py-1"
+                        onClick={() => handleAccept(n._id, true)}
+                      >
+                        Accept
+                      </button>
+                      <button
+                        className="text-xs text-red-600 bg-zinc-950 px-2 rounded-xl  py-1"
+                        onClick={() => handleAccept(n._id, false)}
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  </li>
+                </>
+              ))}
+            </ul>
+          </>
+        )}
       </motion.div>
     </motion.div>
   );

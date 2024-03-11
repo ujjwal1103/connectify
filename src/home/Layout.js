@@ -11,16 +11,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("userJoined", (data) => {
-        toast(data?.username + "Came Online");
-      });
-    }
-  }, [socket]);
-
-  useEffect(() => {
-    if (socket) {
       socket.on("allusers", (data) => {
-        console.log(data)
         setUsers(data.filter((u) => u.userId !== getCurrentUserId()));
       });
     }

@@ -9,7 +9,6 @@ const Messages = ({
   loading,
   handlePageChange,
   hasMore,
-  scrollIntoView
 }) => {
   const { messages } = useSelector((state) => state.chat);
   const [groupedMessages, setGroupedMessages] = useState([]);

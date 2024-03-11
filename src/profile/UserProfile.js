@@ -1,9 +1,14 @@
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
 import { useNavigate, useParams } from "react-router-dom";
-import { followUser, unfollowUser } from "./services/postServices";
+import {
+  followUser,
+  unfollowUser,
+  sentFriendRequest,
+  cancelFollowRequest,
+} from "./services/postServices";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import ProfileCard from "./components/ProfileCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addChat } from "../redux/services/chatSlice";
@@ -14,6 +19,8 @@ import {
   setOtherUser,
 } from "../redux/services/profileSlice";
 import PageNotFound from "../PageNotFound/PageNotFound";
+import { toast, Zoom } from "react-toastify";
+import useAleart from "../utils/hooks/useAleart";
 
 // const images = [
 //   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
@@ -35,6 +42,8 @@ const UserProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { otherUser: user, loading, error } = useSelector(profileState);
+  const [requestSent, setRequestSent] = useState(false);
+  const { alert } = useAleart();
 
   const getUser = useCallback(async () => {
     try {
@@ -46,6 +55,14 @@ const UserProfile = () => {
   }, [dispatch, username]);
 
   const handleFollowRequest = async () => {
+    if (user?.isPrivate && !user?.isFollow) {
+      setRequestSent(true);
+      const res = await sentFriendRequest(user?._id);
+      if (res.requested) {
+        alert("Friend Request Sent Successfully");
+      }
+      return;
+    }
     dispatch(
       setOtherUser({
         ...user,
@@ -85,6 +102,13 @@ const UserProfile = () => {
     }
   };
 
+  const deleteSentFriendRequest = async (e) => {
+    //delete sent friend request
+    const res = await cancelFollowRequest(user?._id);
+    console.log(res);
+    setRequestSent(false);
+  };
+
   useEffect(() => {
     getUser();
   }, [getUser]);
@@ -102,10 +126,10 @@ const UserProfile = () => {
       className=" 
       w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-zinc-950 p-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
-      <div className=" lg:sticky top-0 left-0 lg:w-[400px] w-72 flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
+      <div className=" lg:sticky top-0 left-0  flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
         <ProfileCard user={user} canOpen={user?.isPrivate && !user?.isFollow}>
           <div className="flex gap-3 justify-center items-center">
-            {user?.isFollow ? (
+            {user?.isFollow && !requestSent ? (
               <button
                 onClick={handleUnfollow}
                 className=" p-2 rounded-xl ring  ring-blue-600 hover:bg-zinc-800 transition-colors delay-200"
@@ -113,12 +137,14 @@ const UserProfile = () => {
                 Following
               </button>
             ) : (
-              <button
-                onClick={handleFollowRequest}
-                className=" p-2 rounded-xl  w-24 bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
-              >
-                Follow
-              </button>
+              !requestSent && (
+                <button
+                  onClick={handleFollowRequest}
+                  className=" p-2 rounded-xl  w-24 bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
+                >
+                  Follow
+                </button>
+              )
             )}
             {user?.isFollow && (
               <button
@@ -128,11 +154,20 @@ const UserProfile = () => {
                 Message
               </button>
             )}
+            {requestSent && (
+              <button
+                value="requestId"
+                onClick={deleteSentFriendRequest}
+                className=" p-2 rounded-xl bg-zinc-950 hover:bg-zinc-800  transition-colors delay-200"
+              >
+                Requested
+              </button>
+            )}
           </div>
         </ProfileCard>
       </div>
-          
-      {(user?.isPrivate && !user?.isFollow) ? (
+
+      {user?.isPrivate && !user?.isFollow ? (
         <div className="lg:flex-1 w-full border border-white h-52  rounded-xl grid place-content-center">
           <div className="flex flex-col gap-5 text-center">
             <span>This Account is Private</span>

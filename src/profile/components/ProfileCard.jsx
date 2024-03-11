@@ -33,7 +33,7 @@ const ProfileCard = ({ user, children, canOpen }) => {
             </div>
             <span className="text-xl">{user.name}</span>
           </div>
-         <div> <span className="text-xl hidden md:block lg:hidden">{user?.username}</span>
+         <div className="lg:hidden"> <span className="text-xl hidden md:block lg:hidden">{user?.username}</span>
           <CountGrid
           className="md:grid grid-cols-3 gap-2 my-2 hidden lg:hidden"
           posts={user?.posts}
