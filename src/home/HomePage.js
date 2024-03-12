@@ -61,7 +61,7 @@ const HomePage = () => {
         <Sidebar />
         </div>
         <section className="flex flex-1 gap-3 justify-between ">
-          <div className="grid grid-cols-1 flex-1 flex-col gap-5 ">
+          <div className="grid grid-cols-2 flex-1 flex-col gap-5 ">
             {content}
 
             {isLoading  && <FeedLoading />}

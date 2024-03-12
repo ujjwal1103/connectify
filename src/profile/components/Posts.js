@@ -6,15 +6,15 @@ import { reset, setPage } from "../../redux/services/postSlice";
 import { PostLoading } from "./UserLoading";
 import useInfinitePosts from "../../hooks/useInfinitePosts";
 
-const Posts = ({ userId }) => {
-  const { posts, loading, hasNext, page } = useInfinitePosts(userId);
+const Posts = ({ userId, username }) => {
+  const { posts, loading, hasNext, page } = useInfinitePosts(userId, username);
   const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
       dispatch(reset());
     };
-  }, []);
+  }, [username]);
 
   const observer = useRef();
   const lastPost = useCallback(

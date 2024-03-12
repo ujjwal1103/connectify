@@ -1,57 +1,82 @@
+import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Login, Register } from "./module/Auth";
-import HomePage from "./home/HomePage";
-import PageNotFound from "./PageNotFound/PageNotFound";
-import UnAuthorized from "./PageNotFound/UnAuthorized.js";
-import ProtectedRoute from "./protectedRoutes/ProtectedRoute";
-import Layout from "./home/Layout";
-import Profile from "./profile/Profile";
-import UserProfile from "./profile/UserProfile";
-import Search from "./search/Search";
-import { Messenger } from "./messenger";
-import AuthRoutes from "./protectedRoutes/AuthRoutes";
-import ChatWindow from "./messenger/component/ChatWindow.js";
-import Post from "./module/post/Post.jsx";
-import Exp from "./exp/Exp.jsx";
-import Peoples from "./module/People/index.js";
-import { useEffect } from "react";
-import { makeRequest } from "./config/api.config.js";
+import ConnectifyIcon from "./icons/Connectify.js";
+import { motion } from "framer-motion";
+import useHealthCheck from "./utils/hooks/useHealthCheck.js";
+
+const Login = lazy(() => import("./module/Auth/Login"));
+const Register = lazy(() => import("./module/Auth/Register"));
+const HomePage = lazy(() => import("./home/HomePage"));
+const PageNotFound = lazy(() => import("./PageNotFound/PageNotFound"));
+const UnAuthorized = lazy(() => import("./PageNotFound/UnAuthorized.js"));
+const ProtectedRoute = lazy(() => import("./protectedRoutes/ProtectedRoute"));
+const AuthRoutes = lazy(() => import("./protectedRoutes/AuthRoutes"));
+const Layout = lazy(() => import("./home/Layout"));
+const Profile = lazy(() => import("./profile/Profile"));
+const UserProfile = lazy(() => import("./profile/UserProfile"));
+const Search = lazy(() => import("./search/Search"));
+const Messenger = lazy(() => import("./messenger/Messenger.js"));
+const ChatWindow = lazy(() => import("./messenger/component/ChatWindow.js"));
+const Post = lazy(() => import("./module/post/Post.jsx"));
+const Exp = lazy(() => import("./exp/Exp.jsx"));
+const Peoples = lazy(() => import("./module/People/index.js"));
 
 const App = () => {
+  const { loading } = useHealthCheck();
 
-  useEffect(() => {
-    const res = makeRequest("/healthCheck");
-    console.log(res);
-  }, []);
+  if (loading) {
+    return <PageLoader />;
+  }
 
   return (
-    <Routes>
-      {/* Authentication Routes */}
-      <Route path="/" element={<AuthRoutes />}>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-      </Route>
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Authentication Routes */}
+        <Route path="/" element={<AuthRoutes />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
 
-      {/* Protected Routes */}
-      <Route path="" element={<ProtectedRoute />}>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="p/:postId" element={<Post />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path=":username" element={<UserProfile />} />
-          <Route path="search" element={<Search />} />
-          <Route path="expore/people" element={<Peoples />} />
+        {/* Protected Routes */}
+        <Route path="" element={<ProtectedRoute />}>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="p/:postId" element={<Post />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path=":username" element={<UserProfile />} />
+            <Route path="search" element={<Search />} />
+            <Route path="expore/people" element={<Peoples />} />
+          </Route>
+          <Route path="messenger" element={<Messenger />}>
+            <Route path=":chatId" element={<ChatWindow />} />
+          </Route>
         </Route>
-        <Route path="messenger" element={<Messenger />}>
-          <Route path=":chatId" element={<ChatWindow />} />
-        </Route>
-      </Route>
-      <Route path="/unauthorized" element={<UnAuthorized />} />
-      <Route path="exp" element={<Exp />} />
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+        <Route path="/unauthorized" element={<UnAuthorized />} />
+        <Route path="exp" element={<Exp />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 
 export default App;
+
+function PageLoader({}) {
+  return (
+    <div className="w-screen h-dvh bg-zinc-800 flex justify-center items-center">
+      <motion.span
+        animate={{
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+        }}
+        className=""
+      >
+        <ConnectifyIcon size={156} />
+      </motion.span>
+    </div>
+  );
+}

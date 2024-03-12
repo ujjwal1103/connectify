@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, forwardRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 
@@ -20,7 +20,7 @@ import {
 } from "../../icons";
 import { useClickOutside } from "@react-hookz/web";
 import Modal from "../../shared/Modal";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import LogoutBtn from "../../shared/Buttons/LogoutBtn";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 
@@ -35,7 +35,7 @@ const Navbar = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
   };
   const toggleDropdown = () => {
-    setIsOpen(true);
+    !isOpen && setIsOpen(!isOpen);
   };
   useClickOutside(modelRef, () => setIsOpen(false));
 
@@ -43,13 +43,13 @@ const Navbar = () => {
     setIsOpenNotification((prev) => !prev);
   };
 
-  const handleDarkMode = () => {
-    if (document.body.classList.contains("dark")) {
-      document.body.classList.remove("dark");
-    } else {
-      document.body.classList.add("dark");
-    }
-  };
+  // const handleDarkMode = () => {
+  //   if (document.body.classList.contains("dark")) {
+  //     document.body.classList.remove("dark");
+  //   } else {
+  //     document.body.classList.add("dark");
+  //   }
+  // };
   return (
     <header className="px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
       <nav className="bg-violet-700 bg-opacity-70 shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
@@ -107,7 +107,7 @@ const Navbar = () => {
           <div>
             <NavLink
               to={"/profile"}
-              className={({ isActive, isPending }) =>
+              className={({ isActive }) =>
                 isActive ? "text-[#620C45] font-extrabold" : ""
               }
             >
@@ -118,55 +118,16 @@ const Navbar = () => {
           <div className="lg:relative hidden lg:inline-block text-left dropdown-menu-button">
             <button
               onClick={toggleDropdown}
+              disabled={isOpen}
               className={`p-2 focus:outline-none  ${
                 isOpen && "text-[#620C45]"
               }`}
             >
               <EllipsisV className="w-6 h-6" />
             </button>
-            {isOpen && (
-              <div
-                ref={modelRef}
-                className="origin-top-right absolute lg:right-0 mt-2 lg:w-52 w-full  bg-white border dark:text-white dark:bg-zinc-900 dark:border-zinc-500/30 rounded-lg shadow-lg"
-              >
-                <ul className="py-1 ">
-                  <li>
-                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-red-400">
-                      <Cog className="mr-2" />
-                      Settings
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
-                      <QuestionCircle className="mr-2" />
-                      Help
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
-                      <Phone className="mr-2" />
-                      Contact Us
-                    </NavLink>
-                  </li>
-                  <li>
-                    <button
-                      className="flex gap-3 items-center w-full dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
-                      onClick={handleDarkMode}
-                    >
-                      <DarkMode className="mr-2" />
-                      DarkMode
-                    </button>
-                  </li>
-                  <li className="border-t border-zinc-500/30"></li>
-                  <li>
-                    <button className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700">
-                      <SignOutAlt className="mr-2" />
-                      <LogoutBtn>Logout</LogoutBtn>
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
+            <AnimatePresence>
+              {isOpen && <MenuBox ref={modelRef} />}
+            </AnimatePresence>
           </div>
         </div>
         <AnimatePresence>
@@ -178,10 +139,7 @@ const Navbar = () => {
         </AnimatePresence>
         <AnimatePresence>
           {isOpenNotification && (
-            <Modal
-              onClose={toggleNotification}
-              showCloseButton={false}
-            >
+            <Modal onClose={toggleNotification} showCloseButton={false}>
               <Notification setClose={toggleNotification} />
             </Modal>
           )}
@@ -203,3 +161,53 @@ const Badge = ({ children, count }) => {
     </div>
   );
 };
+
+const MenuBox = forwardRef(({}, ref) => {
+  return (
+    <motion.div
+      initial={{ scale: 0, origin:'center' }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+      transition={{ duration: 0.3 }}
+      ref={ref}
+      className="origin-top-right absolute lg:right-0 mt-2 lg:w-52 w-full  bg-white border dark:text-white dark:bg-zinc-900 dark:border-zinc-500/30 rounded-lg shadow-lg"
+    >
+      <ul className="py-1 ">
+        <li>
+          <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-red-400">
+            <Cog className="mr-2" />
+            Settings
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
+            <QuestionCircle className="mr-2" />
+            Help
+          </NavLink>
+        </li>
+        <li>
+          <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700">
+            <Phone className="mr-2" />
+            Contact Us
+          </NavLink>
+        </li>
+        {/* <li>
+       <button
+         className="flex gap-3 items-center w-full dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700"
+         onClick={handleDarkMode}
+       >
+         <DarkMode className="mr-2" />
+         DarkMode
+       </button>
+      </li> */}
+        <li className="border-t border-zinc-500/30"></li>
+        <li>
+          <button className="flex gap-3 items-center w-full   px-4 py-2 text-red-600 hover:bg-gray-200 dark:hover:bg-slate-700">
+            <SignOutAlt className="mr-2" />
+            <LogoutBtn>Logout</LogoutBtn>
+          </button>
+        </li>
+      </ul>
+    </motion.div>
+  );
+});

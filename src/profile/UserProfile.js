@@ -42,7 +42,6 @@ const UserProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { otherUser: user, loading, error } = useSelector(profileState);
-  const [requestSent, setRequestSent] = useState(false);
   const { alert } = useAleart();
 
   const getUser = useCallback(async () => {
@@ -56,7 +55,12 @@ const UserProfile = () => {
 
   const handleFollowRequest = async () => {
     if (user?.isPrivate && !user?.isFollow) {
-      setRequestSent(true);
+      dispatch(
+        setOtherUser({
+          ...user,
+          isRequested: true,
+        })
+      );
       const res = await sentFriendRequest(user?._id);
       if (res.requested) {
         alert("Friend Request Sent Successfully");
@@ -103,10 +107,13 @@ const UserProfile = () => {
   };
 
   const deleteSentFriendRequest = async (e) => {
-    //delete sent friend request
     const res = await cancelFollowRequest(user?._id);
-    console.log(res);
-    setRequestSent(false);
+    dispatch(
+      setOtherUser({
+        ...user,
+        isRequested: false,
+      })
+    );
   };
 
   useEffect(() => {
@@ -126,10 +133,10 @@ const UserProfile = () => {
       className=" 
       w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-zinc-950 p-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
-      <div className=" lg:sticky top-0 left-0  flex-col lg:mx-auto flex rounded-xl justify-center  items-center ">
+      <div className=" w-full lg:w-96 lg:min-w-80 lg:max-w-80 lg:sticky top-0 ">
         <ProfileCard user={user} canOpen={user?.isPrivate && !user?.isFollow}>
           <div className="flex gap-3 justify-center items-center">
-            {user?.isFollow && !requestSent ? (
+            {user?.isFollow && !user?.isRequested ? (
               <button
                 onClick={handleUnfollow}
                 className=" p-2 rounded-xl ring  ring-blue-600 hover:bg-zinc-800 transition-colors delay-200"
@@ -137,7 +144,7 @@ const UserProfile = () => {
                 Following
               </button>
             ) : (
-              !requestSent && (
+              !user?.isRequested && (
                 <button
                   onClick={handleFollowRequest}
                   className=" p-2 rounded-xl  w-24 bg-blue-600 hover:bg-blue-800 transition-colors delay-200"
@@ -154,7 +161,7 @@ const UserProfile = () => {
                 Message
               </button>
             )}
-            {requestSent && (
+            {user?.isRequested && (
               <button
                 value="requestId"
                 onClick={deleteSentFriendRequest}
@@ -168,17 +175,23 @@ const UserProfile = () => {
       </div>
 
       {user?.isPrivate && !user?.isFollow ? (
-        <div className="lg:flex-1 w-full border border-white h-52  rounded-xl grid place-content-center">
-          <div className="flex flex-col gap-5 text-center">
-            <span>This Account is Private</span>
-            <span>Follow to see their photos and videos.</span>
-          </div>
-        </div>
+        <PrivateUser />
       ) : (
-        <Posts userId={user?._id} />
+        <Posts userId={user?._id} username={username} />
       )}
     </div>
   );
 };
 
 export default UserProfile;
+
+const PrivateUser = ({}) => {
+  return (
+    <div className="lg:flex-1 w-full border border-white h-52  rounded-xl grid place-content-center">
+      <div className="flex flex-col gap-5 text-center">
+        <span>This Account is Private</span>
+        <span>Follow to see their photos and videos.</span>
+      </div>
+    </div>
+  );
+};

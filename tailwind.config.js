@@ -8,6 +8,9 @@ module.exports = {
         page: "calc(100dvh - 5.5rem)",
         like: "calc(100dvh - 3rem)",
         post: "calc(100dvh - 37.54px)",
+        follow: "calc(100dvh - 200px)", 
+        follower: "calc(100dvh - 145px)", 
+        single:"calc(100dvh - 100px)",
       },
 
       backgroundImage: {

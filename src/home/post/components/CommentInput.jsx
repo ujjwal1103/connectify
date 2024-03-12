@@ -19,13 +19,13 @@ const CommentInput = ({ postId }) => {
       const data = await makeRequest.post(`/comment`, {
         post: postId,
         comment: commentText,
-        mentions: mentionedUsers
+        mentions: mentionedUsers,
       });
       if (data.isSuccess) {
         setCommentText("");
-        setMentionedUsers([])
-        setShowEmojiPicker(false)
-        setCursorPosition(0)
+        setMentionedUsers([]);
+        setShowEmojiPicker(false);
+        setCursorPosition(0);
       }
     } catch (error) {
       console.log(error);
@@ -84,8 +84,13 @@ const CommentInput = ({ postId }) => {
       </button>
 
       {showEmojiPicker && (
-        <div ref={emojiRef} className="absolute z-10 right-0 bottom-0">
-          <Picker onEmojiClick={onEmojiClick} emojiStyle="apple" />
+        <div ref={emojiRef} className="absolute  z-10 -right-72 bottom-0">
+          <Picker
+            onEmojiClick={onEmojiClick}
+            emojiStyle="apple"
+            theme={document.body.classList.contains("dark") ? "dark" : "light"}
+            className="dark:bg-zinc-950"
+          />
         </div>
       )}
     </div>

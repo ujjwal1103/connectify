@@ -2,7 +2,13 @@ import React, { useRef } from "react";
 import avatar from "../assets/man.png";
 import { BiLoader } from "react-icons/bi";
 
-const ProfilePicture = ({ src, className, loading = false }) => {
+const ProfilePicture = ({
+  src,
+  className,
+  loading = false,
+  alt = "images",
+  onClick = () => {},
+}) => {
   const imageRef = useRef();
 
   if (loading) {
@@ -14,11 +20,11 @@ const ProfilePicture = ({ src, className, loading = false }) => {
           onError={() => {
             imageRef.current.src = avatar;
           }}
-          alt={src || "profile image"}
+          alt={alt || "profile image"}
           className={className}
         />
         <span className="absolute inset-0 flex justify-center items-center bg-black rounded-full bg-opacity-20">
-          <BiLoader className="animate-spin fill-zinc-900 text-4xl"/>
+          <BiLoader className="animate-spin fill-zinc-900 text-4xl" />
         </span>
       </div>
     );
@@ -31,7 +37,8 @@ const ProfilePicture = ({ src, className, loading = false }) => {
       onError={() => {
         imageRef.current.src = avatar;
       }}
-      alt={src || "profile image"}
+      onClick={onClick}
+      alt={alt || "profile image"}
       className={className}
     />
   );

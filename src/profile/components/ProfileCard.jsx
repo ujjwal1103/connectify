@@ -21,7 +21,7 @@ const ProfileCard = ({ user, children, canOpen }) => {
 
   return (
     <>
-      <div className="bg-zinc-900 relative rounded-md p-2">
+      <div className="bg-zinc-900 relative rounded-md p-2 w-full">
         <div className="flex md:px-10 md:pt-10 lg:p-0 items-center lg:justify-center justify-center md:justify-start md:gap-10">
           <div className="flex justify-center items-center  flex-col gap-4 py-2 md:bg-red- ">
             <span className="text-xl md:hidden lg:block">{user?.username}</span>

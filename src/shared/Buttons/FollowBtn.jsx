@@ -3,7 +3,7 @@ import { followUser, unfollowUser } from "../../profile/services/postServices";
 import { isCurrentUser } from "../../utils/getCurrentUserId";
 import Button from "../Components/Button";
 
-const FollowBtn = ({ userId, callBack, isFollow }) => {
+const FollowBtn = ({ userId, callBack = () => {}, isFollow }) => {
   const [follow, setFollow] = useState(isFollow);
 
   const handleFollowRequest = async () => {

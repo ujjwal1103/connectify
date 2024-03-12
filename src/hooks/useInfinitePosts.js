@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setHasNext, setLoading, setPosts } from "../redux/services/postSlice";
 import { getPostsPage } from "./useMyPosts";
 
-const useInfinitePosts = (userId) => {
+const useInfinitePosts = (userId, username='') => {
   const {
     page,
     posts = [],
@@ -22,7 +22,7 @@ const useInfinitePosts = (userId) => {
       dispatch(setLoading(false));
     };
     fetchPost();
-  }, [page, userId]);
+  }, [page, userId, username]);
 
   return { posts, loading, hasNext, page };
 };

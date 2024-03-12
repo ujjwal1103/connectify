@@ -3,7 +3,7 @@ import React from 'react'
 
     const Loading = () => {
         return (
-          <div className="flex items-center dark:bg-slate-800 mb-2 w-[95%] mx-auto justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg  p-2 rounded-lg">
+          <div className="flex items-center dark:bg-zinc-800 mb-2 w-[95%] mx-auto justify-between space-x-2 hover:scale-90 duration-500 bg-zinc-50 shadow-lg  p-2 rounded-lg">
             <div className="flex items-center space-x-2">
               <div className="w-12 h-12 bg-zinc-950 rounded-full"></div>
               <span className="flex flex-col gap-2">

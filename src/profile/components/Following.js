@@ -12,7 +12,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 
-const Following = ({ userId }) => {
+const Following = ({ userId, onClose }) => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const { followings } = useSelector(profileState);
@@ -52,29 +52,25 @@ const Following = ({ userId }) => {
 
   const navigateToUser = (username) => {
     if (username === currentUser?.username) {
+      onClose();
       navigate(`/profile`);
     } else {
+      onClose();
       navigate(`/${username}`);
     }
   };
 
-  // const handleFollowButtonClick = async (userId) => {
-  //   const data = await unfollowUser(userId);
-  //   if (data.isSuccess) {
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     console.log("unmounting");
-  //     dispatch(setFollowing([]));
-  //   };
-  // }, []);
+  useEffect(() => {
+    return () => {
+      console.log("unmounting");
+      dispatch(setFollowing([]));
+    };
+  }, []);
 
   return (
     <FadeInAnimation>
-      <div className="flex items-center h-screen justify-center">
-        <div className="w-96 bg-white dark:bg-zinc-950 border rounded-lg ">
+      <div className="flex md:min-h-64 md:h-follow h-dvh items-center w-screen justify-center">
+        <div className="md:w-96 w-screen bg-white dark:bg-zinc-950 md:border rounded-lg ">
           <div className=" text-black dark:text-white text-center w-full p-3 ">
             <h2 className="text-xl">Following</h2>
           </div>
@@ -95,7 +91,7 @@ const Following = ({ userId }) => {
             </div>
           </div>
           <div
-            className="overflow-y-scroll min-h-96 h-[500px] "
+            className="overflow-y-scroll md:h-96 h-follower"
             id="scrollableDiv"
           >
             {!loading && (
@@ -112,29 +108,27 @@ const Following = ({ userId }) => {
               >
                 {followings?.map((user) => {
                   return (
-                    <div className="m-3" key={user?._id}>
+                    <div className="md:m-3" key={user?._id}>
                       <div className="flex items-center dark:bg-zinc-800 justify-between space-x-2 hover:scale-90 duration-500 bg-slate-50 shadow-lg m-2 p-2 rounded-lg  ">
                         <div className="flex items-center space-x-2">
                           <ProfilePicture
                             src={user?.avatar}
-                            className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
+                            className="inline-block md:size-12 size-8  rounded-full hover:scale-90 duration-500 object-cover"
                           />
 
                           <button
                             onClick={() => navigateToUser(user?.username)}
-                            className="flex flex-col"
+                            className="flex flex-col md:text-sm text-xs"
                           >
-                            <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                            <span className=" font-medium text-gray-900 dark:text-gray-50">
                               {user?.name}
                             </span>
-                            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            <span className="  text-gray-500 dark:text-gray-400">
                               {user?.username}
                             </span>
                           </button>
                         </div>
-                        {user?.username === currentUser.username ? (
-                          ""
-                        ) : (
+                        {user?.username !== currentUser.username && (
                           <FollowBtn
                             callBack={(data) => {
                               console.log(data);

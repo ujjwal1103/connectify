@@ -72,7 +72,7 @@ const AddNewUser = ({ onClose }) => {
   };
   return (
     <div className=" overflow-hidden  rounded-xl">
-      <div className="w-96 bg-zinc-950 shadow-lg p-2">
+      <div className="md:w-96 w-screen bg-zinc-950 min-h-80 md:h-follow h-dvh shadow-lg p-2">
         <div className="p-2 mb-2 rounded-sm shadow-lg text-gray-50">
           <h1>New Chat</h1>
         </div>
@@ -91,12 +91,12 @@ const AddNewUser = ({ onClose }) => {
           </div>
         )}
         <div
-          className={`overflow-y-scroll ${users.length === 0 ? "" : "h-96"}`}
+          className={`overflow-y-scroll md:h-80 h-dvh`}
         >
           {users?.map((user) => {
             return (
               <div
-                className="flex group items-center  p-2 gap-3 m-2 bg-zinc-900 rounded-xl"
+                className="flex group items-center p-2 gap-3 m-2 bg-zinc-900 rounded-xl"
                 key={user._id}
               >
                 <ProfilePicture

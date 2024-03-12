@@ -36,9 +36,9 @@ const Post = ({ post }, ref) => {
     <article
       id={post._id}
       ref={ref && ref}
-      className=" bg-gray-50  dark:border-zinc-500/30 rounded-lg overflow-clip shadow-md dark:bg-zinc-900 relative"
+      className=" bg-gray-50 flex dark:border-zinc-500/30 rounded-lg  shadow-md dark:bg-zinc-900 relative"
     >
-      <div className="lg:p-3 md:p-3 p-2">
+      <div className="lg:p-3 md:p-3 p-2 flex flex-col justify-between flex-1">
         <PostHeader post={post} />
         <PostContent contentUrl={post?.imageUrl} onClick={handleSetPost} />
         <PostActions

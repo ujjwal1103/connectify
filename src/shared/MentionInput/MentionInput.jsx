@@ -1,15 +1,24 @@
-import { useDebouncedState } from "@react-hookz/web";
-import React, { forwardRef, useEffect, useState } from "react";
+import { useClickOutside, useDebouncedState } from "@react-hookz/web";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { makeRequest } from "../../config/api.config";
 
 const MentionInput = (
-  { text, setText, placeholder, setCursorPosition, onClick, onBlur, mentionedUsers, setMentionedUsers },
+  {
+    text,
+    setText,
+    placeholder,
+    setCursorPosition,
+    onClick,
+    onBlur,
+    mentionedUsers,
+    setMentionedUsers,
+  },
   ref
 ) => {
   const [query, setQuery] = useDebouncedState("", 600, 500);
   const [users, setUsers] = useState([]);
   const [mentionStartIndex, setMentionStartIndex] = useState(null);
-
+  const mentionBoxRef = useRef();
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
 
@@ -21,7 +30,6 @@ const MentionInput = (
 
     // Detect "@" symbol in the input
     const atIndex = inputValue.lastIndexOf("@");
-
 
     if (atIndex !== -1) {
       // "@" found at the end, consider it a mention trigger
@@ -37,8 +45,9 @@ const MentionInput = (
       setQuery("");
     }
 
-
-    const remainingUsers = mentionedUsers.filter((user) => inputValue.includes(`${user}`));
+    const remainingUsers = mentionedUsers.filter((user) =>
+      inputValue.includes(`${user}`)
+    );
     setMentionedUsers(remainingUsers);
   };
 
@@ -84,13 +93,18 @@ const MentionInput = (
     ref.current.focus();
   };
 
+  useClickOutside(mentionBoxRef, () => {
+    setMentionStartIndex(null);
+    setUsers([]);
+  });
+
   return (
     <div className="w-full">
       <textarea
         type="text"
         onChange={handleInputChange}
         value={text}
-        className="bg-transparent p-2 border-none w-full h-full focus:outline-none resize-none "
+        className="bg-transparent  p-2 border-none w-full h-full focus:outline-none resize-none "
         ref={ref}
         rows={1}
         placeholder={placeholder}
@@ -99,7 +113,10 @@ const MentionInput = (
       />
 
       {mentionStartIndex !== null && users.length > 0 && (
-        <div className="p-2 absolute divide-y-2 z-10 w-96 mt-2 bg-zinc-950 rounded-md h-auto min-h-fit max-h-52 overflow-y-scroll">
+        <div
+          ref={mentionBoxRef}
+          className="p-2 absolute bottom-12 divide-y-2 z-10 w-96 mt-2 bg-zinc-950 rounded-md h-auto min-h-fit max-h-52 overflow-y-scroll"
+        >
           {users.map((u) => (
             <div
               className="p-1"

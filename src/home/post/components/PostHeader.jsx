@@ -5,7 +5,7 @@ import UsernameLink from "../../../shared/UsernameLink";
 const PostHeader = ({ post }) => {
   return (
     <div className="w-full py-2 flex gap-6 items-center justify-between">
-      <div className="flex gap-6 items-center">
+      <div className="flex gap-3 items-center">
         <div>
           <ProfilePicture
             src={post?.user?.avatar}

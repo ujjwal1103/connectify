@@ -9,7 +9,7 @@ import { useSocket } from "../../../context/SocketContext";
 import { sendNotification } from "../../notification/Services";
 import { useState } from "react";
 
-const PostActions = ({ post, userId, showCurrentPost }) => {
+const PostActions = ({ post, userId, showCurrentPost, size=24 }) => {
   const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
 
@@ -42,28 +42,28 @@ const PostActions = ({ post, userId, showCurrentPost }) => {
     }
   };
   return (
-    <div className="flex justify-between items-center pt-3 px-2">
+    <div className="flex justify-between items-center pt-2 px-2">
       <div className="flex items-center gap-3">
         {post?.isLiked ? (
-          <HeartFill size={24} className="text-red-600" onClick={dislikePost} />
+          <HeartFill size={size} className="text-red-600" onClick={dislikePost} />
         ) : (
           <Heart
-            size={24}
+            size={size}
             className="hover:text-gray-600 dark:text-gray-50"
             onClick={likePost}
           />
         )}
         <Chat
-          size={24}
+          size={size}
           className="hover:text-gray-600 dark:text-gray-50"
           onClick={showCurrentPost}
         />
-        <Send size={24} className="hover:text-gray-600 dark:text-gray-50" />
+        <Send size={size} className="hover:text-gray-600 dark:text-gray-50" />
       </div>
       {isBookMarked ? (
-        <BookMarkFill size={24} onClick={() => setIsBookMarked(false)} />
+        <BookMarkFill size={size} onClick={() => setIsBookMarked(false)} />
       ) : (
-        <BookMark size={24} color="" onClick={() => setIsBookMarked(true)} />
+        <BookMark size={size} color="" onClick={() => setIsBookMarked(true)} />
       )}
     </div>
   );

@@ -17,6 +17,8 @@ const postSlice = createSlice({
       // Assuming action.payload is an array of new posts
       const newPosts = action.payload;
 
+      console.log(newPosts)
+
       // Filter out duplicates based on a unique identifier (e.g., post ID)
       const uniqueNewPosts = newPosts.filter(
         (newPost) =>
@@ -24,6 +26,11 @@ const postSlice = createSlice({
       );
 
       // Update the state with unique new posts
+      if (state.page === 1) {
+        console.log(state.page, uniqueNewPosts);
+        state.posts = uniqueNewPosts;
+        return;
+      }
       state.posts = [...state.posts, ...uniqueNewPosts];
     },
     addPost: (state, action) => {
@@ -84,7 +91,10 @@ const postSlice = createSlice({
     setHasNext: (state, action) => {
       state.hasNext = action.payload;
     },
-    reset: () => initialState,
+    reset: () => {
+      console.log("called");
+      return initialState;
+    },
   },
 });
 

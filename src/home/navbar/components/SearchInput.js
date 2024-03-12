@@ -4,11 +4,19 @@ import { makeRequest } from "../../../config/api.config";
 import blackUser from "../../../assets/no_avatar.png";
 import { Search } from "../../../icons";
 import UsernameLink from "../../../shared/UsernameLink";
+import { useLocation } from "react-router-dom";
 
 const SearchInput = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    setSearchQuery("");
+    setShowSearchResults(false);
+    setSearchResults([]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
@@ -37,7 +45,15 @@ const SearchInput = () => {
   };
 
   return (
-    <div className="w-full z-[1000] lg:h-auto h-96  relative lg:block">
+    <div
+      className="w-full z-[1000] lg:h-auto h-96  relative lg:block"
+      tabIndex={0}
+      // onBlur={() => {
+      //   console.log("onBlur click");
+      //   setShowSearchResults(false);
+      //   setSearchResults([]);
+      // }}
+    >
       <Input
         type="search"
         onChange={handleSearch}
@@ -47,15 +63,14 @@ const SearchInput = () => {
         sufix={<Search className="text-lg" onClick={handleSearch} />}
       />
       {showSearchResults && searchResults.length > 0 && (
-        <div className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-y-scroll z-[100] bg-white dark:bg-zinc-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3">
+        <div
+          className="lg:absolute mt-2 lg:m-0 max-h-96 overflow-y-scroll z-[100] bg-white dark:bg-zinc-800 flex flex-col gap-3 dark:text-gray-50 w-full top-12 rounded-lg p-3"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           {searchResults?.map((result) => (
-            <div
-              onClick={() => {
-                setShowSearchResults(false);
-                setSearchResults([]);
-              }}
-              className="flex gap-6 items-center"
-            >
+            <div className="flex gap-6 items-center">
               <img
                 src={result?.avatar || blackUser}
                 alt=""

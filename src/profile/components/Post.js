@@ -51,15 +51,18 @@ const Post = ({ post }, ref) => {
         alt=""
         className="object-cover w-full h-full rounded group-hover:opacity-80"
         onClick={handleSetPost}
+        loading="lazy"
       />
 
-     { getCurrentUserId() === post.user._id &&  <div className="absolute w-12 h-12  right-0 top-0 rounded-b flex justify-center items-center opacity-0 group-hover:opacity-100 transition duration-300">
-        <div className="flex  justify-center items-center w-full ">
-          <button onClick={() => setMenuOption(true)}>
-            <OutlineMenuFold size={24} color="white" />
-          </button>
+      {getCurrentUserId() === post.user._id && (
+        <div className="absolute w-12 h-12  right-0 top-0 rounded-b flex justify-center items-center opacity-0 group-hover:opacity-100 transition duration-300">
+          <div className="flex  justify-center items-center w-full ">
+            <button onClick={() => setMenuOption(true)}>
+              <OutlineMenuFold size={24} color="white" />
+            </button>
+          </div>
         </div>
-      </div>}
+      )}
       <div className="absolute w-full h-24 bg-gradient-to-b from-transparent to-neutral-950 bottom-0 rounded-b flex items-end opacity-0 group-hover:opacity-100 transition duration-300">
         <div className="flex gap-5 justify-center w-full py-3">
           {isLiked ? (
@@ -93,16 +96,16 @@ const Post = ({ post }, ref) => {
           />
         </Modal>
       )}
-      {menuOption  && (
+      {menuOption && (
         <Modal onClose={() => setMenuOption(false)}>
           <ul className="lg:w-96 p-2 rounded-xl bg-zinc-950 flex  flex-col gap-2">
-            { (
+            {
               <li className="p-2 w-full font-bold bg-red-300 rounded-xl border-2 border-red-950 text-red-950">
                 <button onClick={() => deleteCurrentPost(post._id)}>
                   Delete
                 </button>
               </li>
-            )}
+            }
           </ul>
         </Modal>
       )}

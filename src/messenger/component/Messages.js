@@ -67,7 +67,7 @@ const Messages = ({
           </div>
         ))}
 
-        <div ref={messagesContainerRef} className="p-2 bg-red-400"></div>
+        <div ref={messagesContainerRef}></div>
       </div>
     </div>
   );

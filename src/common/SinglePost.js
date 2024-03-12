@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PostActions from "../home/post/components/PostActions";
 import moment from "moment";
@@ -83,7 +83,7 @@ const SinglePost = ({ post, posts }) => {
   };
 
   return (
-    <div className="max-w-[70%] min-w-[1024px] w-[900px]  m-auto lg:h-post   overflow-y-auto shadow-2xl grid grid-cols-2 flex-col lg:flex-row bg-white dark:bg-zinc-900">
+    <div className="max-w-[70%] min-w-[1024px] w-[900px] m-auto h-single  overflow-y-hidden shadow-2xl grid grid-cols-2 flex-col lg:flex-row bg-white dark:bg-zinc-900">
       {posts.length > 0 && (
         <button
           className="absolute top-1/2 left-10 text-3xl text-white hidden lg:block "
@@ -104,12 +104,12 @@ const SinglePost = ({ post, posts }) => {
         <ImageSlider images={currPost.imageUrl} className={"w-full "} />
       </div>
 
-      <div className="flex flex-col  dark:text-gray-50">
+      <div className="flex flex-col justify-between h-single dark:text-gray-50">
         <div className="hidden lg:flex  justify-between items-center">
           <div className="flex items-center justify-center  p-3 gap-5">
             <ProfilePicture
-              src={currPost?.user?.avatar || avatar}
-              className="w-12 h-12 object-cover border-2 border-white rounded-full"
+              src={currPost?.user?.avatar}
+              className="size-12 object-cover  rounded-full"
             />
             <UsernameLink
               username={currPost?.user?.username}
@@ -125,22 +125,22 @@ const SinglePost = ({ post, posts }) => {
         </div>
         <hr />
         {currPost?.caption && (
-          <div className="flex 4  px-3 pt-2 gap-5">
+          <div className="flex px-2 pt-2 gap-2">
             <ProfilePicture
-              src={post?.user?.avatar || avatar}
-              className="w-10 h-10 object-cover border-2 border-white rounded-full"
+              src={post?.user?.avatar}
+              className="size-8 object-cover  rounded-full"
             />
-            <div>
+            <div className="flex flex-col w-full">
               <UsernameLink
                 username={currPost?.user?.username}
-                className="cursor-pointer"
+                className="cursor-pointer text-xs"
               />
-              <div className="text-sm"> {currPost.caption}</div>
+              <span className="text-[12px] overflow-ellipsis w-52"> {currPost.caption} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, mollitia?</span>
             </div>
           </div>
         )}
         {comments.length <= 0 && (
-          <div className="flex-1 flex justify-center items-center ">
+          <div className="h-full flex justify-center items-center ">
             <div>
               <h1 className="text-2xl text-center font-semibold">
                 No comments yet.
@@ -151,23 +151,22 @@ const SinglePost = ({ post, posts }) => {
         )}
         {comments?.lenght !== 0 && (
           <div
-            className={`flex-1 max-h-96 lg:max-h-full overflow-y-scroll ${
-              comments?.length <= 0 && "hidden"
+            className={` flex-1  overflow-y-scroll ${
+              comments?.length === 0 && "hidden"
             }`}
           >
             {comments?.map((comment) => {
               return (
-                <div key={comment._id} className="p-3 dark:text-gray-50  ">
+                <div key={comment._id} className="px-2 mb-2 first:mt-2 dark:text-gray-50  ">
                   <div className="flex gap-4 items-start">
-                    <div className="w-10 h-10 ">
-                      <img
-                        src={comment.from.avatar || avatar}
-                        alt=""
-                        className="w-10 h-10 rounded-full"
+                    <div className=" ">
+                      <ProfilePicture
+                        src={comment.from.avatar}
+                        className="size-8 object-cover  rounded-full"
                       />
                     </div>
 
-                    <div className="flex-1 text-sm">
+                    <div className="flex-1 text-[12px]">
                       <span className="font-semibold">
                         {comment.from.username}
                       </span>
@@ -177,10 +176,10 @@ const SinglePost = ({ post, posts }) => {
                           mentions={comment?.mentions}
                         />
                       </span>
-                      <div className="flex gap-5 text-sm pt-2">
-                        <div>{comment.updatedAt}</div>
-                        <div>1 like</div>
-                        <div>reply</div>
+                      <div className="flex gap-5 text-[10px]">
+                        <span>{comment.updatedAt}</span>
+                        <span>1 like</span>
+                        <span>reply</span>
                       </div>
                     </div>
 
@@ -196,21 +195,21 @@ const SinglePost = ({ post, posts }) => {
 
         <hr />
         <div>
-          <PostActions post={currPost} userId={user?._id} />
-          <span className="p-3">{currPost?.like} likes</span>
-          <span className="p-3 block text-xs text-gray-500">
+          <PostActions post={currPost} userId={user?._id} size={20}/>
+          <span className="px-3 py-1 text-[14px]">{currPost?.like} likes</span>
+          <span className="px-3 py-1 block text-[12px] text-gray-500">
             {moment(currPost?.createdAt).format("MMMM D YYYY").toUpperCase()}
           </span>
         </div>
         <hr />
-        <div className="flex  items-center justify-between mx-4 mb-2  gap-4">
+        <div className="flex items-center justify-between mx-4   gap-4">
           <span>
             <EmojiWink />
           </span>
           <input
             type="text"
             placeholder="Add a comment..."
-            className="flex-1 border-none !ring-0 bg-transparent"
+            className="flex-1 border-none text-xs !ring-0 bg-transparent"
             value={commentText}
             onChange={handleChange}
           />
@@ -221,7 +220,7 @@ const SinglePost = ({ post, posts }) => {
   );
 };
 
-export default SinglePost;
+export default memo(SinglePost);
 
 const CommentText = ({ comment, mentions }) => {
   const highlightMentions = () => {

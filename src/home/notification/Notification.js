@@ -12,17 +12,18 @@ import { Link } from "react-router-dom";
 import ProfilePicture from "../../common/ProfilePicture";
 import UserProfile from "../../profile/UserProfile";
 import UsernameLink from "../../shared/UsernameLink";
+import FollowBtn from "../../shared/Buttons/FollowBtn";
 
 const Notification = ({ setClose, onClose }) => {
   const dispatch = useDispatch();
-  const notifications = [...data];
+  const { notifications } = useSelector((state) => state.notifications);
   const [showFollowRequests, setShowFollowRequest] = useState();
   const getAllNotifications = useCallback(async () => {
     try {
       const res = await makeRequest.get("notifications");
 
-      if (res.data.isSuccess) {
-        dispatch(setNotifications(res.data.notifications));
+      if (res.isSuccess) {
+        dispatch(setNotifications(res.notifications));
       }
     } catch (error) {
       console.log(error);
@@ -45,12 +46,13 @@ const Notification = ({ setClose, onClose }) => {
     getAllFollowRequestForUser();
   }, []);
 
-  const handleAccept = (requestId, accept) => {
+  const handleAccept = async (requestId, accept) => {
     if (accept) {
-      console.log("follow request accepted", requestId);
+      const res = await makeRequest.patch(`/accept/${requestId}`);
+      console.log(res);
+      getAllFollowRequestForUser();
       return;
     }
-    console.log("follow request declined", requestId);
   };
 
   return (
@@ -164,7 +166,7 @@ export const data = [
       "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
   },
   {
-    type: "FOLLOW_RESQUEST",
+    type: "FOLLOW_RESQUEST_SENT",
     requestId: "2839820482742847387482738472",
     from: {
       username: "ujjwal_lade",
@@ -240,12 +242,30 @@ const Noti = ({ n }) => {
             src={n.from.avatar}
             className={"size-8 rounded-full object-cover"}
           />
-          <span className="flex-1 text-xs">{n.text}</span>
-          {n.following && (
-            <button className="text-[10px] px-2 text-sky-100 py-1 border rounded-md">
-              Following
-            </button>
-          )}
+          <p className="flex-1 text-xs leading-tight">
+            <span>{n.from.username} </span>
+            <span>{n.text}</span>
+          </p>
+
+          <FollowBtn isFollow={n.from.isFollow} userId={n.from._id} />
+        </li>
+      );
+    }
+    case "FOLLOWING": {
+      return (
+        <li
+          key={n.postId}
+          className=" dark:text-gray-50  flex justify-between gap-4 items-center rounded-md"
+        >
+          <ProfilePicture
+            src={n.from.avatar}
+            className={"size-8 rounded-full object-cover"}
+          />
+          <p className="flex-1 text-xs leading-tight">
+            <span>{n.from.username} </span>
+            <span>{n.text}</span>
+          </p>
+          <FollowBtn isFollow={n.from.isFollow} userId={n.from._id} />
         </li>
       );
     }
@@ -259,7 +279,10 @@ const Noti = ({ n }) => {
             src={n.from.avatar}
             className={"size-8 rounded-full object-cover"}
           />
-          <span className="flex-1 text-xs">{n.text}</span>
+          <p className="flex-1 text-xs leading-tight">
+            <span>{n.from.username} </span>
+            <span>{n.text}</span>
+          </p>
           <button className="text-xs  px-2 rounded-xl text-sky-100 py-1">
             Accept
           </button>
