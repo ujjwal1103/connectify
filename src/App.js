@@ -7,6 +7,7 @@ import useHealthCheck from "./utils/hooks/useHealthCheck.js";
 
 const Login = lazy(() => import("./module/Auth/Login"));
 const Register = lazy(() => import("./module/Auth/Register"));
+const Auth = lazy(() => import("./module/Auth/Auth"));
 const HomePage = lazy(() => import("./home/HomePage"));
 const PageNotFound = lazy(() => import("./PageNotFound/PageNotFound"));
 const UnAuthorized = lazy(() => import("./PageNotFound/UnAuthorized.js"));
@@ -23,10 +24,13 @@ const Exp = lazy(() => import("./exp/Exp.jsx"));
 const Peoples = lazy(() => import("./module/People/index.js"));
 
 const App = () => {
-  const { loading } = useHealthCheck();
+  const { loading, error } = useHealthCheck();
 
   if (loading) {
     return <PageLoader />;
+  }
+  if (error) {
+    return <div>Something went Wrong</div>;
   }
 
   return (
@@ -36,6 +40,7 @@ const App = () => {
         <Route path="/" element={<AuthRoutes />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="auth" element={<Auth />} />
         </Route>
 
         {/* Protected Routes */}

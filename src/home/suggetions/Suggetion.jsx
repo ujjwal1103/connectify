@@ -5,10 +5,15 @@ import { useState } from "react";
 import { followUser } from "../../profile/services/postServices";
 
 const Suggetion = ({ user }) => {
-  const { _id: userId, avatar, username, name } = user;
+  const { _id: userId, avatar, username, name, isPrivate } = user;
   const [follow, setFollow] = useState(false);
-
+  const [isRequested, setIsRequested] = useState(false);
   const handleFollowRequest = async () => {
+    if (isPrivate) {
+      console.log("private user");
+      setIsRequested(true);
+      return;
+    }
     const data = await followUser(userId);
     if (data.follow) {
       setFollow(data.follow);
@@ -32,6 +37,13 @@ const Suggetion = ({ user }) => {
             </span>
           </Link>
         </div>
+
+        {isRequested && (
+          <button className="text-xs bg-gradient-to-l from-violet-900 to-blue-900 px-2 rounded-xl text-sky-100 py-1">
+            Requested
+          </button>
+        )}
+
         {follow ? (
           <button className="text-xs bg-gradient-to-l from-violet-900 to-blue-900 px-2 rounded-xl text-sky-100 py-1">
             Following

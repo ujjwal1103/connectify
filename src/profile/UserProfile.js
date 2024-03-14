@@ -133,9 +133,9 @@ const UserProfile = () => {
       className=" 
       w-full flex lg:h-page overflow-y-scroll h-post  overflow-x-hidden bg-zinc-950 p-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
-      <div className=" w-full lg:w-96 lg:min-w-80 lg:max-w-80 lg:sticky top-0 ">
+      <div className="w-full lg:min-w-[350px] lg:max-w-[350px] lg:sticky top-0">
         <ProfileCard user={user} canOpen={user?.isPrivate && !user?.isFollow}>
-          <div className="flex gap-3 justify-center items-center">
+          <div className="flex gap-5 py-2 justify-center items-center">
             {user?.isFollow && !user?.isRequested ? (
               <button
                 onClick={handleUnfollow}

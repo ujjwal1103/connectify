@@ -4,6 +4,7 @@ import { makeRequest } from "../../config/api.config";
 import { login } from "../../redux/services/authSlice";
 import { useDispatch } from "react-redux";
 import { useAuth } from "../../context/AuthProvider";
+import { saveUserAndTokenLocalstorage } from "../../utils/getCurrentUserId";
 
 const Auth = () => {
   const location = useLocation();
@@ -23,12 +24,16 @@ const Auth = () => {
           username,
           password,
         });
-        res && localStorage.setItem("user", JSON.stringify(res.user));
+        saveUserAndTokenLocalstorage(
+          res.user,
+          res.accessToken,
+          res.refreshToken
+        );
         loginUser(res?.user);
         dispatch(login({ isAuthenticated: true, user: res?.user }));
-        navigator("/home");
+        navigator("/");
       } catch (error) {
-        console.log(error);
+        console.log(error);``
       }
     },
     [dispatch, loginUser, navigator]
@@ -43,9 +48,7 @@ const Auth = () => {
       });
       setLoading(false);
       res && localStorage.setItem("user", JSON.stringify(res));
-
-      dispatch(login({ isAuthenticated: true, user: res?.user }));
-      navigator("/home");
+      navigator("/");
     } catch (error) {
       console.log(error);
     }

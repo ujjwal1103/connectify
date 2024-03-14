@@ -3,16 +3,22 @@ import { makeRequest } from "../../config/api.config";
 
 const useHealthCheck = () => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await makeRequest("/healthCheck");
-      setLoading(false);
+      try {
+        const res = await makeRequest("/healthCheck");
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
     };
 
     fetchData();
   }, []);
-  return { loading };
+  return { loading, error };
 };
 
 export default useHealthCheck;

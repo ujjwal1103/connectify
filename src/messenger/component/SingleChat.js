@@ -32,7 +32,7 @@ const SingleChat = ({ chat }) => {
       onClick={selectThisChat}
     >
       <ProfilePicture
-        url={chat?.friend?.avatar}
+        src={chat?.friend?.avatar}
         className="inline-block lg:size-10 size-8 rounded-full hover:scale-90 duration-500 object-cover"
       />
       <div className="flex-1">
