@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef } from "react";
+import { useState, useRef, forwardRef, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 
@@ -43,6 +43,11 @@ const Navbar = () => {
     setIsOpenNotification((prev) => !prev);
   };
 
+  useEffect(() => {
+    setIsOpen(false);
+    setIsOpenNotification(false);
+    setIsOpenCreatePost(false)
+  }, [location.pathname]);
   // const handleDarkMode = () => {
   //   if (document.body.classList.contains("dark")) {
   //     document.body.classList.remove("dark");
@@ -165,7 +170,7 @@ const Badge = ({ children, count }) => {
 const MenuBox = forwardRef(({}, ref) => {
   return (
     <motion.div
-      initial={{ scale: 0, origin:'center' }}
+      initial={{ scale: 0, origin: "center" }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
       transition={{ duration: 0.3 }}
@@ -174,7 +179,10 @@ const MenuBox = forwardRef(({}, ref) => {
     >
       <ul className="py-1 ">
         <li>
-          <NavLink className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-red-400">
+          <NavLink
+            to={"/setting"}
+            className="flex gap-3 items-center dark:text-white px-4 py-2 text-gray-800 hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-red-400"
+          >
             <Cog className="mr-2" />
             Settings
           </NavLink>

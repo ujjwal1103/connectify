@@ -79,3 +79,7 @@ progress {
   background-color: #4d003cb5;
   background-color: rgba(200, 71, 0, 0.71);
 }
+
+iframe {
+  display: none;
+}

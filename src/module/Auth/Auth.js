@@ -33,7 +33,7 @@ const Auth = () => {
         dispatch(login({ isAuthenticated: true, user: res?.user }));
         navigator("/");
       } catch (error) {
-        console.log(error);``
+        console.log(error);
       }
     },
     [dispatch, loginUser, navigator]

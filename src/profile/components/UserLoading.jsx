@@ -1,11 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 
 const UserLoading = () => {
   return (
     <div className="flex">
-      <div
-        className="h-full w-96 flex dark:text-gray-50 lg:flex-row flex-col items-center lg:items-start"
-      >
+      <div className="h-full w-96 flex dark:text-gray-50 lg:flex-row flex-col items-center lg:items-start">
         <div className="p-3 sticky top-2 w-[400px] flex-col lg:mx-auto flex justify-center  items-center ">
           <div className="p-2 h-fit w-full bg-zinc-900 rounded-xl">
             <div className="flex justify-center items-center my-3">
@@ -26,7 +24,10 @@ const UserLoading = () => {
             </div>
             <div className="grid grid-cols-3  gap-3  my-2">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex animate-pulse flex-col h-16 rounded-lg justify-center items-center bg-zinc-800"></div>
+                <div
+                  key={i}
+                  className="flex animate-pulse flex-col h-16 rounded-lg justify-center items-center bg-zinc-800"
+                ></div>
               ))}
             </div>
             <div>
@@ -45,17 +46,20 @@ const UserLoading = () => {
 
 export default UserLoading;
 
-export const PostLoading = () => (
-  <div className="flex-1 h-full overflow-hidden py-3 pr-3">
+export const PostLoading = memo(({ className }) => (
+  <div className={className}>
+
     <div className="grid lg:grid-cols-3 overflow-hidden gap-3 w-full">
-      {[1, 2, 3, 4, 5, 6, 7,8,9].map((index) => {
-        return (
-          <div
-            key={index}
-            className="bg-zinc-900 animate-pulse h-52 rounded-md "
-          ></div>
-        );
-      })}
+      {Array(9)
+        .fill(null)
+        .map((_, index) => {
+          return (
+            <div
+              key={index}
+              className="bg-zinc-900 animate-pulse h-64 rounded-md"
+            ></div>
+          );
+        })}
     </div>
   </div>
-);
+));

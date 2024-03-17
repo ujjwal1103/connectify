@@ -82,7 +82,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
   };
 
   return (
-    <div className=" p-2 lg:rounded-lg rounded-lg lg:m-0 h-full border-2 bg-zinc-900 border-zinc-800 ">
+    <div className=" p-2 lg:rounded-lg md:rounded-lg md::m-0 md:h-full w-screen md:w-auto h-dvh border-2 bg-zinc-900 border-zinc-800 ">
       <div className="p-4">
         <h1 className="text-2xl font-semibold font-sans text-gray-50 text-center">
           Edit Profile
@@ -129,7 +129,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
             onChange={handleDataChange}
             name="gender"
           />
-          <div className="flex  gap-5">
+          <div className="flex gap-3 justify-end">
             <button
               disabled={submitDisabled || uploadingProfile}
               type="submit"
@@ -140,7 +140,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
             </button>
             <button
               type="submit"
-              className="middle none center mr-3 rounded-lg border border-[#620C45] py-3 px-6 font-sans text-xs font-bold uppercase text-[#620C45] transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="middle none center  rounded-lg border border-[#620C45] py-3 px-6 font-sans text-xs font-bold uppercase text-[#620C45] transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"
               onClick={onClose}
             >

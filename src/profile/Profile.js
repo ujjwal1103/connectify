@@ -69,7 +69,7 @@ const Profile = () => {
         </ProfileCard>
       </div>
 
-      <Posts />
+      <Posts postCount={user?.posts}/>
 
       {edit && (
         <Modal

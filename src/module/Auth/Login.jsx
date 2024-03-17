@@ -4,7 +4,6 @@ import { PersonFill, OutlineLoading, Google, PasswordLock } from "../../icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/services/authSlice";
-import { makeRequest } from "../../config/api.config";
 import getGoogleUrl from "../../config/getGoogleUri";
 import { useAuth } from "../../context/AuthProvider";
 import { useForm } from "react-hook-form";
@@ -14,6 +13,7 @@ import { saveUserAndTokenLocalstorage } from "../../utils/getCurrentUserId";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 import ConnectifyIcon from "../../icons/Connectify";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
+import { loginWithEmailAndPassword } from "../../api";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -28,12 +28,12 @@ const Login = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm();
   const onSubmit = (data) => {
-    userSignIn(data);
+    loginUserWithEmailAndPassword(data);
   };
-  const userSignIn = async (data) => {
+  const loginUserWithEmailAndPassword = async (data) => {
     setLoading(true);
     try {
-      const res = await makeRequest.post("/login", {
+      const res = await loginWithEmailAndPassword({
         username: data.username,
         password: data.password,
       });
@@ -59,8 +59,8 @@ const Login = () => {
         message: error?.message,
       });
       setLoading(false);
-      toast.error(error?.message,{
-        position:"top-center"
+      toast.error(error?.message, {
+        position: "top-center",
       });
       setTimeout(() => {
         clearErrors();
@@ -114,8 +114,11 @@ const Login = () => {
 
             <div className="flex justify-between w-full items-center">
               {loading ? (
-                <button disabled className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  ">
-                  <OutlineLoading className="animate-spin" size={20}/>
+                <button
+                  disabled
+                  className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  "
+                >
+                  <OutlineLoading className="animate-spin" size={20} />
                 </button>
               ) : (
                 <button

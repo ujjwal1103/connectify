@@ -177,7 +177,7 @@ const UserProfile = () => {
       {user?.isPrivate && !user?.isFollow ? (
         <PrivateUser />
       ) : (
-        <Posts userId={user?._id} username={username} />
+        <Posts userId={user?._id} username={username} postCount={user?.posts} />
       )}
     </div>
   );

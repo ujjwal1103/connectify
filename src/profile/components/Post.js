@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setPost } from "../../redux/services/postSlice";
 import { deleteThisPost } from "../services/postServices";
@@ -46,12 +46,12 @@ const Post = ({ post }, ref) => {
       ref={ref && ref}
       className="relative group w-full h-[270px] flex items-center rounded shadow-xl justify-center"
     >
-      <img
+      <ImageComponent
         src={post.imageUrl[0]}
         alt=""
+        loaderClassName={`flex justify-center items-center bg-zinc-900 animate-pulse md:w-96 w-full h-full rounded `}
         className="object-cover w-full h-full rounded group-hover:opacity-80"
         onClick={handleSetPost}
-        loading="lazy"
       />
 
       {getCurrentUserId() === post.user._id && (
@@ -114,3 +114,34 @@ const Post = ({ post }, ref) => {
 };
 
 export default forwardRef(Post);
+
+export const ImageComponent = memo(
+  ({ src, alt, className,loaderClassName, onClick, style = {} }) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    useEffect(() => {
+      const image = new Image();
+      image.onload = () => {
+        setImageLoaded(true);
+      };
+      image.src = src;
+    }, [src]);
+    return (
+      <>
+        <div
+          className={loaderClassName}
+          style={{ ...style, display: imageLoaded ? "none" : "flex" }}
+        ></div>
+
+        <img
+          src={src}
+          alt={alt}
+          className={className}
+          onClick={onClick}
+          loading="lazy"
+          style={{ ...style, display: imageLoaded ? "inline" : "none" }}
+        />
+      </>
+    );
+  }
+);

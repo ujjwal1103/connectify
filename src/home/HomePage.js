@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
 import NoPosts from "../profile/components/NoPosts";
-
+import InfiniteScroll from "react-infinite-scroll-component";
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
   const { isLoading, isError, error, feeds, hasNextPage } = usePosts(pageNum);
@@ -27,28 +27,13 @@ const HomePage = () => {
     [isLoading, hasNextPage]
   );
 
-  if (isError)
-    return (
-      <div className="flex h-page  flex-col  gap-3 justify-center items-center text-white">
-        <div className="bg-red-300  p-3 font-semibold text-red-900 border-2 border-red-900 rounded-md">
-          {error.message}
-        </div>
-        <button
-          className="bg-blue-600 p-2 rounded-lg hover:bg-blue-700"
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          RETRY
-        </button>
-      </div>
-    );
+  if (isError) return <ErrorPage />;
 
   const content = feeds.map((post, i) => {
     if (feeds.length === i + 1) {
-      return <Post ref={lastPostRef} key={post.id} post={post} />;
+      return <Post ref={lastPostRef} key={post._id} post={post} />;
     }
-    return <Post key={post.id} post={post} />;
+    return <Post key={post._id} post={post} />;
   });
 
   return (
@@ -58,13 +43,34 @@ const HomePage = () => {
       </div> */}
       <div className="flex lg:gap-3">
         <div className="hidden md:hidden lg:block lg:w-fit">
-        <Sidebar />
+          <Sidebar />
         </div>
-        <section className="flex flex-1 gap-3 justify-between ">
-          <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-1 flex-1 flex-col gap-5 ">
+        <section
+          className="flex flex-1 gap-3 justify-between"
+          id="scrollableDiv"
+        >
+          <div className="grid grid-cols-1 flex-1 flex-col gap-5">
             {content}
+            {/* <InfiniteScroll
+              dataLength={feeds.length}
+              next={() => {
+                setPageNum(pageNum + 1);
+              }}
+              hasMore={hasNextPage}
+              loader={<FeedLoading />}
+              // endMessage={
+              //   <p style={{ textAlign: "center" }}>
+              //     <b>Yay! You have seen it all</b>
+              //   </p>
+              // }
+              crollableTarget={"scrollableDiv"}
+            >
+              {feeds.map((post, i) => {
+                return <Post key={post._id} post={post} />;
+              })}
+            </InfiniteScroll> */}
 
-            {isLoading  && <FeedLoading />}
+            {isLoading && <FeedLoading />}
             {feeds.length === 0 && !isLoading && (
               <div className="bg-zinc-800 rounded-lg">
                 <NoPosts />
@@ -86,7 +92,7 @@ const FeedLoading = () => {
   return (
     <div className=" h-full ">
       <div className=" grid grid-cols-1 flex-1 flex-col  gap-5">
-        {[1, 2, 3].map((i) => (
+        {[1].map((i) => (
           <div
             key={i}
             className="border dark:border-zinc-500/30 p-2 bg-zinc-900  w-full  rounded-lg shadow-md relative"
@@ -101,7 +107,7 @@ const FeedLoading = () => {
               </div>
             </div>
             <div className="h-64 mt-3 bg-zinc-950 rounded-md w-full"></div>
-            <div className="h-20 mt-  3 bg-zinc-950 rounded-md w-full"></div>
+            <div className="h-20 mt-3 bg-zinc-950 rounded-md w-full"></div>
           </div>
         ))}
       </div>

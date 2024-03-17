@@ -17,7 +17,7 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const newSocket = useMemo(

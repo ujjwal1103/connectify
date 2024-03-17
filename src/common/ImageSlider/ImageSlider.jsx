@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import "./image-slider.css";
 import { ChevronBack, ChevronForward, CircleDot, Circle } from "../../icons";
+import { ImageComponent } from "../../profile/components/Post";
 
 export function ImageSlider({ images }) {
   const [currentImages, setCurrentImages] = useState();
@@ -42,10 +43,19 @@ export function ImageSlider({ images }) {
         }}
       >
         {currentImages?.map((url, index) => (
-          <img
+          // <img
+          //   key={url}
+          //   src={url}
+          //   alt={url}
+          //   aria-hidden={imageIndex !== index}
+          //   className={"img-slider-img overflow-hidden"}
+          //   style={{ translate: `${-100 * imageIndex}%` }}
+          // />
+          <ImageComponent
             key={url}
             src={url}
             alt={url}
+            loaderClassName={` bg-zinc-950 animate-pulse w-full h-[400px]`}
             aria-hidden={imageIndex !== index}
             className={"img-slider-img overflow-hidden"}
             style={{ translate: `${-100 * imageIndex}%` }}

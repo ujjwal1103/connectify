@@ -10,15 +10,18 @@ const Peoples = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const fetchPeoples = useCallback(async (p) => {
-    if (page === 1) {
-      setLoading(true);
-    }
-    const res = await makeRequest.get(`/users?page=${p}`);
-    setPeoples([...peoples, ...res?.users]);
-    setHasMore(res?.pagination?.hasMore);
-    setLoading(false);
-  },[page]);
+  const fetchPeoples = useCallback(
+    async (p) => {
+      if (page === 1) {
+        setLoading(true);
+      }
+      const res = await makeRequest.get(`/users?page=${p}`);
+      setPeoples([...peoples, ...res?.users]);
+      setHasMore(res?.pagination?.hasMore);
+      setLoading(false);
+    },
+    [page]
+  );
 
   useEffect(() => {
     fetchPeoples(page);
@@ -31,7 +34,7 @@ const Peoples = () => {
           <div className="flex justify-start  w-full p-2">
             <span className="h-6 bg-zinc-800 rounded-md w-44 "></span>
           </div>
-          {[12, 23, 34, 4, 5, 6,3].map((i) => (
+          {[12, 23, 34, 4, 5, 6, 3].map((i) => (
             <li className="flex py-2  gap-3 w-full items-center px-2">
               <div className={"w-14 h-14 rounded-full bg-zinc-800"} />
               <div className="flex flex-col gap-2">
@@ -53,6 +56,7 @@ const Peoples = () => {
       <div className="w-[50%]  m-auto  ">
         <h1 className="py-3  text-xl">Suggested</h1>
         <InfiniteScroll
+
           dataLength={peoples?.length}
           next={() => {
             setPage((prev) => prev + 1);
@@ -78,7 +82,7 @@ const Peoples = () => {
           scrollableTarget={"scrollableDiv"}
         >
           {peoples?.map((people) => {
-            return <People people={people} />;
+            return <People key={people._id} people={people} />;
           })}
         </InfiniteScroll>
         {/* <ul className="w-full bg-[#1A1A1A] ">
