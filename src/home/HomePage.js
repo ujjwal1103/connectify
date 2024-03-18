@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
 import NoPosts from "../profile/components/NoPosts";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { ErrorPage } from "../App";
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
   const { isLoading, isError, error, feeds, hasNextPage } = usePosts(pageNum);
