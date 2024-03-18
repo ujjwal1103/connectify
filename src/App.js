@@ -122,7 +122,7 @@ function PageLoader({}) {
   );
 }
 
-const ErrorPage = () => (
+export const ErrorPage = () => (
   <div className="min-h-screen bg-gradient-to-br to-[#620C45]  from-[#ff0000] flex items-center justify-center">
     <div className="max-w-md px-8 py-12 bg-white shadow-lg rounded-md text-center">
       <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
