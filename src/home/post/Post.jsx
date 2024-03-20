@@ -19,7 +19,6 @@ const Post = ({ post }, ref) => {
 
   const dispatch = useDispatch();
   const handleSetPost = () => {
-    console.log(isMobile, isBrowser);
     if (isMobile) {
       navigate(`p/${post._id}`);
     } else {

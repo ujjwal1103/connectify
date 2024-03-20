@@ -103,7 +103,7 @@ const App = () => {
 
 export default App;
 
-function PageLoader({}) {
+export const PageLoader = ({}) => {
   return (
     <div className="w-screen h-dvh bg-zinc-800 flex justify-center items-center">
       <motion.span
@@ -120,7 +120,7 @@ function PageLoader({}) {
       </motion.span>
     </div>
   );
-}
+};
 
 export const ErrorPage = () => (
   <div className="min-h-screen bg-gradient-to-br to-[#620C45]  from-[#ff0000] flex items-center justify-center">

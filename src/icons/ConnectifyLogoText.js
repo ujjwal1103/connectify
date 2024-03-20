@@ -20,7 +20,7 @@ const ConnectifyLogoText = ({w='300',h='60'}) => {
           height="16.4384"
           rx="5"
           stroke="white"
-          stroke-width="4"
+          strokeWidth="4"
         />
         <rect
           x="316"
@@ -29,12 +29,12 @@ const ConnectifyLogoText = ({w='300',h='60'}) => {
           height="16.4384"
           rx="5"
           stroke="white"
-          stroke-width="4"
+          strokeWidth="4"
         />
         <path
           d="M331.69 52.0011V52.0011C337.685 52.0011 342.545 47.141 342.545 41.1458V34.3673V27.9669C342.545 21.3395 347.918 15.9669 354.545 15.9669H355.009"
           stroke="white"
-          stroke-width="4"
+          strokeWidth="4"
         />
       </g>
     </svg>

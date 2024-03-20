@@ -19,8 +19,8 @@ const ConnectifyIcon = ({size}) => {
             height="21.8534"
             rx="5"
             stroke="white"
-            stroke-width="4"
-            shape-rendering="crispEdges"
+            strokeWidth="4"
+            shapeRendering="crispEdges"
           />
         </g>
         <rect
@@ -30,12 +30,12 @@ const ConnectifyIcon = ({size}) => {
           height="21.8534"
           rx="5"
           stroke="white"
-          stroke-width="4"
+          strokeWidth="4"
         />
         <path
           d="M46.6552 76.6423H49.2111C56.0485 76.6423 61.504 70.9379 61.1992 64.1073L60.3282 44.5903C60.0648 38.687 64.1382 33.4705 69.9293 32.2951L74.3448 31.3989"
           stroke="white"
-          stroke-width="4"
+          strokeWidth="4"
         />
       </g>
       <defs>
@@ -46,9 +46,9 @@ const ConnectifyIcon = ({size}) => {
           width="120"
           height="114.728"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -81,9 +81,9 @@ const ConnectifyIcon = ({size}) => {
           width="31.9138"
           height="33.8534"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

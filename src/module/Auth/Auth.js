@@ -5,6 +5,7 @@ import { login } from "../../redux/services/authSlice";
 import { useDispatch } from "react-redux";
 import { useAuth } from "../../context/AuthProvider";
 import { saveUserAndTokenLocalstorage } from "../../utils/getCurrentUserId";
+import { PageLoader } from "../../App";
 
 const Auth = () => {
   const location = useLocation();
@@ -77,19 +78,15 @@ const Auth = () => {
   }, [authenticate]);
 
   if (loading) {
-    return (
-      <div className="bg-hero-pattern w-screen bg-opacity-60 h-screen bg-no-repeat bg-cover flex justify-center items-center">
-        <h1 className="text-white text-2xl">Loading...</h1>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (
-    <div className="bg-hero-pattern w-screen h-screen bg-no-repeat bg-cover flex justify-center items-center">
+    <div className="w-screen h-screen bg-no-repeat bg-cover flex justify-center items-center">
       {usernamePopup && (
         <div className="flex flex-col gap-4">
           <label className="text-gray-50">
-            Enter new username to continue{" "}
+            Enter new username to continue
           </label>
           <input
             type="text"

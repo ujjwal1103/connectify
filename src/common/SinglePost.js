@@ -21,7 +21,7 @@ import { ImageSlider } from "./ImageSlider/ImageSlider";
 const SinglePost = ({ post, posts }) => {
   const { user } = useSelector((state) => state.auth);
   const [currPost, setCurrentPost] = useState(post);
-  const [commentText, setCommentText] = useState(null);
+  const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
 
   const handleChange = (e) => {

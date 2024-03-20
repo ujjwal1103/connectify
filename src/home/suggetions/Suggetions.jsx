@@ -26,7 +26,7 @@ const Suggetions = () => {
       {loading && (
         <div className="mt-10 flex gap-2 flex-col">
           {[1, 2, 3, 4, 5].map((i) => (
-            <UserLoading />
+          <UserLoading key={i}/>
           ))}
         </div>
       )}

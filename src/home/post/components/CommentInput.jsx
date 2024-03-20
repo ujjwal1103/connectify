@@ -6,7 +6,7 @@ import Picker from "emoji-picker-react";
 import { useClickOutside } from "@react-hookz/web";
 
 const CommentInput = ({ postId }) => {
-  const [commentText, setCommentText] = useState(null);
+  const [commentText, setCommentText] = useState();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [mentionedUsers, setMentionedUsers] = useState([]);
