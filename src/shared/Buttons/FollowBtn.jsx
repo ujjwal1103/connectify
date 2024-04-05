@@ -30,7 +30,7 @@ const FollowBtn = ({ userId, callBack = () => {}, isFollow }) => {
   if (follow) {
     return (
       <Button
-        className="text-xs bg-gradient-to-l from-violet-900 to-blue-900 px-2 rounded-xl text-sky-100 py-1"
+        className="text-xs bg-gradient-to-l from-blue-900 to-violet-900 px-2 rounded-xl text-sky-100 py-1"
         onClick={handleUnfollow}
         size={"small"}
       >
@@ -41,7 +41,7 @@ const FollowBtn = ({ userId, callBack = () => {}, isFollow }) => {
 
   return (
     <Button
-      className=" bg-gradient-to-l from-sky-900 to-indigo-900 px-2  text-sky-100 "
+      className="text-xs bg-gradient-to-l from-violet-900 to-blue-900 px-2 rounded-xl text-sky-100 py-1 "
       onClick={handleFollowRequest}
       size={"small"}
     >

@@ -32,10 +32,6 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     setSocket(newSocket);
 
-    newSocket.on("connect", () => {
-      console.log("socket connection established", newSocket.id);
-    });
-
     return () => newSocket.disconnect();
   }, [newSocket]);
 

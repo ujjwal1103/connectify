@@ -1,15 +1,16 @@
 import Input from "../../common/InputFields/Input";
-import { ImageFill, Send } from "../../icons";
+import { ImageFill, OutlineLoading3Quarters, Send } from "../../icons";
 import { useRef, useState } from "react";
-import { makeRequest } from "../../config/api.config";
 import { useDispatch } from "react-redux";
 import { setMessageChatId } from "../../redux/services/chatSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClickOutside } from "@react-hookz/web";
 import { useSocket } from "../../context/SocketContext";
 import { sendNotification } from "../../home/notification/Services";
+import { useSendMessageMutation } from "../../redux/services/messageApi";
+import { NEW_MESSAGE } from "../../utils/constant";
 
-const MessageInput = ({ userId, chatId, getMessages }) => {
+const MessageInput = ({ userId, chatId, onMessage }) => {
   const [messageText, setMessageText] = useState("");
   const [openDial, setOpenDial] = useState(false);
   const speedDialRef = useRef();
@@ -18,18 +19,20 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
   const handleTextChange = (e) => {
     setMessageText(e.target.value);
   };
+  const [mutate, { isLoading }] = useSendMessageMutation();
   const handleSend = async () => {
+    setMessageText("");
     if (!messageText) return;
     const newMessage = {
       text: messageText,
       to: userId,
     };
 
-    const response = await makeRequest.post(`message/${chatId}`, newMessage);
-    if (response.isSuccess) {
-      getMessages();
-      setMessageText("");
-      await sendNotification(userId, "Send Message", socket, chatId);
+    // const response = await makeRequest.post(`message/${chatId}`, newMessage);
+    const response = await mutate({ chatId, newMessage });
+
+    if (response?.data.isSuccess) {
+      await sendNotification(userId, NEW_MESSAGE, socket, chatId, newMessage);
       dispatch(setMessageChatId(response.chatId));
     }
   };
@@ -58,6 +61,11 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
         value={messageText}
         onChange={handleTextChange}
         placeholder="Type..."
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && messageText && e.target.value) {
+            handleSend()
+          }
+        }}
         prefix={
           <button
             className="cursor-pointer px-3"
@@ -67,12 +75,18 @@ const MessageInput = ({ userId, chatId, getMessages }) => {
           </button>
         }
         sufix={
-          <button
-            disabled={!messageText}
-            className="cursor-pointer px-3 disabled:pointer-events-none"
-          >
-            <Send onClick={handleSend} />
-          </button>
+          isLoading ? (
+            <button className="cursor-pointer px-3 disabled:pointer-events-none">
+              <OutlineLoading3Quarters className="animate-spin" />
+            </button>
+          ) : (
+            <button
+              disabled={!messageText}
+              className="cursor-pointer px-3 disabled:pointer-events-none"
+            >
+              <Send onClick={handleSend} />
+            </button>
+          )
         }
       />
       <AnimatePresence>

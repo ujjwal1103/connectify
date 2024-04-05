@@ -7,6 +7,7 @@ import suggetionsReducer from "./services/suggetionSlice";
 import chatReducer from "./services/chatSlice";
 import storyReducer from "./services/storySlice";
 import profileReducer from "./services/profileSlice";
+import { messageApi } from "./services/messageApi";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,8 @@ export const store = configureStore({
     chat: chatReducer,
     story: storyReducer,
     profile: profileReducer,
+    [messageApi.reducerPath]: messageApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware().concat(messageApi.middleware),
 });

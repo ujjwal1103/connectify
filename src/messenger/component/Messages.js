@@ -1,29 +1,21 @@
-import { useEffect, useRef, useState } from "react";
 import Message from "./Message";
-import { useSelector } from "react-redux";
-import { groupMessagesByDate } from "../../utils/groupMessagesByDate";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
 import { BiLoader } from "react-icons/bi";
+import { forwardRef, useEffect, useRef } from "react";
 
-const Messages = ({
-  loading,
-  handlePageChange,
-  hasMore,
-}) => {
-  const { messages } = useSelector((state) => state.chat);
-  const [groupedMessages, setGroupedMessages] = useState([]);
-  const messagesContainerRef = useRef(null);
+const Messages = ({ isLoading, allMessages = [], page }, ref) => {
+  const autoscrollRef = useRef(null);
+
   useEffect(() => {
-    setGroupedMessages(groupMessagesByDate(messages));
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollIntoView({
+    if (autoscrollRef.current && page === 1) {
+      autoscrollRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
-    }
-  }, [loading, messages]);
+    } 
+  }, [allMessages]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-full flex flex-1 justify-center items-center dark:text-gray-50 text-xl  mb-4 p-2 ">
         <BiLoader size={44} className="animate-spin" />
@@ -31,7 +23,7 @@ const Messages = ({
     );
   }
 
-  if (!messages || (messages?.length === 0 && !loading))
+  if (!Object.keys(allMessages) || (Object.keys(allMessages)?.length === 0 && !isLoading))
     return (
       <div className="h-full flex flex-1 justify-center items-center dark:text-gray-50 text-xl  mb-4 p-2 ">
         Send new message to start a conversation
@@ -39,25 +31,14 @@ const Messages = ({
     );
 
   return (
-    <div className="h-full flex flex-col scroll-smooth flex-1 gap-3  overflow-y-scroll overflow-x-hidden mb-4 p-2 ">
+    <div ref={ref} className="h-full flex flex-col scroll-smooth flex-1 gap-3  overflow-y-scroll overflow-x-hidden  p-2 ">
       <div>
-        {hasMore && messages.length > 10 && (
-          <button
-            className=" text-[10px] text-center text-gray-200 w-fit self-center p-1 rounded-xl bg-neutral-950"
-            onClick={() => {
-              handlePageChange();
-            }}
-          >
-            View more messages
-          </button>
-        )}
-
-        {Object.keys(groupedMessages).map((date) => (
-          <div key={date} className="flex flex-col gap-3">
+        {Object.keys(allMessages).map((date) => (
+          <div className="flex flex-col gap-3" key={Date.now()}>
             <h3 className="text-center text-[10px]  text-gray-200 w-fit self-center p-1 rounded-xl bg-neutral-950">
               {date}
             </h3>
-            {groupedMessages[date].map((message) => (
+            {allMessages[date].map((message) => (
               <Message
                 key={message._id}
                 currentUserMessage={message.from === getCurrentUserId()}
@@ -67,10 +48,10 @@ const Messages = ({
           </div>
         ))}
 
-        <div ref={messagesContainerRef}></div>
+        <div id="scrollar" ref={autoscrollRef} />
       </div>
     </div>
   );
 };
 
-export default Messages;
+export default forwardRef(Messages);

@@ -18,20 +18,21 @@ html {
   }
 }
 
-::-webkit-scrollbar {
-  width: 0;
+*::-webkit-scrollbar {
+  width: 5px;
+  background-color: black;
+  height: 0px;
 }
 
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   border: 7px solid transparent;
-  background-clip: padding-box;
   border-radius: 9999px;
-  background-color: rgba(58, 58, 58, 0.3);
+  height: 5px;
+  background-color: grey;
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: white;
+} 
 
 body {
   width: 100%;
@@ -83,3 +84,13 @@ progress {
 iframe {
   display: none;
 }
+
+
+input:autofill {
+  
+  border: 3px solid darkorange;
+  background-color: red !important;
+  box-shadow: none !important ;
+}
+
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { makeRequest } from "../../config/api.config";
 
 const useHealthCheck = () => {
@@ -8,7 +8,7 @@ const useHealthCheck = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await makeRequest("/healthCheck");
+        await makeRequest("/healthCheck");
         setLoading(false);
       } catch (error) {
         setLoading(false);

@@ -31,11 +31,11 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error: error };
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error caught by boundary:", error, errorInfo);
+    // console.error("Error caught by boundary:", error, errorInfo);
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -43,7 +43,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <ErrorPage />;
+      return <ErrorPage error={this.state.error} />;
     }
 
     return this.props.children;
@@ -64,7 +64,11 @@ const App = () => {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <ErrorBoundary>
+      <ErrorBoundary
+        onError={(error) => {
+          console.log("error", error);
+        }}
+      >
         <Routes>
           {/* Authentication Routes */}
           <Route path="/" element={<AuthRoutes />}>
@@ -122,7 +126,7 @@ export const PageLoader = ({}) => {
   );
 };
 
-export const ErrorPage = () => (
+export const ErrorPage = ({ error }) => (
   <div className="min-h-screen bg-gradient-to-br to-[#620C45]  from-[#ff0000] flex items-center justify-center">
     <div className="max-w-md px-8 py-12 bg-white shadow-lg rounded-md text-center">
       <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
@@ -133,6 +137,7 @@ export const ErrorPage = () => (
         Don't worry, our team has been notified and we're working on fixing it.
         Please try again later.
       </p>
+      <p className="text-gray-600 mb-4">{error?.toString()}</p>
     </div>
   </div>
 );

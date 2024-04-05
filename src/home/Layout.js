@@ -28,9 +28,9 @@ const Layout = () => {
 
   return (
     <>
-      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit bg-black  ">
+      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit dark:bg-black  ">
         <div className="flex justify-center items-center sticky top-10">
-          <ConnectifyLogoText className="fill-white lg:hidden" w="200" h="20" />
+          <ConnectifyLogoText  w="200" h="20" />
         </div>
       </header>
       <Navbar />

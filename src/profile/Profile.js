@@ -46,7 +46,7 @@ const Profile = () => {
   return (
     <div
       className=" 
-      w-full flex lg:h-page overflow-y-scroll h-page  overflow-x-hidden bg-zinc-950 p-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
+      w-full flex lg:h-page overflow-y-scroll h-page  overflow-x-hidden bg-zinc-950 px-3 pt-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
       <div className="w-full  lg:min-w-[350px] lg:max-w-[350px]   lg:sticky top-0">
         <ProfileCard toggleEdit={toggleEdit} user={user} isPrivate={false}>

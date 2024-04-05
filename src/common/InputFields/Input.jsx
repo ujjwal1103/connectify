@@ -42,6 +42,7 @@ const Input = (props, ref) => {
         {...props}
         type={showPassword ? "text" : type}
         className={className}
+        autoComplete={undefined}
         onFocus={() => {
           iconRef?.current?.firstChild?.classList.add("dark:fill-[#620C45]");
         }}

@@ -12,6 +12,8 @@ const ImageCrop = ({
   aspect: as = 3,
   profile = false,
   name,
+  onImagePick = () => {},
+  cropedImagesUrls = [],
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(scale);
@@ -23,7 +25,7 @@ const ImageCrop = ({
     setCroppedAreaPixels(cap);
   };
 
-  const cropImage = async () => {
+  const cropImage = async (allowNext = false) => {
     try {
       const { file, url } = await getCroppedImage(
         image,
@@ -32,16 +34,28 @@ const ImageCrop = ({
         rotate
       );
 
-      onCrop(file, url);
-      onClose();
+      onCrop(file, url, allowNext);
+
+      !allowNext && onClose();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleImagePick = (e) => {
+    cropImage(true);
+    onImagePick(e);
+  };
 
   return (
     <div className="fixed inset-0 flex justify-center  items-center ">
+      <div className="flex flex-col gap-4 p-4">
+        {cropedImagesUrls?.map((img) => (
+          <div>
+            <img src={img} className="w-32 rounded-md "/>
+          </div>
+        ))}
+      </div>
       <div className="relative flex box-border rounded-md overflow-clip justify-center items-center flex-col w-96 ">
         <div className="bg-zinc-900 box-border items-center flex justify-between w-full text-center text-xl font-bold p-2">
           <button
@@ -50,11 +64,11 @@ const ImageCrop = ({
             onClick={onClose}
           >
             Cancel
-          </button>{" "}
+          </button>
           <button
             type="button"
             className="bg-white text-black rounded-md p-1 text-base"
-            onClick={cropImage}
+            onClick={() => cropImage(false)}
           >
             Next
           </button>
@@ -91,7 +105,7 @@ const ImageCrop = ({
           </div>
         )}
         {!profile && (
-          <div className="absolute bottom-0 left-0 p-2 flex gap-3">
+          <div className="absolute bottom-0 left-0 p-2 flex gap-3  w-full">
             <button
               className="bg-zinc-600 shadow-md p-1 rounded-md dark:text-white"
               onClick={() => setAspect((prev) => (prev === 3 ? 4 : 3))}
@@ -104,39 +118,26 @@ const ImageCrop = ({
             >
               <ZoomIn size={24} />
             </button>
+            <div className="self-center ml-auto">
+              <input
+                type="file"
+                name="imagePicker"
+                id="imagePicker"
+                hidden
+                onChange={handleImagePick}
+              />
+              <label
+                className="w-12  cursor-pointer flex justify-center items-center bg-white"
+                htmlFor="imagePicker"
+              >
+                Add
+              </label>
+            </div>
           </div>
         )}
-        {/* <div className=" w-full text-black flex flex-col p-3">
-          <div className="flex flex-col text-white">
-            <label htmlFor="zoom">Zoom</label>
-            <input
-              type="range"
-              name="zoom"
-              id=""
-              min={1}
-              max={3}
-              step={0.1}
-              className=" accent-blue-500"
-              value={zoom}
-              onChange={(e) => setZoom(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col text-white">
-            {" "}
-            <label htmlFor="Rotate">Rotate</label>
-            <input
-              type="range"
-              name="rotate"
-              id=""
-              max={360}
-              step={1}
-              value={rotate}
-              className="block accent-blue-500"
-              onChange={(e) => setRotate(e.target.value)}
-            />
-          </div>
-        </div> */}
       </div>
+
+      
     </div>
   );
 };

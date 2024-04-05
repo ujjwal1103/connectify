@@ -2,12 +2,14 @@ import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import FocusTrap from "./FocusTrap";
 import { useClickOutside } from "@react-hookz/web";
+import { motion } from "framer-motion";
 
 const Modal = ({
   onClose,
   children,
   shouldCloseOutsideClick = true,
   showCloseButton = true,
+  animate = true,
 }) => {
   const elRef = useRef(null);
   const modalRef = useRef(null);
@@ -45,9 +47,22 @@ const Modal = ({
     <div className="z-[999] fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 backdrop-blur-md">
       <FocusTrap>
         <div className="flex justify-center items-center w-screen h-screen">
-          <div onClick={handleChildClick} ref={modalRef}>
-            {childrenWithProps}
-          </div>
+          {animate ? (
+            <motion.div
+              initial={{ scale: 0.1 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              transition={{ type: "spring", stiffness: 100 }}
+              onClick={handleChildClick}
+              ref={modalRef}
+            >
+              {childrenWithProps}
+            </motion.div>
+          ) : (
+            <div onClick={handleChildClick} ref={modalRef}>
+              {childrenWithProps}
+            </div>
+          )}
 
           {showCloseButton && (
             <button

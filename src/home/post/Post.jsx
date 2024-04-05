@@ -10,7 +10,7 @@ import { setFeed } from "../../redux/services/feedSlice";
 import Modal from "../../shared/Modal";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
-import { isBrowser, isMobile } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 const Post = ({ post }, ref) => {
   const userId = getCurrentUserId();
   const { feed, feeds } = useSelector((state) => state.feed);

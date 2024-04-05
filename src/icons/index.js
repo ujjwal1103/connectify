@@ -44,6 +44,8 @@ import {
   IoChevronForwardCircle as ChevronForwardCircle,
   IoChevronBackCircle as ChevronBackCircle,
 } from "react-icons/io5";
+import { RiCheckDoubleLine as DoubleCheckIcon,RiCheckLine  as Check } from "react-icons/ri";
+
 import { IoIosLock as PasswordLock, IoMdList as MdList } from "react-icons/io";
 import { RiMessengerLine as MessengerLine,  RiCheckboxBlankLine as CheckBoxBlankLine  } from "react-icons/ri";
 import { FiEdit as Edit } from "react-icons/fi";
@@ -70,8 +72,10 @@ export {
   ChevronBack,
   ChevronForward,
   Cog,
+  Check,
   DarkMode,
   DotsNine,
+  DoubleCheckIcon,
   EllipsisV,
   EmojiSmile,
   EmojiWink,
@@ -102,5 +106,7 @@ export {
   Search,
   Send,
   SignOutAlt,
-  ThreeDots,CheckBoxBlankLine,ZoomIn
+  ThreeDots,
+  CheckBoxBlankLine,
+  ZoomIn
 };

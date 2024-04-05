@@ -1,6 +1,7 @@
 export function groupMessagesByDate(messages) {
     const groupedMessages = {};
-    messages.forEach((message) => {
+
+    messages?.forEach((message) => {
       const messageDate = new Date(message.createdAt);
       const today = new Date();
       const yesterday = new Date(today);

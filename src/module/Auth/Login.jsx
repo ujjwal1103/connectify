@@ -28,24 +28,28 @@ const Login = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm();
   const onSubmit = (data) => {
+    if (loading) return;
     loginUserWithEmailAndPassword(data);
   };
-  const loginUserWithEmailAndPassword = async (data) => {
+  const loginUserWithEmailAndPassword = async ({ username, password }) => {
     setLoading(true);
+    const id = toast.loading("Login...");
     try {
-      const res = await loginWithEmailAndPassword({
-        username: data.username,
-        password: data.password,
-      });
+      const res = await loginWithEmailAndPassword({ username, password });
       if (res.isSuccess) {
+        toast.dismiss(id);
         saveUserAndTokenLocalstorage(
           res.user,
           res.accessToken,
           res.refreshToken
         );
-
-        toast(`Welcome Back!!`, {
+        
+        toast.success("Welcome Back!!", {
           icon: <ConnectifyIcon size={34} />,
+          closeOnClick: true,
+          closeButton: true,
+          autoClose: 2000,
+          hideProgressBar: false,
         });
       }
       loginUser(res?.user);
@@ -59,12 +63,18 @@ const Login = () => {
         message: error?.message,
       });
       setLoading(false);
-      toast.error(error?.message, {
-        position: "top-center",
+      toast.update(id, {
+        render: error?.message,
+        type: "warning",
+        closeOnClick: true,
+        closeButton: true,
+        autoClose: 2000,
+        hideProgressBar: false,
       });
+
       setTimeout(() => {
         clearErrors();
-      }, 5000);
+      }, 3000);
     }
   };
 
@@ -112,28 +122,12 @@ const Login = () => {
               error={errors?.password}
             />
 
-            <div className="flex justify-between w-full items-center">
-              {loading ? (
-                <button
-                  disabled
-                  className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  "
-                >
-                  <OutlineLoading className="animate-spin" size={20} />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !isValid}
-                  className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  hover:bg-black"
-                >
-                  {isSubmitting ? (
-                    <OutlineLoading className="animate-spin" />
-                  ) : (
-                    "Login"
-                  )}
-                </button>
-              )}
-            </div>
+            <AuthButton
+              title={"Login"}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              loading={loading}
+            />
 
             <p className="text-white">
               Dont have an account?
@@ -162,3 +156,23 @@ const Login = () => {
 };
 
 export default Login;
+
+function AuthButton({ isValid, loading, title = "Login" }) {
+  return (
+    <div className="flex justify-between w-full items-center">
+      <button
+        type="submit"
+        disabled={!isValid}
+        className="w-full disabled:bg-slate-500 h-12 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  hover:bg-black"
+      >
+        {loading ? (
+          <span className="flex justify-center">
+            <OutlineLoading className="animate-spin" />
+          </span>
+        ) : (
+          title
+        )}
+      </button>
+    </div>
+  );
+}

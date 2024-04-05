@@ -19,23 +19,10 @@ import {
   setOtherUser,
 } from "../redux/services/profileSlice";
 import PageNotFound from "../PageNotFound/PageNotFound";
-import { toast, Zoom } from "react-toastify";
 import useAleart from "../utils/hooks/useAleart";
-
-// const images = [
-//   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2023/10/30/17/34/flamingos-8353373_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295431_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2017/05/08/13/15/bird-2295436_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2015/11/16/16/28/bird-1045954_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
-//   "https://cdn.pixabay.com/photo/2012/08/06/00/53/bridge-53769_1280.jpg",
-// ];
+import { ACCEPT_REQUEST } from "../utils/constant";
+import useSocketEvents from "../hooks/useSocketEvents";
+import { useSocket } from "../context/SocketContext";
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -43,7 +30,7 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { otherUser: user, loading, error } = useSelector(profileState);
   const { alert } = useAleart();
-
+  const { socket } = useSocket();
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest(`/user/${username}`);
@@ -119,6 +106,16 @@ const UserProfile = () => {
   useEffect(() => {
     getUser();
   }, [getUser]);
+
+  const handleRefech = useCallback(() => {
+    getUser();
+  }, []);
+
+  const eventHandlers = {
+    [ACCEPT_REQUEST]: handleRefech,
+  };
+
+  useSocketEvents(socket, eventHandlers);
 
   if (loading) {
     return <UserLoading />;

@@ -5,8 +5,9 @@ import { setUser } from "../../redux/services/profileSlice";
 import { makeRequest } from "../../config/api.config";
 
 const PrivateAccount = () => {
-  const [checked, setChecked] = useState(true);
-
+  const { user } = useSelector((state) => state.profile);
+  const [checked, setChecked] = useState(user?.isPrivate);
+  console.log(user);
   const dispatch = useDispatch();
 
   const getUser = useCallback(async () => {
@@ -23,9 +24,15 @@ const PrivateAccount = () => {
     getUser();
   }, [getUser]);
 
-  const handleChange = () => {
-    setChecked(!checked);
+  const handleChange = async () => {
+    const data = await makeRequest.put(
+      `/user/privateAccount?isPrivate=${!checked}`
+    );
+    if (data.isSuccess) {
+      setChecked(!checked);
+    }
   };
+
   return (
     <div className="py-3 flex justify-between items-center">
       <label htmlFor="private_account" className="text-[16px]">
@@ -35,18 +42,38 @@ const PrivateAccount = () => {
     </div>
   );
 };
-const ThemeSwitcher = () => {
-  const [checked, setChecked] = useState(false);
 
-  const handleChange = () => {
-    setChecked(!checked);
+const ThemeSwitcher = () => {
+
+
+  const [darkMode, setDarkMode] = useState(() => {
+    // Initialize dark mode state from localStorage, default to false if not found
+    return localStorage.getItem("darkMode") === "true" ? true : false;
+  });
+
+  const handleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+
   return (
     <div className="py-3 flex justify-between items-center">
       <label htmlFor="private_account" className="text-[16px]">
         Dark
       </label>
-      <Switch checked={checked} onChange={handleChange} />
+      <Switch
+        checked={darkMode}
+        onChange={handleDarkMode}
+      />
     </div>
   );
 };
@@ -71,7 +98,7 @@ const settings = [
 
 const Setting = () => {
   return (
-    <main className="h-page bg-zinc-950 w-1/2 shadow-md mx-auto">
+    <main className="lg:h-page h-dvh  dark:bg-zinc-950 lg:w-1/2 shadow-md mx-auto">
       <header className="p-5">
         <h1 className="font-semibold text-3xl">Settings</h1>
       </header>

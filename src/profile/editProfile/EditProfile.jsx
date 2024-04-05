@@ -82,7 +82,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
   };
 
   return (
-    <div className=" p-2 lg:rounded-lg md:rounded-lg md::m-0 md:h-full w-screen md:w-auto h-dvh border-2 bg-zinc-900 border-zinc-800 ">
+    <div className="p-2 lg:rounded-lg md:rounded-lg md::m-0 md:h-full w-screen md:w-auto  h-svh border-2 bg-zinc-900 border-zinc-800 ">
       <div className="p-4">
         <h1 className="text-2xl font-semibold font-sans text-gray-50 text-center">
           Edit Profile

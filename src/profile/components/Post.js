@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setPost } from "../../redux/services/postSlice";
 import { deleteThisPost } from "../services/postServices";
 import SinglePost from "../../common/SinglePost";
+import { isMobile } from "react-device-detect";
 import {
   BookMark,
   BookMarkFill,
   Chat,
-  Heart,
-  HeartFill,
   OutlineMenuFold,
 } from "../../icons";
 import Modal from "../../shared/Modal";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
+import { useNavigate } from "react-router-dom";
+import { LikeButton } from "../../home/post/components/PostActions";
 
 const Post = ({ post }, ref) => {
   const [showPost, setShowPost] = useState(false);
@@ -21,6 +22,7 @@ const Post = ({ post }, ref) => {
   const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.post);
+  const navigate = useNavigate();
 
   const deleteCurrentPost = async (postId) => {
     try {
@@ -37,8 +39,11 @@ const Post = ({ post }, ref) => {
   };
 
   const showCurrentPost = () => {
-    setShowPost((prev) => !prev);
-    // document.body.classList.toggle("overflow-hidden");
+    if (isMobile) {
+      navigate(`/p/${post._id}`);
+    } else {
+      setShowPost((prev) => !prev);
+    }
   };
 
   return (
@@ -65,15 +70,12 @@ const Post = ({ post }, ref) => {
       )}
       <div className="absolute w-full h-24 bg-gradient-to-b from-transparent to-neutral-950 bottom-0 rounded-b flex items-end opacity-0 group-hover:opacity-100 transition duration-300">
         <div className="flex gap-5 justify-center w-full py-3">
-          {isLiked ? (
-            <HeartFill
-              size={24}
-              color="red"
-              onClick={() => setIsLiked(false)}
-            />
-          ) : (
-            <Heart size={24} color="red" onClick={() => setIsLiked(true)} />
-          )}
+        <LikeButton
+          isLiked={isLiked}
+          id={post?._id}
+          onLikeClick={(like)=>setIsLiked(like)}
+          postUserId={post.user._id}
+        />
           <Chat size={24} color="" onClick={handleSetPost} />
           {isBookMarked ? (
             <BookMarkFill size={24} onClick={() => setIsBookMarked(false)} />
@@ -116,7 +118,7 @@ const Post = ({ post }, ref) => {
 export default forwardRef(Post);
 
 export const ImageComponent = memo(
-  ({ src, alt, className,loaderClassName, onClick, style = {} }) => {
+  ({ src, alt, className, loaderClassName, onClick, style = {} }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     useEffect(() => {

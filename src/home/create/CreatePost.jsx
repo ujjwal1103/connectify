@@ -9,12 +9,14 @@ import ImageCrop from "../../shared/ImageCrop";
 import { useDispatch } from "react-redux";
 import { addPost } from "../../redux/services/postSlice";
 import { useLocation } from "react-router-dom";
+import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
 
 const CreatePost = ({ onClose }) => {
   const [imageUrl, setImageUrl] = useState();
+  const [cropedImages, setCropedImages] = useState([]);
+  const [cropedImagesUrls, setCropedImagesUrls] = useState([]);
   const [caption, setCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [newFile, setNewFile] = useState();
   const [selectedFile, setSelectedFile] = useState();
   const [openC, setOpenC] = useState(false);
   const [editCaption, setEditCaption] = useState(false);
@@ -46,7 +48,7 @@ const CreatePost = ({ onClose }) => {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("postImage", newFile);
+      formData.append("postImage", cropedImages);
       formData.append("caption", caption || "");
       const data = await makeRequest.post("/post", formData);
       if (data?.isSuccess) {
@@ -95,11 +97,11 @@ const CreatePost = ({ onClose }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}
-          className="dark:text-white flex w-auto flex-col "
+          className="dark:text-white flex w-screen relative lg:w-auto flex-col lg:h-auto h-dvh "
         >
-          <div className="p-2 flex justify-between">
+          <div className="p-2 flex justify-between lg:static fixed gap-5 z-50 bottom-0">
             <button
-              className="middle none center rounded-lg bg-slate-800 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="middle  none center rounded-lg bg-slate-800 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"
               onClick={() => {
                 setEditCaption(false);
@@ -127,19 +129,14 @@ const CreatePost = ({ onClose }) => {
               </button>
             )}
           </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2 }}
-            className="flex relative h-fit flex-col lg:flex-row"
-          >
-            <div className="flex justify-center items-center  gap-5">
-              <img src={imageUrl} className="lg:h-80 h-44 object-contain " alt="imagess"/>
+          <div className="flex relative h-fit flex-col lg:flex-row">
+            <div className="flex justify-center items-center lg:w-96 gap-5">
+             <ImageSlider images={cropedImagesUrls}  height="100%"/>
             </div>
-            <div className="lg:w-96 w-auto lg:h-80 h-44">
+            <div className="lg:w-96 w-auto lg:h-80 h-dvh">
               <MultiLineInput
                 text={caption}
-                onChange={(e)=>setCaption(e.target.value )}
+                onChange={(e) => setCaption(e.target.value)}
                 className={
                   "!ring-0 resize-none border outline-none border-none w-full h-full dark:bg-neutral-800 p-2 dark:text-gray-100"
                 }
@@ -153,7 +150,7 @@ const CreatePost = ({ onClose }) => {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
 
@@ -161,12 +158,20 @@ const CreatePost = ({ onClose }) => {
         <ImageCrop
           image={imageUrl}
           name={selectedFile.name}
-          onCrop={(file, imageUrl) => {
+          cropedImagesUrls={cropedImagesUrls}
+          onCrop={(file, imageUrl, allowNext) => {
+            if (allowNext) {
+              setCropedImages([...cropedImages, file]);
+              setCropedImagesUrls([...cropedImagesUrls, imageUrl]);
+              return;
+            }
             setImageUrl(imageUrl);
-            setNewFile(file);
+            setCropedImages([...cropedImages, file]);
+            setCropedImagesUrls([...cropedImagesUrls, imageUrl]);
             setEditCaption(true);
             setOpenC(false);
           }}
+          onImagePick={handleImagePick}
           onClose={() => setOpenC(false)}
         />
       )}

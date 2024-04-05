@@ -4,7 +4,7 @@ import "./image-slider.css";
 import { ChevronBack, ChevronForward, CircleDot, Circle } from "../../icons";
 import { ImageComponent } from "../../profile/components/Post";
 
-export function ImageSlider({ images }) {
+export function ImageSlider({ images, height='50%' }) {
   const [currentImages, setCurrentImages] = useState();
   const [imageIndex, setImageIndex] = useState(0);
   const [singleImage, setSingleImage] = useState(currentImages?.length === 1);
@@ -32,7 +32,7 @@ export function ImageSlider({ images }) {
     <section
       aria-label="Image Slider"
       className="overflow-hidden"
-      style={{ width: "100%", height: "50%", position: "relative" }}
+      style={{ width: "100%", height: height, position: "relative" }}
     >
       <div
         style={{

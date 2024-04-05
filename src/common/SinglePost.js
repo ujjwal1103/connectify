@@ -10,7 +10,6 @@ import {
   ThreeDots,
 } from "../icons";
 import { makeRequest } from "../config/api.config";
-import avatar from "../assets/man.png";
 import UsernameLink from "../shared/UsernameLink";
 import ProfilePicture from "./ProfilePicture";
 import FollowBtn from "../shared/Buttons/FollowBtn";
@@ -222,7 +221,7 @@ const SinglePost = ({ post, posts }) => {
 
 export default memo(SinglePost);
 
-const CommentText = ({ comment, mentions }) => {
+export const CommentText = ({ comment, mentions }) => {
   const highlightMentions = () => {
     if (!mentions || mentions.length === 0) {
       return comment;

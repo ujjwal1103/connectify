@@ -1,13 +1,14 @@
 import React, { memo, useState } from "react";
 import { getReadableTime } from "../../utils/groupMessagesByDate";
+import { Check, DoubleCheckIcon } from "../../icons";
 
 const Message = ({
   currentUserMessage,
-  message: { text, createdAt },
+  message: { text, createdAt, seen },
 }) => {
   const [showMore, setShowMore] = useState(false);
-  const messageLength = text.length;
-  const longMessage = messageLength > 200 && messageLength - 200 > 250
+  const messageLength = text?.length;
+  const longMessage = messageLength > 200 && messageLength - 200 > 250;
   const toggleShowMore = () => {
     setShowMore(!showMore);
   };
@@ -24,10 +25,7 @@ const Message = ({
       `}
     >
       <div className="overflow-hidden break-words">
-        {showMore
-          ? text
-          : text.slice(0, 300) +
-            (longMessage ? "..." : "")}
+        {showMore ? text : text?.slice(0, 300) + (longMessage ? "..." : "")}
       </div>
 
       <div className="flex text-[10px] justify-end items-center w-fit float-right flex-col text-right text-gray-300">
@@ -39,7 +37,11 @@ const Message = ({
             {showMore ? "View Less" : "View More"}
           </button>
         )}
-        <span> {getReadableTime(createdAt)}</span>
+        <span className="flex items-center gap-3">
+          {" "}
+          {getReadableTime(createdAt)}{" "}
+          {currentUserMessage && (seen ? <DoubleCheckIcon className="text-blue-500" /> : <Check />)}
+        </span>
       </div>
     </div>
   );

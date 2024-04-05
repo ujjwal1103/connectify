@@ -6,6 +6,8 @@ import usePosts from "../hooks/usePosts";
 import NoPosts from "../profile/components/NoPosts";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ErrorPage } from "../App";
+import SuggetionContainer from "../common/suggetions";
+import { Link } from "react-router-dom";
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
   const { isLoading, isError, error, feeds, hasNextPage } = usePosts(pageNum);
@@ -43,38 +45,27 @@ const HomePage = () => {
         <Story />
       </div> */}
       <div className="flex lg:gap-3">
-        <div className="hidden md:hidden lg:block lg:w-fit">
+        {/* <div className="hidden md:hidden lg:block lg:w-fit">
           <Sidebar />
-        </div>
+        </div> */}
         <section
-          className="flex flex-1 gap-3 justify-between"
+          className="flex lg:m-auto gap-3 lg:w-[80%] w-full justify-between"
           id="scrollableDiv"
         >
           <div className="grid grid-cols-1 flex-1 flex-col gap-5">
             {content}
-            {/* <InfiniteScroll
-              dataLength={feeds.length}
-              next={() => {
-                setPageNum(pageNum + 1);
-              }}
-              hasMore={hasNextPage}
-              loader={<FeedLoading />}
-              // endMessage={
-              //   <p style={{ textAlign: "center" }}>
-              //     <b>Yay! You have seen it all</b>
-              //   </p>
-              // }
-              crollableTarget={"scrollableDiv"}
-            >
-              {feeds.map((post, i) => {
-                return <Post key={post._id} post={post} />;
-              })}
-            </InfiniteScroll> */}
 
             {isLoading && <FeedLoading />}
             {feeds.length === 0 && !isLoading && (
-              <div className="bg-zinc-800 rounded-lg">
-                <NoPosts />
+              <div className=" lg:h-auto lg:w-auto">
+                <div className="dark:bg-zinc-800 rounded-lg h-36 lg:h-auto">
+                  <NoPosts />
+                </div>
+                <div className="p-2 flex  justify-between">
+                  <span>Suggetions</span>{" "}
+                  <Link to="/expore/people">View More</Link>
+                </div>
+                <SuggetionContainer />
               </div>
             )}
             <section className="invisible relative overflow-hidden bg-white lg:py-8 py-7 dark:bg-transparent dark:text-white"></section>

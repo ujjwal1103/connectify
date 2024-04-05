@@ -5,7 +5,7 @@ import MentionInput from "../../../shared/MentionInput/MentionInput";
 import Picker from "emoji-picker-react";
 import { useClickOutside } from "@react-hookz/web";
 
-const CommentInput = ({ postId }) => {
+const CommentInput = ({ postId, onComment=null }) => {
   const [commentText, setCommentText] = useState();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -26,6 +26,7 @@ const CommentInput = ({ postId }) => {
         setMentionedUsers([]);
         setShowEmojiPicker(false);
         setCursorPosition(0);
+        onComment && onComment(data.comment)
       }
     } catch (error) {
       console.log(error);
@@ -75,11 +76,11 @@ const CommentInput = ({ postId }) => {
         setMentionedUsers={setMentionedUsers}
       />
       {commentText && (
-        <button className="text-blue-400" onClick={sendComment}>
+        <button className="text-blue-400 pr-2" onClick={sendComment}>
           Post
         </button>
       )}
-      <button className="pr-2" onClick={() => setShowEmojiPicker(true)}>
+      <button className="pr-2 hidden lg:block" onClick={() => setShowEmojiPicker(true)}>
         <EmojiSmile />
       </button>
 

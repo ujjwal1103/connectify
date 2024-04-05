@@ -9,6 +9,9 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { MessengerLine } from "../icons";
 import NewChatBtn from "./component/NewChatBtn";
 import { useSocket } from "../context/SocketContext";
+import { NEW_MESSAGE, REFECTCH_CHATS } from "../utils/constant";
+import useSocketEvents from "../hooks/useSocketEvents";
+import { AnimatePresence } from "framer-motion";
 
 const NoSelectedChat = () => {
   return (
@@ -36,7 +39,9 @@ const Messenger = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { chatId } = useParams();
+
   const { socket } = useSocket();
+
   const fetchAllChats = useCallback(async () => {
     try {
       const data = await makeRequest("chats");
@@ -65,19 +70,16 @@ const Messenger = () => {
     fetchAllChats();
   }, [fetchAllChats]);
 
-  useEffect(() => {
-    if (socket) {
-      const handleMessage = (data) => {
-        fetchAllChats();
-      };
+  const handleMessage = useCallback((data) => {
+    fetchAllChats();
+  }, []);
 
-      socket.on("Receive Message", handleMessage);
+  const eventHandlers = {
+    [NEW_MESSAGE]: handleMessage,
+    [REFECTCH_CHATS]: handleMessage,
+  };
 
-      return () => {
-        socket.off("Receive Message", handleMessage);
-      };
-    }
-  }, [socket, selectedChat]);
+  useSocketEvents(socket, eventHandlers);
 
   useEffect(() => {
     if (!selectedChat && chatId) {
@@ -86,26 +88,43 @@ const Messenger = () => {
   }, [chatId, navigate]);
 
   return (
-    <main className="bg-gray-100 overflow-hidden dark:bg-zinc-950 flex h-dvh ">
+    <main className="bg-gray-100 overflow-y-hidden dark:bg-zinc-950 flex h-dvh ">
       <div
-        className={`lg:flex-[0.5] md:flex-[0.5] xl:flex-[0.5] flex-1  ${
+        className={`lg:flex-[0.5] md:flex-[0.5] xl:flex-[0.5] flex-1 resize-x ${
           chatId && "hidden lg:block "
         } bg-zinc-950  xl:block md:block border-r border-zinc-700`}
       >
         <CurrentUserInfo user={currentUser} />
 
         <div
-          className="dark:bg-zinc-950 overflow-y-scroll scroll-smooth resize-x bg-red-400"
-          style={{ height: "calc(100% - 100px)" }}
+          className="dark:bg-zinc-950 overflow-y-scroll scroll-smooth  bg-red-400"
+          style={{ height: "calc(100% - 80px)" }}
         >
           <Search searchTerm={searchTerm} onChange={handleChange} />
-          {!searchTerm &&
-            chats?.map((chat) => {
-              return <SingleChat key={chat._id} chat={chat} />;
+          <AnimatePresence >
+            {!searchTerm &&
+              chats?.map((chat, index) => {
+                return (
+                  <SingleChat
+                    index={index}
+                    key={chat._id}
+                    chat={chat}
+                    refechChats={fetchAllChats}
+                  />
+                );
+              })}
+
+            {searchResults?.map((chat, index) => {
+              return (
+                <SingleChat
+                  index={index}
+                  key={chat._id}
+                  chat={chat}
+                  efechChats={fetchAllChats}
+                />
+              );
             })}
-          {searchResults?.map((chat) => {
-            return <SingleChat key={chat._id} chat={chat} />;
-          })}
+          </AnimatePresence>
         </div>
       </div>
       {selectedChat && chatId ? <Outlet /> : <NoSelectedChat />}

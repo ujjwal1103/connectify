@@ -1,5 +1,4 @@
 import { useEffect, useCallback, useState } from "react";
-import avatar from "../../assets/man.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectNotifications,
@@ -10,14 +9,20 @@ import { AngleLeft } from "../../icons";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ProfilePicture from "../../common/ProfilePicture";
-import UserProfile from "../../profile/UserProfile";
+
 import UsernameLink from "../../shared/UsernameLink";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
+import { LIKE_POST, NEW_REQUEST } from "../../utils/constant";
+import useSocketEvents from "../../hooks/useSocketEvents";
+import { useSocket } from "../../context/SocketContext";
+import { ImageComponent } from "../../profile/components/Post";
+import moment from "moment";
 
 const Notification = ({ setClose, onClose }) => {
   const dispatch = useDispatch();
   const { notifications } = useSelector((state) => state.notifications);
   const [showFollowRequests, setShowFollowRequest] = useState();
+  const { socket } = useSocket();
   const getAllNotifications = useCallback(async () => {
     try {
       const res = await makeRequest.get("notifications");
@@ -34,7 +39,7 @@ const Notification = ({ setClose, onClose }) => {
     getAllNotifications();
   }, [getAllNotifications]);
 
-  const [request, setRequest] = useState();
+  const [request, setRequest] = useState([]);
 
   const getAllFollowRequestForUser = useCallback(async () => {
     const res = await makeRequest("/followRequests");
@@ -49,11 +54,23 @@ const Notification = ({ setClose, onClose }) => {
   const handleAccept = async (requestId, accept) => {
     if (accept) {
       const res = await makeRequest.patch(`/accept/${requestId}`);
-      console.log(res);
       getAllFollowRequestForUser();
+      getAllNotifications();
       return;
     }
   };
+
+  const handleRequest = useCallback((data) => {
+    getAllFollowRequestForUser();
+    getAllNotifications();
+  }, []);
+
+  const eventHandlers = {
+    [NEW_REQUEST]: handleRequest,
+    [LIKE_POST]: handleRequest,
+  };
+
+  useSocketEvents(socket, eventHandlers);
 
   return (
     <motion.div
@@ -66,7 +83,7 @@ const Notification = ({ setClose, onClose }) => {
         animate={{ x: 0 }}
         transition={{ duration: 0.5 }}
         exit={{ x: 500 }}
-        className="w-96 dark:bg-zinc-900  overflow-y-scroll lg:border-l-2 bottom-0 h-full"
+        className="w-96 dark:bg-zinc-900 bg-white  overflow-y-scroll lg:border-l-2 bottom-0 h-full"
       >
         {!showFollowRequests && (
           <>
@@ -78,18 +95,20 @@ const Notification = ({ setClose, onClose }) => {
                 Notifications
               </h1>
             </div>
-            <div className="px-4">
-              <button
-                onClick={() => setShowFollowRequest(true)}
-                className="dark:text-white"
-              >
-                Follow Requests
-              </button>
-            </div>
+            {!!request.length && (
+              <div className="px-4">
+                <button
+                  onClick={() => setShowFollowRequest(true)}
+                  className="dark:text-white"
+                >
+                  Follow Requests ({request.length})
+                </button>
+              </div>
+            )}
             <ul className="p-2 flex flex-col gap-2 text-white">
               {notifications?.map((n) => (
                 <>
-                  <Noti n={n} />
+                  <Noti n={n} handleAccept={handleAccept} />
                 </>
               ))}
             </ul>
@@ -208,30 +227,8 @@ export const data = [
   },
 ];
 
-const Noti = ({ n }) => {
+const Noti = ({ n, handleAccept }) => {
   switch (n.type) {
-    case "POST_LIKE": {
-      return (
-        <li
-          key={n.postId}
-          className=" dark:text-gray-50  flex justify-between gap-4 items-center rounded-md"
-        >
-          <ProfilePicture
-            src={n.from.avatar}
-            className={"size-8 rounded-full object-cover"}
-          />
-          <span className="flex-1 text-xs">{n.text}</span>
-
-          <Link to={`/posts/${n?.postId}`}>
-            <img
-              src={n?.postImageUrl}
-              alt=""
-              className="size-8 object-cover "
-            />
-          </Link>
-        </li>
-      );
-    }
     case "FOLLOW_REQUEST_ACCEPTED": {
       return (
         <li
@@ -242,10 +239,7 @@ const Noti = ({ n }) => {
             src={n.from.avatar}
             className={"size-8 rounded-full object-cover"}
           />
-          <p className="flex-1 text-xs leading-tight">
-            <span>{n.from.username} </span>
-            <span>{n.text}</span>
-          </p>
+          <NotificationText text={n.text} username={n.from.username} date={n.createdAt} />
 
           <FollowBtn isFollow={n.from.isFollow} userId={n.from._id} />
         </li>
@@ -261,11 +255,32 @@ const Noti = ({ n }) => {
             src={n.from.avatar}
             className={"size-8 rounded-full object-cover"}
           />
-          <p className="flex-1 text-xs leading-tight">
-            <span>{n.from.username} </span>
-            <span>{n.text}</span>
-          </p>
+          <NotificationText text={n.text} username={n.from.username} date={n.createdAt} />
           <FollowBtn isFollow={n.from.isFollow} userId={n.from._id} />
+        </li>
+      );
+    }
+    case "LIKE_POST": {
+      return (
+        <li
+          key={n.postId}
+          className=" dark:text-gray-50  flex justify-between gap-4 items-center rounded-md"
+        >
+          <ProfilePicture
+            src={n.from.avatar}
+            className={"size-8 rounded-full object-cover"}
+          />
+          <NotificationText text={n.text} username={n.from.username} date={n.createdAt} />
+
+          <div>
+            <ImageComponent
+              key={n.postId.imageUrl}
+              src={n.postId.imageUrl}
+              alt={n.postId.imageUrl}
+              loaderClassName={`bg-zinc-950 animate-pulse size-10 bg-red-400`}
+              className={"size-10 object-cover"}
+            />
+          </div>
         </li>
       );
     }
@@ -279,14 +294,17 @@ const Noti = ({ n }) => {
             src={n.from.avatar}
             className={"size-8 rounded-full object-cover"}
           />
-          <p className="flex-1 text-xs leading-tight">
-            <span>{n.from.username} </span>
-            <span>{n.text}</span>
-          </p>
-          <button className="text-xs  px-2 rounded-xl text-sky-100 py-1">
+          <NotificationText text={n.text} username={n.from.username} date={n.createdAt} />
+          <button
+            className="text-xs  px-2 rounded-xl text-sky-100 py-1"
+            onClick={() => handleAccept(n.requestId, true)}
+          >
             Accept
           </button>
-          <button className="text-xs text-red-600 px-2 rounded-xl  py-1">
+          <button
+            className="text-xs text-red-600 px-2 rounded-xl  py-1"
+            onClick={() => handleAccept(n.requestId, false)}
+          >
             Decline
           </button>
         </li>
@@ -294,3 +312,15 @@ const Noti = ({ n }) => {
     }
   }
 };
+
+function NotificationText({ text, username, date }) {
+  return (
+    <div className="flex-1">
+      <p className=" text-xs leading-tight">
+        <UsernameLink username={username} />
+        <span> {text}</span>
+      </p>
+      <p className="text-[8px]">{moment(date).calendar()}</p>
+    </div>
+  );
+}

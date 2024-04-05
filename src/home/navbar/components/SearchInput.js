@@ -59,7 +59,7 @@ const SearchInput = () => {
         onChange={handleSearch}
         value={searchQuery}
         placeholder="Search your friends"
-        className="peer w-full rounded-lg border-none placeholder:text-red-500 outline-none focus:border-none dark:bg-zinc-800 dark:placeholder:text-white dark:text-gray-50 focus-visible:ring-2 focus-visible:ring-[#620C45] "
+        className="peer w-full rounded-lg border-none bg-gray-50 placeholder:text-gray-900 outline-none focus:border-none dark:bg-zinc-800 dark:placeholder:text-white dark:text-gray-50 focus-visible:ring-2 focus-visible:ring-[#620C45] "
         sufix={<Search className="text-lg" onClick={handleSearch} />}
       />
       {showSearchResults && searchResults.length > 0 && (

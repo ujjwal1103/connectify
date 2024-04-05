@@ -4,8 +4,9 @@ import FollowBtn from "../../shared/Buttons/FollowBtn";
 import UsernameLink from "../../shared/UsernameLink";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { makeRequest } from "../../config/api.config";
+import { Link } from "react-router-dom";
 
-const Peoples = () => {
+const SuggetionContainer = () => {
   const [peoples, setPeoples] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const Peoples = () => {
       if (page === 1) {
         setLoading(true);
       }
-      const res = await makeRequest.get(`/users?page=${p}`);
+      const res = await makeRequest.get(`/users?page=${p}&limit=10`);
       setPeoples([...peoples, ...res?.users]);
       setHasMore(res?.pagination?.hasMore);
       setLoading(false);
@@ -52,58 +53,33 @@ const Peoples = () => {
   }
 
   return (
-    <div className="h-page overflow-y-scroll bg-[#0D0D0D]" id="scrollableDiv">
-      <div className="w-[50%]  m-auto  ">
-        <h1 className="py-3  text-xl">Suggested</h1>
-        <InfiniteScroll
-
-          dataLength={peoples?.length}
-          next={() => {
-            setPage((prev) => prev + 1);
-          }}
-          hasMore={hasMore}
-          loader={[12, 23, 34].map((i) => (
-            <li className="flex py-2  gap-3 w-full items-center px-2">
-              <ProfilePicture className={"w-14 h-14 rounded-full"} />
-              <div className="flex flex-col gap-2">
-                <span className="h-4 rounded-md w-24 bg-zinc-800"></span>
-                <span className="h-4 rounded-md w-16 bg-zinc-800"></span>
-              </div>
-              <div className="ml-auto mr-10 self-center">
-                <button className="h-6 rounded w-14 bg-zinc-800"></button>
-              </div>
-            </li>
-          ))}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-          scrollableTarget={"scrollableDiv"}
-        >
-          {peoples?.map((people) => {
-            return <People key={people._id} people={people} />;
-          })}
-        </InfiniteScroll>
+    <div className="overflow-x-scroll overflow-hidden suggetionBox ">
+      <div className="inline-flex h-44 max-h-44">
+        {peoples?.map((people) => {
+          return <People key={people._id} people={people} />;
+        })}
       </div>
     </div>
   );
 };
 
-export default Peoples;
+export default SuggetionContainer;
 
 const People = ({ people }) => {
   const { avatar, username, name } = people;
   return (
-    <li className="flex py-2  gap-3 w-full items-center px-2">
+    <div className=" w-36 p-2 rounded-lg border dark:border-zinc-500/30  flex items-center justify-between flex-col mx-2 mb-2">
       <ProfilePicture src={avatar} className={"w-14 h-14 rounded-full"} />
-      <div className="flex flex-col">
-        <span>{name}</span>
-        <UsernameLink username={username} className="text-gray-400" />
+      <div className="flex flex-col justify-center">
+        <span className="text-[14px]">{name}</span>
+        <UsernameLink
+          username={username}
+          className="text-gray-400 text-[12px]"
+        />
       </div>
-      <div className="ml-auto mr-10 self-center">
+      <div className="flex justify-center">
         <FollowBtn size="medium" isFollow={false} />
       </div>
-    </li>
+    </div>
   );
 };

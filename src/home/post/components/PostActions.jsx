@@ -16,22 +16,23 @@ import { useSocket } from "../../../context/SocketContext";
 import { sendNotification } from "../../notification/Services";
 import { useState } from "react";
 
-const PostActions = ({ post, userId, showCurrentPost, size = 24 }) => {
+const PostActions = ({ post, userId, showCurrentPost, size = 24, onLike }) => {
   const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
 
-  const { socket, isUserOnline } = useSocket();
+
 
   const handleLikeClicked = async (isLike, error) => {
     if (error) {
       return;
     }
+
+    if(onLike){
+      onLike(isLike)
+      return;
+    }
     if (isLike) {
       dispatch(likeCurrentPost({ postId: post._id, userId }));
-      const isOnline = isUserOnline(post?.user?._id);
-      if (isOnline) {
-        await sendNotification(post?.user?._id, "Post Like", socket);
-      }
     } else {
       dispatch(dislikeCurrentPost({ postId: post._id, userId }));
     }
@@ -45,6 +46,7 @@ const PostActions = ({ post, userId, showCurrentPost, size = 24 }) => {
           size={size}
           id={post?._id}
           onLikeClick={handleLikeClicked}
+          postUserId={post.user._id}
         />
         <Chat
           size={size}
@@ -64,13 +66,14 @@ const PostActions = ({ post, userId, showCurrentPost, size = 24 }) => {
 
 export default PostActions;
 
-const LikeButton = ({ size = 24, id, onLikeClick, isLiked }) => {
+export const LikeButton = ({ size = 24, id, onLikeClick, isLiked,postUserId }) => {
   const handleLikeClicked = async (isLike) => {
     onLikeClick(isLike, false);
     try {
       if (isLike) {
         await makeRequest.post("/like", {
           postId: id,
+          postUserId
         });
       } else {
         await makeRequest.delete(`/unLike?postId=${id}`);

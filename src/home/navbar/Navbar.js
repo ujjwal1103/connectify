@@ -1,8 +1,8 @@
-import { useState, useRef, forwardRef, useEffect } from "react";
+import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 
-import Notification from "../notification/Notification";
+import NotificationComponent from "../notification/Notification";
 import SearchInput from "./components/SearchInput";
 import {
   Chat,
@@ -23,6 +23,10 @@ import Modal from "../../shared/Modal";
 import { AnimatePresence, motion } from "framer-motion";
 import LogoutBtn from "../../shared/Buttons/LogoutBtn";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
+import useSocketEvents from "../../hooks/useSocketEvents";
+import { useSocket } from "../../context/SocketContext";
+import { ACCEPT_REQUEST, LIKE_POST, NEW_MESSAGE, NEW_REQUEST } from "../../utils/constant";
+import { makeRequest } from "../../config/api.config";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +34,7 @@ const Navbar = () => {
   const [isOpenCreatePost, setIsOpenCreatePost] = useState(false);
   const location = useLocation();
   const modelRef = useRef();
-
+  const { socket } = useSocket();
   const toggleCreatePost = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
   };
@@ -41,30 +45,83 @@ const Navbar = () => {
 
   const toggleNotification = () => {
     setIsOpenNotification((prev) => !prev);
+    setBadgeCounts({
+      ...badgeCounts,
+      notification: 0,
+    });
   };
 
   useEffect(() => {
     setIsOpen(false);
     setIsOpenNotification(false);
-    setIsOpenCreatePost(false)
+    setIsOpenCreatePost(false);
   }, [location.pathname]);
-  // const handleDarkMode = () => {
-  //   if (document.body.classList.contains("dark")) {
-  //     document.body.classList.remove("dark");
-  //   } else {
-  //     document.body.classList.add("dark");
-  //   }
-  // };
+
+  const [badgeCounts, setBadgeCounts] = useState({
+    messages: 0,
+    notification: 0,
+  });
+  const handleNotify = () => {
+    if ("Notification" in window) {
+      console.log(Notification);
+      if (Notification.permission === "granted") {
+        new Notification('new message');
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            new Notification('New message');
+          }
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const rs = await makeRequest.get('/notification/count')
+      setBadgeCounts({
+        ...badgeCounts,
+        notification: rs.notifications,
+      });
+    };
+    fetchCount();
+  }, []);
+
+  const handleNotifationCount = useCallback(() => {
+    setBadgeCounts({
+      ...badgeCounts,
+      notification: badgeCounts.notification + 1,
+    });
+  }, []);
+
+  const handleMessage = useCallback(() => {
+    setBadgeCounts((prev) => ({
+      ...prev,
+      messages: prev.messages + 1,
+    }));
+    handleNotify();
+  }, []);
+
+  const eventHandlers = {
+    [NEW_REQUEST]: handleNotifationCount,
+    [ACCEPT_REQUEST]: handleNotifationCount,
+    [NEW_MESSAGE]: handleMessage,
+    [LIKE_POST]: handleNotifationCount,
+  };
+
+  useSocketEvents(socket, eventHandlers);
+
   return (
-    <header className="px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
-      <nav className="bg-violet-700 bg-opacity-70 shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
+    <header className="px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent dark:shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
+      <nav className="bg-gray-200  shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
         <div className="hidden lg:block">
           <ConnectifyLogoText size={44} showShadow={false} />
         </div>
+
         <div className="hidden lg:flex flex-1 items-center">
           <SearchInput />
         </div>
-        <div className="text-white flex lg:w-60  items-center justify-between w-full">
+        <div className="dark:text-white  flex lg:w-60  items-center justify-between w-full">
           <div>
             <NavLink
               to={""}
@@ -85,8 +142,7 @@ const Navbar = () => {
               <Search size={24} />
             </NavLink>
           </div>
-          <Badge count={5}>
-            {" "}
+          <Badge count={badgeCounts.messages}>
             <div>
               <NavLink
                 to={"/messenger"}
@@ -104,8 +160,8 @@ const Navbar = () => {
               <PlusSquare size={24} />
             </NavLink>
           </div>
-          <Badge count={10}>
-            <button onClick={toggleNotification}>
+          <Badge count={badgeCounts.notification}>
+            <button onClick={toggleNotification} className="flex items-center">
               <Heart size={24} />
             </button>
           </Badge>
@@ -137,15 +193,22 @@ const Navbar = () => {
         </div>
         <AnimatePresence>
           {isOpenCreatePost && (
-            <Modal onClose={() => setIsOpenCreatePost(false)}>
+            <Modal
+              onClose={() => setIsOpenCreatePost(false)}
+              shouldCloseOutsideClick={false}
+            >
               <CreatePost />
             </Modal>
           )}
         </AnimatePresence>
         <AnimatePresence>
           {isOpenNotification && (
-            <Modal onClose={toggleNotification} showCloseButton={false}>
-              <Notification setClose={toggleNotification} />
+            <Modal
+              onClose={toggleNotification}
+              showCloseButton={false}
+              animate={false}
+            >
+              <NotificationComponent setClose={toggleNotification} />
             </Modal>
           )}
         </AnimatePresence>
@@ -158,10 +221,12 @@ export default Navbar;
 
 const Badge = ({ children, count }) => {
   return (
-    <div className="h-4 relative">
-      <span className="absolute -right-1 -top-1 text-[8px] bg-red-600 size-3 rounded-full flex justify-center items-center">
-        {count}
-      </span>
+    <div className="relative">
+      {count > 0 && (
+        <span className="absolute -right-1 -top-1 text-[8px] bg-red-600 size-3 rounded-full flex justify-center items-center">
+          {count}
+        </span>
+      )}
       {children}
     </div>
   );

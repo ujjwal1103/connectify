@@ -1,9 +1,10 @@
+import { NEW_MESSAGE } from "../../../utils/constant";
 import {
   getCurrentUserId,
   getCurrentUsername,
 } from "../../../utils/getCurrentUserId";
 
-export const sendNotification = async (userId, action, socket, chatId) => {
+export const sendNotification = async (userId, action, socket, chatId, message) => {
   if (userId && getCurrentUserId()) {
     switch (action) {
       case "Post Like": {
@@ -14,11 +15,12 @@ export const sendNotification = async (userId, action, socket, chatId) => {
         });
         break;
       }
-      case "Send Message": {
-        socket.emit("Send Message", {
+      case NEW_MESSAGE: {
+        socket.emit(NEW_MESSAGE, {
           to: userId,
           chat: chatId,
           from: getCurrentUserId(),
+          message,
           notification: `${getCurrentUsername()} send you a Message`,
         });
         break;

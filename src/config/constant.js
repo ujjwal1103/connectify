@@ -8,8 +8,8 @@ const GOOGLE_PROD_OAUTH_REDIRECT_URI =
   process.env.REACT_APP_PROD_GOOGLE_OAUTH_REDIRECT_URI;
 const GOOGLE_DEV_OAUTH_REDIRECT_URI =
   process.env.REACT_APP_DEV_GOOGLE_OAUTH_REDIRECT_URI;
-const NODE_ENV = process.env.NODE_ENV;
-// const NODE_ENV = "production";
+// const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = 'production';
 const PROD = "production";
 
 const BASE_URL = NODE_ENV === PROD ? PROD_BASE_URL : DEV_BASE_URL;
