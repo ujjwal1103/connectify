@@ -8,6 +8,7 @@ const PostHeader = ({ post }) => {
       <div className="flex gap-3 items-center">
         <div>
           <ProfilePicture
+            useSmall={true}
             src={post?.user?.avatar}
             className="rounded-full w-10 h-10 object-cover"
           />

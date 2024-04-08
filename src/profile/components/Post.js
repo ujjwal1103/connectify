@@ -1,6 +1,6 @@
 import { forwardRef, memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, setPost } from "../../redux/services/postSlice";
+import { deletePost, setPost, updateLike } from "../../redux/services/postSlice";
 import { deleteThisPost } from "../services/postServices";
 import SinglePost from "../../common/SinglePost";
 import { isMobile } from "react-device-detect";
@@ -18,7 +18,6 @@ import { LikeButton } from "../../home/post/components/PostActions";
 const Post = ({ post }, ref) => {
   const [showPost, setShowPost] = useState(false);
   const [menuOption, setMenuOption] = useState(false);
-  const [isLiked, setIsLiked] = useState(post?.isLiked);
   const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.post);
@@ -30,6 +29,9 @@ const Post = ({ post }, ref) => {
       if (res) dispatch(deletePost(postId));
     } catch (error) {
       console.log(error);
+      
+    }finally{
+      setMenuOption(false)
     }
   };
 
@@ -71,9 +73,11 @@ const Post = ({ post }, ref) => {
       <div className="absolute w-full h-24 bg-gradient-to-b from-transparent to-neutral-950 bottom-0 rounded-b flex items-end opacity-0 group-hover:opacity-100 transition duration-300">
         <div className="flex gap-5 justify-center w-full py-3">
         <LikeButton
-          isLiked={isLiked}
+          isLiked={post?.isLiked}
           id={post?._id}
-          onLikeClick={(like)=>setIsLiked(like)}
+          onLikeClick={(like)=>{
+            dispatch(updateLike({like, postId:post?._id}))
+          }}
           postUserId={post.user._id}
         />
           <Chat size={24} color="" onClick={handleSetPost} />

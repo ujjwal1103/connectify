@@ -22,7 +22,7 @@ export const messageApi = createApi({
         `messages/${data?.chatId}?page=${data?.page || 1}&pageSize=${
           data?.limit || 20
         }`,
-      providesTags: ["messages"],
+      
       pollingInterval: 5000,
     }),
     sendMessage: builder.mutation({
@@ -31,7 +31,6 @@ export const messageApi = createApi({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: ["messages"],
     }),
   }),
 });

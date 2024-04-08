@@ -11,6 +11,7 @@ import Loading from "./Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
+import { useDebounce } from "../../utils/hooks/useDebounce";
 
 const Following = ({ userId, onClose }) => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -21,14 +22,14 @@ const Following = ({ userId, onClose }) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
+  const debouncedQuery = useDebounce(query, 300);
   const getFollowing = useCallback(async () => {
     if (page === 1) {
       setLoading(true);
     }
     let url = `/following/${userId}?page=${page}`;
-    if (query) {
-      url = url + `&username=${query}`;
+    if (debouncedQuery) {
+      url = url + `&username=${debouncedQuery}`;
     }
     try {
       const data = await makeRequest.get(url);
@@ -39,12 +40,13 @@ const Following = ({ userId, onClose }) => {
         } else {
           dispatch(setFollowing([...followings, ...data.followings]));
         }
-        setLoading(false);
       }
     } catch (error) {
-      setLoading(false);
+      
+    }finally{
+      setLoading(false)
     }
-  }, [userId, page]);
+  }, [userId, page, debouncedQuery]);
 
   useEffect(() => {
     getFollowing();
@@ -62,7 +64,6 @@ const Following = ({ userId, onClose }) => {
 
   useEffect(() => {
     return () => {
-      console.log("unmounting");
       dispatch(setFollowing([]));
     };
   }, []);
@@ -80,7 +81,6 @@ const Following = ({ userId, onClose }) => {
               <Input
                 type="text"
                 onChange={(e) => {
-                  setPage(1);
                   setQuery(e.target.value);
                 }}
                 className="w-full p-3 text-white outline-none border-none ml-5 focus:outline-none focus:ring-0 bg-transparent"
@@ -135,6 +135,7 @@ const Following = ({ userId, onClose }) => {
                             }}
                             userId={user?._id}
                             isFollow={user?.isFollow}
+                            isRequested={user?.isRequested}
                           />
                         )}
                       </div>

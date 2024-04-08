@@ -48,7 +48,9 @@ const CreatePost = ({ onClose }) => {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("postImage", cropedImages);
+      for (let i = 0; i < cropedImages.length; i++) {
+        formData.append('postImage', cropedImages[i]);
+      }
       formData.append("caption", caption || "");
       const data = await makeRequest.post("/post", formData);
       if (data?.isSuccess) {

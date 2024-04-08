@@ -64,6 +64,7 @@ const UserProfile = () => {
     const data = await followUser(user?._id);
     if (data.follow) {
       getUser();
+      alert(`You are now following ${username}`);
     }
   };
 

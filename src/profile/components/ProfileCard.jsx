@@ -27,6 +27,7 @@ const ProfileCard = ({ user, children, canOpen }) => {
             <span className="text-xl md:hidden lg:block">{user?.username}</span>
             <div className=" bg-gray-500 rounded-full">
               <ProfilePicture
+                useSmall={false}
                 src={user?.avatar}
                 className="size-28 md:size-20 object-cover rounded-full shadow-sm"
               />

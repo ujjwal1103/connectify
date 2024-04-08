@@ -32,8 +32,8 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
     const response = await mutate({ chatId, newMessage });
 
     if (response?.data.isSuccess) {
-      await sendNotification(userId, NEW_MESSAGE, socket, chatId, newMessage);
-      dispatch(setMessageChatId(response.chatId));
+      onMessage(response.data.message)
+      await sendNotification(userId, NEW_MESSAGE, socket, chatId, response.data.message);
     }
   };
 

@@ -3,7 +3,7 @@ import { getCurrentUserId } from "../../utils/getCurrentUserId";
 import { BiLoader } from "react-icons/bi";
 import { forwardRef, useEffect, useRef } from "react";
 
-const Messages = ({ isLoading, allMessages = [], page }, ref) => {
+const Messages = ({ isLoading, allMessages = {}, page }, ref) => {
   const autoscrollRef = useRef(null);
 
   useEffect(() => {

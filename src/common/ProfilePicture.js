@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import avatar from "../assets/man.png";
 import { BiLoader } from "react-icons/bi";
+import { tranformUrl } from "../utils";
 
 const ProfilePicture = ({
   src,
@@ -8,6 +9,7 @@ const ProfilePicture = ({
   loading = false,
   alt = "images",
   onClick = () => {},
+  useSmall = true,
 }) => {
   const imageRef = useRef();
 
@@ -16,7 +18,7 @@ const ProfilePicture = ({
       <div className="relative flex justify-center items-center">
         <img
           ref={imageRef}
-          src={src || avatar}
+          src={(useSmall ? tranformUrl(src): src) || avatar}
           onError={() => {
             imageRef.current.src = avatar;
           }}
@@ -33,7 +35,7 @@ const ProfilePicture = ({
   return (
     <img
       ref={imageRef}
-      src={src || avatar}
+      src={(useSmall ? tranformUrl(src): src) || avatar}
       onError={() => {
         imageRef.current.src = avatar;
       }}

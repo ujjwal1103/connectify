@@ -6,6 +6,7 @@ import ProfilePicture from "../../common/ProfilePicture";
 import Modal from "../../shared/Modal";
 import Logo from "../../icons/Logo";
 import UserLoading from "../../common/loading/UserLoading";
+import { tranformUrl } from "../../utils";
 
 const Self = () => {
   const [user, setUser] = useState();
@@ -35,7 +36,7 @@ const Self = () => {
         <div className="flex -z-50 items-center dark:bg-zinc-900 justify-between space-x-2  duration-500 bg-slate-50 shadow-lg p-2 rounded-lg w-80 mx-auto">
           <div className="flex items-center space-x-2">
             <ProfilePicture
-              src={user?.avatar}
+              src={tranformUrl(user?.avatar)}
               className="inline-block h-12 w-12 rounded-full hover:scale-90 duration-500 object-cover"
             />
             <span className="flex flex-col">

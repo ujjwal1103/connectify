@@ -1,6 +1,5 @@
 import Post from "./post/Post";
 import Suggetions from "./suggetions/Suggetions";
-import Sidebar from "./components/Sidebar";
 import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
 import NoPosts from "../profile/components/NoPosts";
@@ -27,7 +26,7 @@ const HomePage = () => {
 
       if (post) intObserver.current.observe(post);
     },
-    [isLoading, hasNextPage]
+    [hasNextPage, isLoading]
   );
 
   if (isError) return <ErrorPage />;
@@ -38,6 +37,9 @@ const HomePage = () => {
     }
     return <Post key={post._id} post={post} />;
   });
+
+
+ 
 
   return (
     <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">

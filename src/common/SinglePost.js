@@ -16,11 +16,12 @@ import FollowBtn from "../shared/Buttons/FollowBtn";
 import { getCurrentUserId } from "../utils/getCurrentUserId";
 import { followUser } from "../profile/services/postServices";
 import { ImageSlider } from "./ImageSlider/ImageSlider";
+import { tranformUrl } from "../utils";
 
 const SinglePost = ({ post, posts }) => {
   const { user } = useSelector((state) => state.auth);
   const [currPost, setCurrentPost] = useState(post);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState([]);
 
   const handleChange = (e) => {
@@ -41,6 +42,10 @@ const SinglePost = ({ post, posts }) => {
   useEffect(() => {
     getComments();
   }, [getComments]);
+
+  useEffect(() => {
+    setCurrentPost(post);
+  }, [post]);
 
   const handleLeftClick = () => {
     const index = posts.findIndex((p) => p._id === currPost._id);
@@ -83,22 +88,24 @@ const SinglePost = ({ post, posts }) => {
 
   return (
     <div className="max-w-[70%] min-w-[1024px] w-[900px] m-auto h-single  overflow-y-hidden shadow-2xl grid grid-cols-2 flex-col lg:flex-row bg-white dark:bg-zinc-900">
-      {posts.length > 0 && (
-        <button
-          className="absolute top-1/2 left-10 text-3xl text-white hidden lg:block "
-          onClick={handleLeftClick}
-        >
-          <ChevronBack />
-        </button>
-      )}
-      {posts.length > 0 && (
-        <button
-          className="absolute top-1/2 right-10  text-3xl text-white hidden lg:block"
-          onClick={handleRightClick}
-        >
-          <ChevronForward />
-        </button>
-      )}
+      {posts.length > 1 &&
+        posts.findIndex((p) => p._id === currPost._id) !== 0 && (
+          <button
+            className="absolute top-1/2 left-10 text-3xl text-white hidden lg:block "
+            onClick={handleLeftClick}
+          >
+            <ChevronBack />
+          </button>
+        )}
+      {posts.length > 1 &&
+        posts.findIndex((p) => p._id === currPost._id) !== posts.length - 1 && (
+          <button
+            className="absolute top-1/2 right-10 text-3xl text-white hidden lg:block"
+            onClick={handleRightClick}
+          >
+            <ChevronForward />
+          </button>
+        )}
       <div className=" bg-zinc-950 flex justify-center items-center">
         <ImageSlider images={currPost.imageUrl} className={"w-full "} />
       </div>
@@ -107,6 +114,7 @@ const SinglePost = ({ post, posts }) => {
         <div className="hidden lg:flex  justify-between items-center">
           <div className="flex items-center justify-center  p-3 gap-5">
             <ProfilePicture
+              useSmall={true}
               src={currPost?.user?.avatar}
               className="size-12 object-cover  rounded-full"
             />
@@ -114,9 +122,15 @@ const SinglePost = ({ post, posts }) => {
               username={currPost?.user?.username}
               className="cursor-pointer"
             />
-            {!currPost.isFollow && currPost.user._id !== getCurrentUserId() && (
-              <FollowBtn onClick={handleFollowRequest} />
-            )}
+            {!currPost.user.isFollow &&
+              currPost.user._id !== getCurrentUserId() && (
+                <FollowBtn
+                  isRequested={currPost.user.isRequested}
+                  userId={currPost.user._id}
+                  isPrivate={currPost.user.isPrivate}
+                  onClick={handleFollowRequest}
+                />
+              )}
           </div>
           <div>
             <ThreeDots className=" mx-4" size={24} />
@@ -134,7 +148,11 @@ const SinglePost = ({ post, posts }) => {
                 username={currPost?.user?.username}
                 className="cursor-pointer text-xs"
               />
-              <span className="text-[12px] overflow-ellipsis w-52"> {currPost.caption} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas, mollitia?</span>
+              <span className="text-[12px] overflow-ellipsis w-52">
+                {" "}
+                {currPost.caption} Lorem ipsum dolor sit amet, consectetur
+                adipisicing elit. Voluptas, mollitia?
+              </span>
             </div>
           </div>
         )}
@@ -156,7 +174,10 @@ const SinglePost = ({ post, posts }) => {
           >
             {comments?.map((comment) => {
               return (
-                <div key={comment._id} className="px-2 mb-2 first:mt-2 dark:text-gray-50  ">
+                <div
+                  key={comment._id}
+                  className="px-2 mb-2 first:mt-2 dark:text-gray-50  "
+                >
                   <div className="flex gap-4 items-start">
                     <div className=" ">
                       <ProfilePicture
@@ -194,7 +215,7 @@ const SinglePost = ({ post, posts }) => {
 
         <hr />
         <div>
-          <PostActions post={currPost} userId={user?._id} size={20}/>
+          <PostActions post={currPost} userId={user?._id} size={20} />
           <span className="px-3 py-1 text-[14px]">{currPost?.like} likes</span>
           <span className="px-3 py-1 block text-[12px] text-gray-500">
             {moment(currPost?.createdAt).format("MMMM D YYYY").toUpperCase()}

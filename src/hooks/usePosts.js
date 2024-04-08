@@ -10,11 +10,13 @@ export const getPostsPage = async (pageParam = 1, options = {}) => {
 
 const usePosts = (pageNum = 1) => {
   const { feeds, totalPages } = useSelector((state) => state.feed);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState({});
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
   const dispatch = useDispatch();
+
+  console.count(isLoading, hasNextPage, totalPages)
 
   useEffect(() => {
     setIsLoading(true);
@@ -43,7 +45,10 @@ const usePosts = (pageNum = 1) => {
     return () => {
       controller.abort();
     };
-  }, [pageNum, dispatch, totalPages]);
+  }, [pageNum, dispatch]);
+
+
+  console.log(pageNum, dispatch)
 
   return { isLoading, isError, error, feeds, hasNextPage };
 };

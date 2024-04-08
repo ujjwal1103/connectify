@@ -3,14 +3,27 @@ import { followUser, unfollowUser } from "../../profile/services/postServices";
 import { isCurrentUser } from "../../utils/getCurrentUserId";
 import Button from "../Components/Button";
 
-const FollowBtn = ({ userId, callBack = () => {}, isFollow }) => {
+const FollowBtn = ({
+  userId,
+  callBack = () => {},
+  isFollow,
+  showRemoveFollowerBtn,
+  isRequested,
+  isPrivate,
+}) => {
   const [follow, setFollow] = useState(isFollow);
+  const [isRequestSent, setIsRequestSent] = useState(isRequested);
 
   const handleFollowRequest = async () => {
-    const data = await followUser(userId);
-    if (data.follow) {
-      setFollow(data.follow);
-      callBack(data);
+    if (isPrivate) {
+      //send friend request
+      setIsRequestSent(true)
+    } else {
+      const data = await followUser(userId);
+      if (data.follow) {
+        setFollow(data.follow);
+        callBack(data);
+      }
     }
   };
 
@@ -25,6 +38,29 @@ const FollowBtn = ({ userId, callBack = () => {}, isFollow }) => {
 
   if (isCurrentUser(userId)) {
     return <span></span>;
+  }
+
+  if (showRemoveFollowerBtn) {
+    return (
+      <Button
+        className="text-xs bg-gradient-to-l from-blue-900 to-violet-900 px-2 rounded-xl text-sky-100 py-1"
+        onClick={handleUnfollow}
+        size={"small"}
+      >
+        Remove
+      </Button>
+    );
+  }
+  if (isRequestSent) {
+    return (
+      <Button
+        className="text-xs bg-gradient-to-l bg-zinc-900 px-2 rounded-xl text-sky-100 py-1"
+        onClick={handleUnfollow}
+        size={"small"}
+      >
+        Requested
+      </Button>
+    );
   }
 
   if (follow) {

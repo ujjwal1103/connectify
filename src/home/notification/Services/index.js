@@ -1,4 +1,4 @@
-import { NEW_MESSAGE } from "../../../utils/constant";
+import { NEW_MESSAGE, SEEN_MESSAGES } from "../../../utils/constant";
 import {
   getCurrentUserId,
   getCurrentUsername,
@@ -21,6 +21,16 @@ export const sendNotification = async (userId, action, socket, chatId, message) 
           chat: chatId,
           from: getCurrentUserId(),
           message,
+          notification: `${getCurrentUsername()} send you a Message`,
+        });
+        break;
+      }
+      case SEEN_MESSAGES: {
+        socket.emit(SEEN_MESSAGES, {
+          to: userId,
+          chat: chatId,
+          from: getCurrentUserId(),
+          message: message._id,
           notification: `${getCurrentUsername()} send you a Message`,
         });
         break;

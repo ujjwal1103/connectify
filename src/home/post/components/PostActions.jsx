@@ -15,12 +15,11 @@ import {
 import { useSocket } from "../../../context/SocketContext";
 import { sendNotification } from "../../notification/Services";
 import { useState } from "react";
+import { updateLike } from "../../../redux/services/postSlice";
 
 const PostActions = ({ post, userId, showCurrentPost, size = 24, onLike }) => {
   const [isBookMarked, setIsBookMarked] = useState(false);
   const dispatch = useDispatch();
-
-
 
   const handleLikeClicked = async (isLike, error) => {
     if (error) {
@@ -30,7 +29,9 @@ const PostActions = ({ post, userId, showCurrentPost, size = 24, onLike }) => {
     if(onLike){
       onLike(isLike)
       return;
-    }
+    } 
+    dispatch(updateLike({like:isLike, postId:post?._id}))
+
     if (isLike) {
       dispatch(likeCurrentPost({ postId: post._id, userId }));
     } else {

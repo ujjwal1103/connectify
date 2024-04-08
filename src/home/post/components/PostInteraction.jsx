@@ -11,9 +11,8 @@ const PostInteraction = ({ post: { _id, user, like, caption } }) => {
   return (
     <div className="flex flex-col py-2 justify-center  dark:text-gray-50">
       <button className="text-left" onClick={() => setOpenLikes(true)}>
-        {like === 0 ? "" : `${like} ${like?.length === 1 ? "like" : "likes"}`}
+        {like === 0 ? "" : `${like} ${like === 1 ? "like" : "likes"}`}
       </button>
-
       <span className="line-clamp-2 dark:text-gray-50">
         <UsernameLink username={user.username} />
         <span className="px-2">

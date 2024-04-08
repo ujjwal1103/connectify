@@ -12,6 +12,7 @@ import { NEW_MESSAGE, SEEN_MESSAGES } from "../../utils/constant";
 import { useSocket } from "../../context/SocketContext";
 import { useParams } from "react-router-dom";
 import { useGetMessagesQuery } from "../../redux/services/messageApi";
+import { sendNotification } from "../../home/notification/Services";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(1);
@@ -32,23 +33,34 @@ const ChatWindow = () => {
 
   const [data, setData] = useInfiniteScrollTop(containerRef, oldMessagesChunk?.totalPages, page, setPage, oldMessagesChunk?.messages)
 
-  
 
   useEffect(() => {
     refetch();
+    ()=>{
+      setData([])
+    }
   }, [chatId]);
 
   const handleMessage = useCallback(
-    (data) => {
+    async(data) => {
       if (data.from === selectedChat?.friend?._id) {
-        refetch();
+        setMessages(prev=>[...prev, {...data.message, seen:true}])
+
+        await sendNotification(data.message.from, SEEN_MESSAGES, socket, chatId, data.message);
       }
     },
     [chatId]
   );
-
-  const handleSeen = useCallback(() => {
-    refetch();
+  const handleSeen = useCallback((data) => {
+    if (data.message.chatId === chatId) {
+      setMessages(prev => prev.map(message => {
+        if (message._id === data.message._id) {
+          // If the message ID matches, update the 'seen' property
+          return { ...message, seen: true };
+        }
+        return message; // For other messages, return unchanged
+      }));
+    }
   }, [chatId]);
 
   const eventHandlers = {
@@ -68,11 +80,10 @@ const ChatWindow = () => {
         page={page}
       />
       <div className="bg-zinc-950 border-t-[0.5px] border-zinc-700">
-        <MessageInput
+    <MessageInput
           userId={selectedChat?.friend?._id}
           currentUserId={getCurrentUserId()}
           chatId={selectedChat?._id}
-          getMessages={refetch}
           onMessage={(message)=>{
             setMessages(prev=>[...prev, message])
           }}

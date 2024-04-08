@@ -48,7 +48,6 @@ const postSlice = createSlice({
     likePost: (state, action) => {
       const postId = action.payload.postId;
       const userId = action.payload.postId;
-
       const likedPostIndex = state.posts.findIndex(
         (post) => post._id === postId
       );
@@ -85,6 +84,21 @@ const postSlice = createSlice({
     setHasNext: (state, action) => {
       state.hasNext = action.payload;
     },
+    updateLike: (state, action) => {
+      const { postId, like } = action.payload;
+      const likePostIndex = state.posts.findIndex(
+        (post) => post._id === postId
+      );
+
+      if (likePostIndex !== -1) {
+        let post = state.posts[likePostIndex];
+        state.posts[likePostIndex] = {
+          ...post,
+          isLiked: like,
+          like: like ? post.like + 1 : post.like - 1,
+        };
+      }
+    },
     reset: () => {
       return initialState;
     },
@@ -103,6 +117,7 @@ export const {
   setLoading,
   reset,
   setHasNext,
+  updateLike,
 } = postSlice.actions;
 
 export default postSlice.reducer;
