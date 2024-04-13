@@ -87,7 +87,7 @@ const App = () => {
               />
               <Route path="p/:postId" element={<Post />} />
               <Route path="profile" element={<Profile />} />
-              <Route path=":username" element={<UserProfile />} />
+              <Route path="profile/:username" element={<UserProfile />} />
               <Route path="search" element={<Search />} />
               <Route path="expore/people" element={<Peoples />} />
               <Route path="setting" element={<Setting />} />
@@ -109,7 +109,7 @@ export default App;
 
 export const PageLoader = ({}) => {
   return (
-    <div className="w-screen h-dvh bg-zinc-800 flex justify-center items-center">
+    <div className="w-screen h-dvh bg-zinc-800 flex-center">
       <motion.span
         animate={{
           scale: [1, 1.2, 1],
@@ -127,7 +127,7 @@ export const PageLoader = ({}) => {
 };
 
 export const ErrorPage = ({ error }) => (
-  <div className="min-h-screen bg-gradient-to-br to-[#620C45]  from-[#ff0000] flex items-center justify-center">
+  <div className="min-h-screen bg-gradient-to-br to-[#620C45]  from-[#ff0000] flex-center">
     <div className="max-w-md px-8 py-12 bg-white shadow-lg rounded-md text-center">
       <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
       <p className="text-lg text-gray-800 mb-8">

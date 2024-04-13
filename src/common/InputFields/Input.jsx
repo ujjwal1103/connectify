@@ -27,6 +27,7 @@ const Input = (props, ref) => {
     sufix = "",
     value,
     className,
+
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -38,16 +39,17 @@ const Input = (props, ref) => {
       <span className="absolute px-2 dark:text-white ">{prefix}</span>
       <input
         ref={ref}
+        autoFocus={true}
         value={value}
         {...props}
         type={showPassword ? "text" : type}
         className={className}
         autoComplete={undefined}
         onFocus={() => {
-          iconRef?.current?.firstChild?.classList.add("dark:fill-[#620C45]");
+         type !== 'password' && iconRef?.current?.firstChild?.classList.add("dark:fill-[#620C45]");
         }}
         onBlur={() => {
-          iconRef?.current?.firstChild?.classList.remove("dark:fill-[#620C45]");
+          type !== 'password' && iconRef?.current?.firstChild?.classList.remove("dark:fill-[#620C45]");
         }}
         placeholder={placeholder}
       />

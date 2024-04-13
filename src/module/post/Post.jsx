@@ -9,10 +9,9 @@ import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
 import moment from "moment";
 import UsernameLink from "../../shared/UsernameLink";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
-import { EmojiWink, Heart, ThreeDots } from "../../icons";
+import { Heart } from "../../icons";
 import { useSelector } from "react-redux";
 import { CommentText } from "../../common/SinglePost";
-import { followUser } from "../../profile/services/postServices";
 import CommentInput from "../../home/post/components/CommentInput";
 
 const Post = () => {
@@ -37,7 +36,7 @@ const Post = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [post?._id]);
+  }, [postId]);
 
   useEffect(() => {
     getComments();
@@ -46,11 +45,6 @@ const Post = () => {
   useEffect(() => {
     getPost();
   }, [getPost]);
-
-  const handleFollowRequest = async () => {
-    const data = await followUser(post?._id);
-    setPost((prev) => ({ ...prev, isFollow: true }));
-  };
 
   if (!post) {
     return <h1>Loading</h1>;
@@ -63,7 +57,7 @@ const Post = () => {
 
       <div className=" flex flex-col   justify-between overflow-hidden dark:text-gray-50">
         <div className="hidden lg:flex justify-between items-center">
-          <div className="flex items-center justify-center  p-3 gap-5">
+          <div className="flex-center  p-3 gap-5">
             <ProfilePicture
               src={post?.user?.avatar}
               className="size-12 object-cover  rounded-full"
@@ -73,7 +67,7 @@ const Post = () => {
               className="cursor-pointer"
             />
             {!post.isFollow && post.user._id !== getCurrentUserId() && (
-              <FollowBtn onClick={handleFollowRequest} />
+              <FollowBtn  />
             )}
           </div>
         </div>

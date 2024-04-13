@@ -1,22 +1,21 @@
-import { useEffect, useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectNotifications,
-  setNotifications,
-} from "../../redux/services/notificationSlice";
+import ProfilePicture from "../../common/ProfilePicture";
 import { makeRequest } from "../../config/api.config";
 import { AngleLeft } from "../../icons";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import ProfilePicture from "../../common/ProfilePicture";
+import {
+  setNotifications
+} from "../../redux/services/notificationSlice";
 
-import UsernameLink from "../../shared/UsernameLink";
-import FollowBtn from "../../shared/Buttons/FollowBtn";
-import { LIKE_POST, NEW_REQUEST } from "../../utils/constant";
-import useSocketEvents from "../../hooks/useSocketEvents";
-import { useSocket } from "../../context/SocketContext";
-import { ImageComponent } from "../../profile/components/Post";
 import moment from "moment";
+import { useSocket } from "../../context/SocketContext";
+import useSocketEvents from "../../hooks/useSocketEvents";
+import { ImageComponent } from "../../profile/components/Post";
+import FollowBtn from "../../shared/Buttons/FollowBtn";
+import UsernameLink from "../../shared/UsernameLink";
+import { tranformUrl } from "../../utils";
+import { LIKE_POST, NEW_REQUEST } from "../../utils/constant";
 
 const Notification = ({ setClose, onClose }) => {
   const dispatch = useDispatch();
@@ -43,17 +42,16 @@ const Notification = ({ setClose, onClose }) => {
 
   const getAllFollowRequestForUser = useCallback(async () => {
     const res = await makeRequest("/followRequests");
-    console.log(res);
     setRequest(res?.followRequest || []);
   }, []);
 
   useEffect(() => {
     getAllFollowRequestForUser();
-  }, []);
+  }, [getAllFollowRequestForUser]);
 
   const handleAccept = async (requestId, accept) => {
     if (accept) {
-      const res = await makeRequest.patch(`/accept/${requestId}`);
+      await makeRequest.patch(`/accept/${requestId}`);
       getAllFollowRequestForUser();
       getAllNotifications();
       return;
@@ -63,7 +61,7 @@ const Notification = ({ setClose, onClose }) => {
   const handleRequest = useCallback((data) => {
     getAllFollowRequestForUser();
     getAllNotifications();
-  }, []);
+  }, [getAllFollowRequestForUser, getAllNotifications]);
 
   const eventHandlers = {
     [NEW_REQUEST]: handleRequest,
@@ -275,8 +273,8 @@ const Noti = ({ n, handleAccept }) => {
           <div>
             <ImageComponent
               key={n.postId.imageUrl}
-              src={n.postId.imageUrl}
-              alt={n.postId.imageUrl}
+              src={tranformUrl(n.postId.imageUrl[0])}
+              alt={n.postId.imageUrl[0]}
               loaderClassName={`bg-zinc-950 animate-pulse size-10 bg-red-400`}
               className={"size-10 object-cover"}
             />

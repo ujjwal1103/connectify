@@ -48,11 +48,6 @@ const SearchInput = () => {
     <div
       className="w-full z-[1000] lg:h-auto h-96  relative lg:block"
       tabIndex={0}
-      // onBlur={() => {
-      //   console.log("onBlur click");
-      //   setShowSearchResults(false);
-      //   setSearchResults([]);
-      // }}
     >
       <Input
         type="search"

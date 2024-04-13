@@ -21,7 +21,10 @@ const Register = () => {
     setError,
     clearErrors,
     formState: { errors, isValid, isSubmitting },
-  } = useForm();
+  } = useForm({
+    criteriaMode: "all",
+    mode: "onBlur" // or onChange if you want real-time validation
+  });
   const onSubmit = (data) => {
     userSignUp(data);
   };
@@ -83,7 +86,11 @@ const Register = () => {
               placeholder="Enter you username"
               prefix={<PersonFill className=" fill-violet-50  text-2xl" />}
               error={errors?.username}
-              {...register("username", { required: "Username is required" })}
+              {...register("username", { required: true,pattern: {
+                value: /^(?=[a-z_])[a-z0-9_]{5,20}$/,
+                message: "Invalid username format"
+              } })}
+              required={true}
             />
             <Input
               className="authInput"

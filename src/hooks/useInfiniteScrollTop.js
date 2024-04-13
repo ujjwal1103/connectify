@@ -16,7 +16,7 @@ export const useInfiniteScrollBottom = (
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
-  const timeoutId = useRef | (null > null);
+  const timeoutId = useRef(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -97,12 +97,13 @@ export const useInfiniteScrollTop = (
   page,
   setPage,
   newData,
-  shouldReverse = false
+  shouldReverse = false,
+
 ) => {
   const [data, setData] = useState([]);
 
   const debounceTimer = useRef(null);
-
+  
   const handleScroll = useCallback(() => {
 
 

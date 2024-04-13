@@ -112,7 +112,7 @@ const SinglePost = ({ post, posts }) => {
 
       <div className="flex flex-col justify-between h-single dark:text-gray-50">
         <div className="hidden lg:flex  justify-between items-center">
-          <div className="flex items-center justify-center  p-3 gap-5">
+          <div className="flex-center  p-3 gap-5">
             <ProfilePicture
               useSmall={true}
               src={currPost?.user?.avatar}

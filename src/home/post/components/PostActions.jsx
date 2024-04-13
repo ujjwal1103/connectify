@@ -12,8 +12,7 @@ import {
   HeartFill,
   Send,
 } from "../../../icons";
-import { useSocket } from "../../../context/SocketContext";
-import { sendNotification } from "../../notification/Services";
+
 import { useState } from "react";
 import { updateLike } from "../../../redux/services/postSlice";
 
@@ -51,15 +50,15 @@ const PostActions = ({ post, userId, showCurrentPost, size = 24, onLike }) => {
         />
         <Chat
           size={size}
-          className="hover:text-gray-600 dark:text-gray-50"
+          className="hover:text-gray-600 dark:text-gray-50 cursor-pointer"
           onClick={showCurrentPost}
         />
-        <Send size={size} className="hover:text-gray-600 dark:text-gray-50" />
+        <Send size={size} className="hover:text-gray-600 dark:text-gray-50 cursor-pointer" />
       </div>
       {isBookMarked ? (
-        <BookMarkFill size={size} onClick={() => setIsBookMarked(false)} />
+        <BookMarkFill className="cursor-pointer" size={size} onClick={() => setIsBookMarked(false)} />
       ) : (
-        <BookMark size={size} color="" onClick={() => setIsBookMarked(true)} />
+        <BookMark className="cursor-pointer" size={size} color="" onClick={() => setIsBookMarked(true)} />
       )}
     </div>
   );
@@ -88,7 +87,7 @@ export const LikeButton = ({ size = 24, id, onLikeClick, isLiked,postUserId }) =
     return (
       <HeartFill
         size={size}
-        className="text-red-600"
+        className="text-red-600 cursor-pointer"
         onClick={() => handleLikeClicked(false)}
       />
     );
@@ -97,7 +96,7 @@ export const LikeButton = ({ size = 24, id, onLikeClick, isLiked,postUserId }) =
   return (
     <Heart
       size={size}
-      className="hover:text-gray-600 dark:text-gray-50"
+      className="hover:text-gray-600 dark:text-gray-50 cursor-pointer"
       onClick={() => handleLikeClicked(true)}
     />
   );

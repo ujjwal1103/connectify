@@ -18,7 +18,7 @@ const Posts = ({ userId, username, postCount }) => {
     return () => {
       dispatch(reset());
     };
-  }, [username]);
+  }, [username, dispatch]);
 
   const observer = useRef();
   const lastPost = useCallback(

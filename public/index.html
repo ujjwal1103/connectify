@@ -14,6 +14,20 @@
     />
 
     <title>Connectify</title>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react",
+          "react/jsx-runtime": "https://esm.sh/react/jsx-runtime",
+          "react-dom/client": "https://esm.sh/react-dom/client",
+          "wavesurfer.js": "../dist/wavesurfer.esm.js",
+          "wavesurfer.js/dist": "../dist",
+          "@wavesurfer/react": "https://unpkg.com/@wavesurfer/react"
+        }
+      }
+    </script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body class="dark">

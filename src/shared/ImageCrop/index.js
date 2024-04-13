@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImage } from "./cropImage";
-import { CheckBoxBlankLine, ZoomIn } from "../../icons";
+import { CheckBoxBlankLine, ImagePlus, ZoomIn } from "../../icons";
+import { IoClose } from "react-icons/io5";
+import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 
 const ImageCrop = ({
-  image,
   onCrop,
   onClose,
   cropShape = "rect",
   scale = 1,
   aspect: as = 3,
   profile = false,
-  name,
   onImagePick = () => {},
   cropedImagesUrls = [],
+  clearImage,
+  selectedImage,
 }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(scale);
@@ -28,14 +30,12 @@ const ImageCrop = ({
   const cropImage = async (allowNext = false) => {
     try {
       const { file, url } = await getCroppedImage(
-        image,
-        name,
+        selectedImage.originalImageUrl,
+        selectedImage.originalImage.name,
         croppedAreaPixels,
         rotate
       );
-
       onCrop(file, url, allowNext);
-
       !allowNext && onClose();
     } catch (error) {
       console.log(error);
@@ -48,12 +48,17 @@ const ImageCrop = ({
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center  items-center ">
-      <div className="flex flex-col gap-4 p-4">
-        {cropedImagesUrls?.map((img) => (
-          <div>
-            <img src={img} className="w-32 rounded-md "/>
+    <div className="fixed inset-0 flex justify-center flex-col-reverse items-center ">
+      <div className="flex gap-4 p-4">
+        { cropedImagesUrls?.map((img) => (
+          <FadeInAnimation>
+          <div className="relative">
+            <button className="absolute  text-white font-semibold bg-red-500 p-1 -top-2 -left-2  rounded-md " onClick={()=>{
+              clearImage(img.name)
+            }}><IoClose size={16}/></button>
+            <img src={img.url} className="w-32 rounded-md " alt={img.name}/>
           </div>
+          </FadeInAnimation>
         ))}
       </div>
       <div className="relative flex box-border rounded-md overflow-clip justify-center items-center flex-col w-96 ">
@@ -61,7 +66,7 @@ const ImageCrop = ({
           <button
             type="button"
             className="text-white text-sm  rounded-md p-2"
-            onClick={onClose}
+            onClick={()=>onClose(selectedImage.originalImage.name)}
           >
             Cancel
           </button>
@@ -75,7 +80,7 @@ const ImageCrop = ({
         </div>
         <div className=" relative w-full h-full  aspect-square  bg-black">
           <Cropper
-            image={image}
+            image={selectedImage.originalImageUrl}
             crop={crop}
             zoom={zoom}
             rotation={rotate}
@@ -90,7 +95,7 @@ const ImageCrop = ({
           />
         </div>
         {openZoom && (
-          <div className="absolute bg-slate-50  bottom-2 rounded-md shadow-md left-30 p-2 flex gap-3">
+          <div className="absolute bottom-14 bg-slate-50   rounded-md shadow-md left-30 p-2 flex gap-3">
             <input
               type="range"
               name="zoom"
@@ -107,32 +112,33 @@ const ImageCrop = ({
         {!profile && (
           <div className="absolute bottom-0 left-0 p-2 flex gap-3  w-full">
             <button
-              className="bg-zinc-600 shadow-md p-1 rounded-md dark:text-white"
+              className="bg-zinc-600 shadow-md p-1 w-12 flex-center rounded-md dark:text-white"
               onClick={() => setAspect((prev) => (prev === 3 ? 4 : 3))}
             >
               <CheckBoxBlankLine size={24} />
             </button>
             <button
-              className="bg-zinc-600 shadow-md p-1 rounded-md dark:text-white"
+              className="bg-zinc-600 shadow-md p-1 w-12 flex-center rounded-md dark:text-white"
               onClick={() => setOpenZoom(!openZoom)}
             >
               <ZoomIn size={24} />
             </button>
-            <div className="self-center ml-auto">
+          {cropedImagesUrls.length < 3 &&  <div className="self-center ml-auto">
               <input
                 type="file"
                 name="imagePicker"
                 id="imagePicker"
                 hidden
+                accept="image/*"
                 onChange={handleImagePick}
               />
               <label
-                className="w-12  cursor-pointer flex justify-center items-center bg-white"
+                className="w-12 h-12 border border-dashed rounded-md cursor-pointer flex justify-center items-center text-white"
                 htmlFor="imagePicker"
               >
-                Add
+                <ImagePlus size={24}/>
               </label>
-            </div>
+            </div>}
           </div>
         )}
       </div>

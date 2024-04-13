@@ -1,20 +1,16 @@
-import { useNavigate } from "react-router-dom";
+
 import SearchInput from "../home/navbar/components/SearchInput";
-import { useEffect } from "react";
+import { isMobile } from "react-device-detect";
+import PageNotFound from "../PageNotFound/PageNotFound";
 
 const Search = () => {
-  const navigate = useNavigate();
-  const screenWidth = window.innerWidth;
-
-
-  useEffect(()=> {
-if(screenWidth > 785){
-  navigate('/home')
-}
-  },[screenWidth, navigate])
+  
+  if(!isMobile){
+     return <PageNotFound/>
+  }
 
   return (
-    <div className="w-screen h-screen lg:hidden -z-50 flex justify-center p-2">
+    <div className="w-screen h-dvh lg:hidden -z-50 flex justify-center p-2">
       <SearchInput />
     </div>
   );

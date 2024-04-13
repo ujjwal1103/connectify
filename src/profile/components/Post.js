@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useState } from "react";
+import { forwardRef, memo, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setPost, updateLike } from "../../redux/services/postSlice";
 import { deleteThisPost } from "../services/postServices";
@@ -14,6 +14,10 @@ import Modal from "../../shared/Modal";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
 import { useNavigate } from "react-router-dom";
 import { LikeButton } from "../../home/post/components/PostActions";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 const Post = ({ post }, ref) => {
   const [showPost, setShowPost] = useState(false);
@@ -22,6 +26,20 @@ const Post = ({ post }, ref) => {
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.post);
   const navigate = useNavigate();
+  const sliderRef = useRef(null); // Reference for the carousel
+
+  const settings = {
+    dots: false,
+    infinite: false,
+    arrows:true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    nextArrow: <span>hello</span>,
+    prevArrow: <span>hello</span> // Adjust as per your requirement
+  };
 
   const deleteCurrentPost = async (postId) => {
     try {
@@ -51,15 +69,20 @@ const Post = ({ post }, ref) => {
   return (
     <div
       ref={ref && ref}
-      className="relative group w-full h-[270px] flex items-center rounded shadow-xl justify-center"
+      className="relative group w-full flex items-center rounded shadow-xl justify-center"
     >
-      <ImageComponent
-        src={post.imageUrl[0]}
-        alt=""
-        loaderClassName={`flex justify-center items-center bg-zinc-900 animate-pulse md:w-96 w-full h-full rounded `}
-        className="object-cover w-full h-full rounded group-hover:opacity-80"
-        onClick={handleSetPost}
-      />
+     <Slider {...settings} ref={sliderRef} className="w-full h-full">
+        {post.imageUrl.map((imageUrl, index) => (
+          <div key={index}>
+            <ImageComponent
+              src={imageUrl}
+              alt=""
+              loaderClassName={`flex justify-center items-center bg-zinc-900 animate-pulse md:w-96 w-full h-full rounded `}
+              className="object-cover w-full h-full rounded group-hover:opacity-80"
+            />
+          </div>
+        ))}
+      </Slider>
 
       {getCurrentUserId() === post.user._id && (
         <div className="absolute w-12 h-12  right-0 top-0 rounded-b flex justify-center items-center opacity-0 group-hover:opacity-100 transition duration-300">

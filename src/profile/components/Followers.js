@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { makeRequest } from "../../config/api.config";
-import avatar from "../../assets/man.png";
 import { useNavigate } from "react-router-dom";
 import Input from "../../common/InputFields/Input";
 import { profileState, setFollower } from "../../redux/services/profileSlice";
 import { useDispatch, useSelector } from "react-redux";
-import FollowButton from "../../shared/FollowButton";
 import { getCurrentUser } from "../../utils/getCurrentUserId";
 import { Search } from "../../icons";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
@@ -48,7 +46,8 @@ const Followers = ({ userId }) => {
     } finally {
       setLoading(false);
     }
-  }, [userId, page, debouncedQuery]);
+
+  }, [userId, page, debouncedQuery, dispatch]);
 
   useEffect(() => {
     getFollowers();
@@ -58,17 +57,15 @@ const Followers = ({ userId }) => {
     if (username === currentUser?.username) {
       navigate(`/profile`);
     } else {
-      navigate(`/${username}`);
+      navigate(`/profile/${username}`);
     }
   };
-
-  const handleRemoveFollower = (userId) => {};
 
   useEffect(() => {
     return () => {
       dispatch(setFollower([]));
     };
-  }, []);
+  }, [dispatch]);
   return (
     <FadeInAnimation>
       <div className="flex md:min-h-64 md:h-follow h-dvh items-center w-screen justify-center">
@@ -131,9 +128,7 @@ const Followers = ({ userId }) => {
                         </div>
 
                         <FollowBtn
-                          callBack={(data) => {
-                            console.log(data);
-                          }}
+                          callBack={() => {}}
                           isPrivate={user?.isPrivate}
                           userId={user?._id}
                           isFollow={user?.isFollow}

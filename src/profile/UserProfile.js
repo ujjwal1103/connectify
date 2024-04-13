@@ -8,7 +8,7 @@ import {
   cancelFollowRequest,
 } from "./services/postServices";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import ProfileCard from "./components/ProfileCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addChat } from "../redux/services/chatSlice";
@@ -95,7 +95,7 @@ const UserProfile = () => {
   };
 
   const deleteSentFriendRequest = async (e) => {
-    const res = await cancelFollowRequest(user?._id);
+    await cancelFollowRequest(user?._id);
     dispatch(
       setOtherUser({
         ...user,
@@ -110,7 +110,7 @@ const UserProfile = () => {
 
   const handleRefech = useCallback(() => {
     getUser();
-  }, []);
+  }, [getUser]);
 
   const eventHandlers = {
     [ACCEPT_REQUEST]: handleRefech,
@@ -183,7 +183,7 @@ const UserProfile = () => {
 
 export default UserProfile;
 
-const PrivateUser = ({}) => {
+const PrivateUser = () => {
   return (
     <div className="lg:flex-1 w-full border border-white h-52  rounded-xl grid place-content-center">
       <div className="flex flex-col gap-5 text-center">

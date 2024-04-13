@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const Switch = ({ checked, onChange }) => {
   return (
     <label className="flex items-center space-x-2">

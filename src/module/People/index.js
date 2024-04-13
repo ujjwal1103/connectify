@@ -16,7 +16,7 @@ const Peoples = () => {
         setLoading(true);
       }
       const res = await makeRequest.get(`/users?page=${p}`);
-      setPeoples([...peoples, ...res?.users]);
+      setPeoples(people=>[...people, ...res?.users]);
       setHasMore(res?.pagination?.hasMore);
       setLoading(false);
     },

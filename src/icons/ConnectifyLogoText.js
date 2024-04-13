@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 
 const ConnectifyLogoText = ({ w = "300", h = "60" }) => {
 

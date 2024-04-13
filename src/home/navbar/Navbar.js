@@ -7,7 +7,6 @@ import SearchInput from "./components/SearchInput";
 import {
   Chat,
   Cog,
-  DarkMode,
   EllipsisV,
   Heart,
   HouseDoor,
@@ -27,6 +26,7 @@ import useSocketEvents from "../../hooks/useSocketEvents";
 import { useSocket } from "../../context/SocketContext";
 import { ACCEPT_REQUEST, LIKE_POST, NEW_MESSAGE, NEW_REQUEST } from "../../utils/constant";
 import { makeRequest } from "../../config/api.config";
+import { BiPlus } from "react-icons/bi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +39,13 @@ const Navbar = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
   };
   const toggleDropdown = () => {
+
+
+    if(isOpen) return ;
+
     !isOpen && setIsOpen(!isOpen);
   };
+
   useClickOutside(modelRef, () => setIsOpen(false));
 
   const toggleNotification = () => {
@@ -63,7 +68,6 @@ const Navbar = () => {
   });
   const handleNotify = () => {
     if ("Notification" in window) {
-      console.log(Notification);
       if (Notification.permission === "granted") {
         new Notification('new message');
       } else if (Notification.permission !== "denied") {
@@ -79,19 +83,19 @@ const Navbar = () => {
   useEffect(() => {
     const fetchCount = async () => {
       const rs = await makeRequest.get('/notification/count')
-      setBadgeCounts({
-        ...badgeCounts,
+      setBadgeCounts(b=>({
+        ...b,
         notification: rs.notifications,
-      });
+      }));
     };
     fetchCount();
   }, []);
 
   const handleNotifationCount = useCallback(() => {
-    setBadgeCounts({
-      ...badgeCounts,
+    setBadgeCounts(b=>({
+      ...b,
       notification: badgeCounts.notification + 1,
-    });
+    }));
   }, []);
 
   const handleMessage = useCallback(() => {
@@ -155,7 +159,7 @@ const Navbar = () => {
               </NavLink>
             </div>
           </Badge>
-          <div className="">
+          <div className="hidden lg:block">
             <NavLink onClick={toggleCreatePost}>
               <PlusSquare size={24} />
             </NavLink>
@@ -196,6 +200,7 @@ const Navbar = () => {
             <Modal
               onClose={() => setIsOpenCreatePost(false)}
               shouldCloseOutsideClick={false}
+              showCloseButton={false}
             >
               <CreatePost />
             </Modal>
@@ -213,6 +218,13 @@ const Navbar = () => {
           )}
         </AnimatePresence>
       </nav>
+
+
+      <div className="fixed lg:hidden bottom-14 right-5 shadow-2xl">
+      <button onClick={toggleCreatePost} className="rounded-full bg-blue-800 size-14 flex-center">
+              <BiPlus size={24} />
+            </button>
+      </div>
     </header>
   );
 };
@@ -232,7 +244,7 @@ const Badge = ({ children, count }) => {
   );
 };
 
-const MenuBox = forwardRef(({}, ref) => {
+const MenuBox = forwardRef((_, ref) => {
   return (
     <motion.div
       initial={{ scale: 0, origin: "center" }}

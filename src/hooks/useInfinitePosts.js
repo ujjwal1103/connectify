@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setHasNext, setLoading, setPosts } from "../redux/services/postSlice";
+import { setLoading, setPosts } from "../redux/services/postSlice";
 import { getPostsPage } from "./useMyPosts";
 
-const useInfinitePosts = (userId, username = "", postCount = 0) => {
+const useInfinitePosts = (userId, postCount = 0) => {
   const { page, posts = [], loading } = useSelector((state) => state.post);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const useInfinitePosts = (userId, username = "", postCount = 0) => {
       setHasMore(res.hasNext && res.totalPages !== page);
       dispatch(setLoading(false));
     }
-  }, [page, userId, username, postCount]);
+  }, [page, userId, postCount, dispatch]);
 
   useEffect(() => {
     fetchPost();

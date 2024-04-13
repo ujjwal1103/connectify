@@ -23,6 +23,7 @@ const Following = ({ userId, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const debouncedQuery = useDebounce(query, 300);
+
   const getFollowing = useCallback(async () => {
     if (page === 1) {
       setLoading(true);
@@ -46,7 +47,7 @@ const Following = ({ userId, onClose }) => {
     }finally{
       setLoading(false)
     }
-  }, [userId, page, debouncedQuery]);
+  }, [userId, page, debouncedQuery,dispatch ]);
 
   useEffect(() => {
     getFollowing();
@@ -58,7 +59,7 @@ const Following = ({ userId, onClose }) => {
       navigate(`/profile`);
     } else {
       onClose();
-      navigate(`/${username}`);
+      navigate(`/profile/${username}`);
     }
   };
 
@@ -66,7 +67,7 @@ const Following = ({ userId, onClose }) => {
     return () => {
       dispatch(setFollowing([]));
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <FadeInAnimation>
@@ -130,8 +131,7 @@ const Following = ({ userId, onClose }) => {
                         </div>
                         {user?.username !== currentUser.username && (
                           <FollowBtn
-                            callBack={(data) => {
-                              console.log(data);
+                            callBack={() => {
                             }}
                             userId={user?._id}
                             isFollow={user?.isFollow}
@@ -145,7 +145,7 @@ const Following = ({ userId, onClose }) => {
               </InfiniteScroll>
             )}
 
-            {loading && [1, 2, 3, 4, 5, 6].map((id) => <Loading key={id} />)}
+            {loading && [1, 2, 3].map((id) => <Loading key={id} />)}
           </div>
         </div>
       </div>

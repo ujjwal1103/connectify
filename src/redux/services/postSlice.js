@@ -7,6 +7,10 @@ const initialState = {
   error: null,
   hasNext: false,
   page: 1,
+  uploadingPost: {
+    loading: false,
+    post: null,
+  },
 };
 
 const postSlice = createSlice({
@@ -99,6 +103,10 @@ const postSlice = createSlice({
         };
       }
     },
+    setUploadingPost: (state, action) => {
+      state.uploadingPost.loading = action.payload.loading
+      state.uploadingPost.post = action.payload.post
+    },
     reset: () => {
       return initialState;
     },
@@ -118,6 +126,7 @@ export const {
   reset,
   setHasNext,
   updateLike,
+  setUploadingPost
 } = postSlice.actions;
 
 export default postSlice.reducer;

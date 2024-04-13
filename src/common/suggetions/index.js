@@ -2,31 +2,26 @@ import React, { useCallback, useEffect, useState } from "react";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 import UsernameLink from "../../shared/UsernameLink";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { makeRequest } from "../../config/api.config";
-import { Link } from "react-router-dom";
 
 const SuggetionContainer = () => {
   const [peoples, setPeoples] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
+
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+
   const fetchPeoples = useCallback(
-    async (p) => {
-      if (page === 1) {
-        setLoading(true);
-      }
-      const res = await makeRequest.get(`/users?page=${p}&limit=10`);
-      setPeoples([...peoples, ...res?.users]);
-      setHasMore(res?.pagination?.hasMore);
+    async () => {
+      setLoading(true);
+      const res = await makeRequest.get(`/users?page=${1}&limit=10`);
+      setPeoples(res?.users);
       setLoading(false);
     },
-    [page]
+    []
   );
 
   useEffect(() => {
-    fetchPeoples(page);
-  }, [page, fetchPeoples]);
+    fetchPeoples();
+  }, [fetchPeoples]);
 
   if (loading) {
     return (

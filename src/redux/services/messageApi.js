@@ -22,7 +22,7 @@ export const messageApi = createApi({
         `messages/${data?.chatId}?page=${data?.page || 1}&pageSize=${
           data?.limit || 20
         }`,
-      
+      keepUnusedDataFor: true,
       pollingInterval: 5000,
     }),
     sendMessage: builder.mutation({
@@ -32,7 +32,17 @@ export const messageApi = createApi({
         body: newMessage,
       }),
     }),
+    sendAttachments: builder.mutation({
+      query: ({ chatId, formData }) => ({
+        url: `message/attachments/${chatId}`,
+        method: "POST",
+        headers: {
+          Accept: "multipart/form-data",
+        },
+        body: formData,
+      }),
+    }),
   }),
 });
 
-export const { useGetMessagesQuery, useSendMessageMutation } = messageApi;
+export const { useGetMessagesQuery, useSendMessageMutation, useSendAttachmentsMutation } = messageApi;

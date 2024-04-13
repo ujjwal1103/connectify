@@ -28,6 +28,10 @@ export function ImageSlider({ images, height='50%' }) {
     });
   }
 
+  if(!currentImages?.length){
+    return null
+  }
+
   return (
     <section
       aria-label="Image Slider"
@@ -43,14 +47,6 @@ export function ImageSlider({ images, height='50%' }) {
         }}
       >
         {currentImages?.map((url, index) => (
-          // <img
-          //   key={url}
-          //   src={url}
-          //   alt={url}
-          //   aria-hidden={imageIndex !== index}
-          //   className={"img-slider-img overflow-hidden"}
-          //   style={{ translate: `${-100 * imageIndex}%` }}
-          // />
           <ImageComponent
             key={url}
             src={url}

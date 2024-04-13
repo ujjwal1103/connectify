@@ -10,6 +10,8 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { AuthProvider } from "./context/AuthProvider";
 import "react-toastify/dist/ReactToastify.css";
+import '@szhsin/react-menu/dist/index.css';
+import '@szhsin/react-menu/dist/transitions/slide.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

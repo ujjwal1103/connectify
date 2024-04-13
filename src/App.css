@@ -5,6 +5,7 @@
   margin: 0;
   box-sizing: border-box;
   font-size: 10px;
+  user-select: none;
 }
 
 html {
@@ -14,7 +15,7 @@ html {
 
 @media only screen and (max-width: 300px) {
   html {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -91,6 +92,19 @@ input:autofill {
   border: 3px solid darkorange;
   background-color: red !important;
   box-shadow: none !important ;
+}
+
+
+/* .slick-arrow{
+  background-color: red !important;
+} */
+.slick-next{
+  right: 5px !important;
+}
+.slick-prev{
+  left: 5px !important;
+  z-index: 100;
+  
 }
 
 

@@ -7,7 +7,6 @@ import { makeRequest } from "../../config/api.config";
 const PrivateAccount = () => {
   const { user } = useSelector((state) => state.profile);
   const [checked, setChecked] = useState(user?.isPrivate);
-  console.log(user);
   const dispatch = useDispatch();
 
   const getUser = useCallback(async () => {

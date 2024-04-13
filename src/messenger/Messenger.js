@@ -88,20 +88,19 @@ const Messenger = () => {
   }, [chatId, navigate]);
 
   return (
-    <main className="bg-gray-100 overflow-y-hidden dark:bg-zinc-950 flex h-dvh ">
+    <main className="bg-gray-100 overflow-y-hidden dark:bg-zinc-950 flex h-dvh  ">
       <div
         className={`lg:flex-[0.5] md:flex-[0.5] xl:flex-[0.5] flex-1 resize-x ${
           chatId && "hidden lg:block "
-        } bg-zinc-950  xl:block md:block border-r border-zinc-700`}
+        } bg-zinc-950  xl:block md:block border-r  border-zinc-700`}
       >
         <CurrentUserInfo user={currentUser} />
-
         <div
           className="dark:bg-zinc-950 overflow-y-scroll scroll-smooth  bg-red-400"
           style={{ height: "calc(100% - 80px)" }}
         >
           <Search searchTerm={searchTerm} onChange={handleChange} />
-          <AnimatePresence >
+          <AnimatePresence>
             {!searchTerm &&
               chats?.map((chat, index) => {
                 return (
@@ -113,7 +112,8 @@ const Messenger = () => {
                   />
                 );
               })}
-
+          </AnimatePresence>
+          <AnimatePresence>
             {searchResults?.map((chat, index) => {
               return (
                 <SingleChat
@@ -125,6 +125,7 @@ const Messenger = () => {
               );
             })}
           </AnimatePresence>
+          
         </div>
       </div>
       {selectedChat && chatId ? <Outlet /> : <NoSelectedChat />}

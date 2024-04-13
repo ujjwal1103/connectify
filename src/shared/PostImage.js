@@ -11,7 +11,6 @@ const PostImage = ({ src, alt, onClick, className, style = {} }) => {
   }, [src]);
 
   const handleImageLoaded = () => {
-    console.log("loading completed");
     setLoading(false);
   };
 

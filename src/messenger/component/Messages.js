@@ -1,10 +1,33 @@
 import Message from "./Message";
 import { getCurrentUserId } from "../../utils/getCurrentUserId";
 import { BiLoader } from "react-icons/bi";
-import { forwardRef, useEffect, useRef } from "react";
-
-const Messages = ({ isLoading, allMessages = {}, page }, ref) => {
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { SEEN_MESSAGES } from "../../utils/constant";
+import useSocketEvents from "../../hooks/useSocketEvents";
+import { useSocket } from "../../context/SocketContext";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+const Messages = ({ isLoading, allMessages = {}, page, messages }, ref) => {
+  const { chatId } = useParams();
   const autoscrollRef = useRef(null);
+  const [seenMessagesIds, setSeenMessagesIds] = useState([]);
+  const { socket } = useSocket();
+  const { selectedMessages } = useSelector((state) => state.chat);
+  
+  const handleSeen = useCallback(
+    (data) => {
+      if (data.chat === chatId) {
+        setSeenMessagesIds(data.idsOnly);
+      }
+    },
+    [chatId]
+  );
+
+  const eventHandlers = {
+    [SEEN_MESSAGES]: handleSeen,
+  };
+
+  useSocketEvents(socket, eventHandlers);
 
   useEffect(() => {
     if (autoscrollRef.current && page === 1) {
@@ -12,18 +35,21 @@ const Messages = ({ isLoading, allMessages = {}, page }, ref) => {
         behavior: "smooth",
         block: "end",
       });
-    } 
-  }, [allMessages]);
+    }
+  }, [messages, page]);
 
-  if (isLoading) {
+  if (isLoading && page === 1) {
     return (
       <div className="h-full flex flex-1 justify-center items-center dark:text-gray-50 text-xl  mb-4 p-2 ">
         <BiLoader size={44} className="animate-spin" />
       </div>
     );
   }
-
-  if (!Object.keys(allMessages) || (Object.keys(allMessages)?.length === 0 && !isLoading))
+  
+  if (
+    !Object.keys(allMessages) ||
+    (Object.keys(allMessages)?.length === 0 && !isLoading)
+  )
     return (
       <div className="h-full flex flex-1 justify-center items-center dark:text-gray-50 text-xl  mb-4 p-2 ">
         Send new message to start a conversation
@@ -31,18 +57,25 @@ const Messages = ({ isLoading, allMessages = {}, page }, ref) => {
     );
 
   return (
-    <div ref={ref} className="h-full flex flex-col scroll-smooth flex-1 gap-3  overflow-y-scroll overflow-x-hidden  p-2 ">
+    <div
+      ref={ref}
+      className="h-full flex flex-col scroll-smooth flex-1 gap-3  overflow-y-scroll overflow-x-hidden  p-2 "
+    >
       <div>
-        {Object.keys(allMessages).map((date) => (
-          <div className="flex flex-col gap-3" key={Date.now()}>
-            <h3 className="text-center text-[10px]  text-gray-200 w-fit self-center p-1 rounded-xl bg-neutral-950">
+        {Object.keys(allMessages).map((date, index) => (
+          <div className="flex flex-col gap-3" key={Date.now() + index}>
+            <h3 className="text-center text-[10px]  text-gray-200 w-fit self-center py-1 px-2 mt-2 rounded-xl bg-neutral-950">
               {date}
             </h3>
             {allMessages[date].map((message) => (
               <Message
+                seen={seenMessagesIds?.some((id) => id === message._id)}
                 key={message._id}
                 currentUserMessage={message.from === getCurrentUserId()}
                 message={message}
+                isMessageSelected={selectedMessages?.some(
+                  (m) => m === message._id
+                )}
               />
             ))}
           </div>

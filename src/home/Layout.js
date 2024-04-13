@@ -1,43 +1,50 @@
-import React, { useEffect } from "react";
 import Navbar from "./navbar/Navbar";
 import { Outlet } from "react-router-dom";
-import { useSocket } from "../context/SocketContext";
-import { toast } from "react-toastify";
+
 import ConnectifyLogoText from "../icons/ConnectifyLogoText";
-import { getCurrentUserId } from "../utils/getCurrentUserId";
-
+import { IoClose } from "react-icons/io5";
+import { Loader } from "../messenger/component/MessageInput";
+import {useDispatch, useSelector} from 'react-redux'
+import { setUploadingPost } from "../redux/services/postSlice";
 const Layout = () => {
-  const { socket, setUsers } = useSocket();
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("allusers", (data) => {
-        setUsers(data.filter((u) => u.userId !== getCurrentUserId()));
-      });
-    }
-  }, [socket, setUsers]);
+  const {uploadingPost} = useSelector(state=>state.post)
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("Receive", (data) => {
-        console.log("liked post", Date.now());
-        toast(data);
-      });
-    }
-  }, [socket]);
+
+  const dispatch = useDispatch()
+
+
+  const closeLoader = ()=>dispatch(setUploadingPost({loading: false, post:null}))
+  
 
   return (
     <>
-      <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit dark:bg-black  ">
-        <div className="flex justify-center items-center sticky top-10">
-          <ConnectifyLogoText  w="200" h="20" />
-        </div>
-      </header>
+       {uploadingPost.loading && <div className="text-white bg-black  absolute top-0 w-screen left-0   rounded-md p-3 shadow-2xl z-50">
+           <button className="absolute right-4" onClick={closeLoader}><IoClose /></button>
+           <p className="text-center py-2">Posting</p>
+           <Loader />  
+      </div>}
+      <MobileHeader/>
       <Navbar />
       <Outlet />
-      {/* <FooterThree /> */}
+
+
+   
+      {uploadingPost.loading && <div className="text-white hidden lg:block bg-black m-2 fixed bottom-auto lg:h-fit lg:bottom-0 w-96 lg:right-0 rounded-md p-3 shadow-2xl z-50">
+           <button className="absolute right-4" onClick={closeLoader}><IoClose /></button>
+           <p className="text-center py-2">Posting</p>
+           <Loader />  
+      </div>}
     </>
   );
 };
 
 export default Layout;
+
+const MobileHeader = () => (
+  <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit dark:bg-black  ">
+    <div className="flex justify-center items-center sticky top-10">
+      <ConnectifyLogoText w="200" h="20" />
+    </div>
+  </header>
+);

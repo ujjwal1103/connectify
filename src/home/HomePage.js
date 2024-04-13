@@ -3,15 +3,17 @@ import Suggetions from "./suggetions/Suggetions";
 import { useCallback, useRef, useState } from "react";
 import usePosts from "../hooks/usePosts";
 import NoPosts from "../profile/components/NoPosts";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { ErrorPage } from "../App";
 import SuggetionContainer from "../common/suggetions";
 import { Link } from "react-router-dom";
+import { ImageComponent } from "../profile/components/Post";
+import { BiLoaderAlt } from "react-icons/bi";
+import { useSelector } from 'react-redux';
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
-  const { isLoading, isError, error, feeds, hasNextPage } = usePosts(pageNum);
+  const { isLoading, isError, feeds, hasNextPage } = usePosts(pageNum);
   const intObserver = useRef();
-
+  const {uploadingPost} = useSelector(state=>state.post)
   const lastPostRef = useCallback(
     (post) => {
       if (isLoading) return;
@@ -38,9 +40,6 @@ const HomePage = () => {
     return <Post key={post._id} post={post} />;
   });
 
-
- 
-
   return (
     <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">
       {/* <div className="hidden justify-start px-2">
@@ -55,9 +54,15 @@ const HomePage = () => {
           id="scrollableDiv"
         >
           <div className="grid grid-cols-1 flex-1 flex-col gap-5">
+        {uploadingPost.loading &&  <section className="bg-gray-50 flex gap-5 items-center dark:border-zinc-500/30 rounded-lg w-full shadow-md dark:bg-zinc-900 relative p-3">
+            <ImageComponent src={uploadingPost.post.imageUrls[0].url} className="size-10"/>
+            <span>Posting</span>
+            <BiLoaderAlt className="animate-spin ml-auto"/>
+          </section>}
             {content}
 
             {isLoading && <FeedLoading />}
+           
             {feeds.length === 0 && !isLoading && (
               <div className=" lg:h-auto lg:w-auto">
                 <div className="dark:bg-zinc-800 rounded-lg h-36 lg:h-auto">
@@ -70,9 +75,8 @@ const HomePage = () => {
                 <SuggetionContainer />
               </div>
             )}
-            <section className="invisible relative overflow-hidden bg-white lg:py-8 py-7 dark:bg-transparent dark:text-white"></section>
+            <section className="invisible relative overflow-hidden bg-white lg:py-0 py-4 dark:bg-transparent dark:text-white"/>
           </div>
-
           <Suggetions />
         </section>
       </div>

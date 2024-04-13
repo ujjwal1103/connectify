@@ -47,9 +47,6 @@ const usePosts = (pageNum = 1) => {
     };
   }, [pageNum, dispatch]);
 
-
-  console.log(pageNum, dispatch)
-
   return { isLoading, isError, error, feeds, hasNextPage };
 };
 

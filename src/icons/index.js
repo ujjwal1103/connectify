@@ -58,9 +58,14 @@ import {
   FaRegCircle as Circle,
 } from "react-icons/fa6";
 import { AiOutlineMenuFold as OutlineMenuFold } from "react-icons/ai";
+import { MdOutlineAudioFile as AudioFileIcon,MdVideoLibrary as VideoLibrary, MdOutlineVideoFile as VideoFileIcon,MdHeadset as HeadSet } from "react-icons/md";
+import { MdLibraryMusic as MusicLibrary } from "react-icons/md";
+import { FaPlay , FaPause} from "react-icons/fa";
+import { LuImagePlus as ImagePlus } from "react-icons/lu";
 export {
   AngleLeft,
   ArrowRight,
+  HeadSet,
   BookMark,
   BookMarkFill,
   Camera,
@@ -108,5 +113,6 @@ export {
   SignOutAlt,
   ThreeDots,
   CheckBoxBlankLine,
-  ZoomIn
+  ZoomIn,
+  AudioFileIcon,VideoFileIcon,VideoLibrary,MusicLibrary, FaPause,FaPlay,ImagePlus
 };
