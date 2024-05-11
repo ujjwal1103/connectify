@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import CurrentUserInfo from "./component/CurrentUserInfo";
 import SingleChat from "./component/SingleChat";
-import { useDispatch, useSelector } from "react-redux";
-import { makeRequest } from "../config/api.config";
-import { setChats } from "../redux/services/chatSlice";
+import { useChatSlice } from "../redux/services/chatSlice";
 import Search from "./component/Search";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { MessengerLine } from "../icons";
@@ -12,6 +10,11 @@ import { useSocket } from "../context/SocketContext";
 import { NEW_MESSAGE, REFECTCH_CHATS } from "../utils/constant";
 import useSocketEvents from "../hooks/useSocketEvents";
 import { AnimatePresence } from "framer-motion";
+import { getConversations } from "../api";
+import { useDebounce } from "../utils/hooks/useDebounce";
+import { BiLoader, BiLoaderAlt } from "react-icons/bi";
+import { Loader } from "./component/MessageInput";
+import { useGetQuery } from "../utils/hooks/useGetQuery";
 
 const NoSelectedChat = () => {
   return (
@@ -30,48 +33,32 @@ const NoSelectedChat = () => {
     </div>
   );
 };
+
 const Messenger = () => {
   const [searchTerm, setSearchTerm] = useState();
-  const [searchResults, setSearchResults] = useState([]);
-  const { user: currentUser } = JSON.parse(localStorage.getItem("user"));
-  const { chats, selectedChat } = useSelector((state) => state.chat);
+  const debouceSearch = useDebounce(searchTerm, 400);
+  const { chats, selectedChat, setChats } = useChatSlice();
 
-  const dispatch = useDispatch();
+  const {  isLoading, error, refech } = useGetQuery({
+    fn: () => getConversations(debouceSearch),
+    deps: [debouceSearch],
+    onSuccess: (data) => {
+      setChats(data.chats);
+    },
+  });
+
   const navigate = useNavigate();
+
   const { chatId } = useParams();
 
   const { socket } = useSocket();
 
-  const fetchAllChats = useCallback(async () => {
-    try {
-      const data = await makeRequest("chats");
-      if (data.isSuccess) {
-        dispatch(setChats(data.chats));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [dispatch]);
-
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
-
-    const filteredChats = chats?.filter((chat) =>
-      chat.friend.username.includes(e.target.value)
-    );
-    if (e.target.value) {
-      setSearchResults(filteredChats);
-    } else {
-      setSearchResults([]);
-    }
   };
 
-  useEffect(() => {
-    fetchAllChats();
-  }, [fetchAllChats]);
-
-  const handleMessage = useCallback((data) => {
-    fetchAllChats();
+  const handleMessage = useCallback(() => {
+    refech();
   }, []);
 
   const eventHandlers = {
@@ -94,43 +81,41 @@ const Messenger = () => {
           chatId && "hidden lg:block "
         } bg-zinc-950  xl:block md:block border-r  border-zinc-700`}
       >
-        <CurrentUserInfo user={currentUser} />
+        <CurrentUserInfo />
         <div
-          className="dark:bg-zinc-950 overflow-y-scroll scroll-smooth  bg-red-400"
+          className="dark:bg-zinc-950 bg-gray-100 overflow-y-scroll scroll-smooth  "
           style={{ height: "calc(100% - 80px)" }}
         >
           <Search searchTerm={searchTerm} onChange={handleChange} />
-          <AnimatePresence>
-            {!searchTerm &&
+          {isLoading && (
+            <div className="p-2 bg-neutral-900-900 flex gap-3 items-center">
+              <BiLoaderAlt className="animate-spin size-10" />{" "}
+              <span>Loading...</span>
+            </div>
+          )}
+          <AnimatePresence mode="popLayout">
+            {!chats.length && !isLoading && !error ? (
+              <div className="p-2 bg-neutral-900-900 flex gap-3 items-center">
+              
+              <span>No Chats Found!</span>
+            </div>
+            ) : (
               chats?.map((chat, index) => {
-                return (
-                  <SingleChat
-                    index={index}
-                    key={chat._id}
-                    chat={chat}
-                    refechChats={fetchAllChats}
-                  />
-                );
-              })}
+                return <SingleChat index={index} key={chat._id} chat={chat} />;
+              })
+            )}
           </AnimatePresence>
-          <AnimatePresence>
-            {searchResults?.map((chat, index) => {
-              return (
-                <SingleChat
-                  index={index}
-                  key={chat._id}
-                  chat={chat}
-                  efechChats={fetchAllChats}
-                />
-              );
-            })}
-          </AnimatePresence>
-          
         </div>
       </div>
-      {selectedChat && chatId ? <Outlet /> : <NoSelectedChat />}
+      {selectedChat && chatId ? (
+        <Outlet context={"props"} />
+      ) : (
+        <NoSelectedChat />
+      )}
     </main>
   );
 };
 
 export default Messenger;
+
+

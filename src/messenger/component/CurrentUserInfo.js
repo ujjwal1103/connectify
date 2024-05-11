@@ -1,29 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { makeRequest } from "../../config/api.config";
+import React from "react";
 import ProfilePicture from "../../common/ProfilePicture";
 import UsernameLink from "../../shared/UsernameLink";
 import NewChatBtn from "./NewChatBtn";
 import { ChevronBack, Edit } from "../../icons";
 import { useNavigate } from "react-router-dom";
+import useGetUser from "../../api/apiHooks/useGetUser";
 
 const CurrentUserInfo = () => {
-  const [user, setUser] = useState();
+  const {user} = useGetUser()
   const navigate = useNavigate();
-  const getUser = useCallback(async () => {
-    try {
-      const response = await makeRequest("/user");
-      setUser(response.user);
-    } catch (error) {
-      console.log("error", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
 
   return (
-    <div className="w-full box-border  flex gap-4 p-1 lg:p-2 border-b dark:border-zinc-700 justify-between items-center dark:text-gray-50">
+    <div className="w-full box-border  flex gap-4 p-1 lg:p-2 border-b dark:border-zinc-700 bg-gray-200 justify-between items-center dark:text-gray-50">
       <div className="flex gap-4 p-2 items-center  dark:text-gray-50">
         <button
           onClick={() => {

@@ -49,6 +49,8 @@ export const getCroppedImage = async (
     rotation
   );
 
+  console.log(bBoxWidth, bBoxheight)
+
   canvas.width = bBoxWidth;
   canvas.height = bBoxheight;
 
@@ -68,6 +70,7 @@ export const getCroppedImage = async (
 
   canvas.width = pixelCrop.width;
   canvas.height = pixelCrop.height;
+  console.log(pixelCrop)
 
   ctx.putImageData(data, 0, 0);
 

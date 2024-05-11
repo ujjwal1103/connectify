@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
@@ -12,23 +12,24 @@ import { useSocket } from "../../context/SocketContext";
 import { useParams } from "react-router-dom";
 import { useGetMessagesQuery } from "../../redux/services/messageApi";
 import { sendNotification } from "../../home/notification/Services";
-import { resetSelectedMessages, setIsSelectMessages } from "../../redux/services/chatSlice";
+import { useChatSlice } from "../../redux/services/chatSlice";
+import { markMessageAsSeen } from "../../api";
 
 const ChatWindow = () => {
   const [page, setPage] = useState(1);
   const [messages, setMessages] = useState([]);
 
+  const { selectedChat, setIsSelectMessages, resetSelectedMessages } =
+    useChatSlice();
+
+  const { socket } = useSocket();
+  const { chatId } = useParams();
   const containerRef = useRef(null);
 
-  const { selectedChat } = useSelector((state) => state.chat);
-  const dispatch = useDispatch()
-  const { chatId } = useParams();
-
-  const {
-    data: oldMessagesChunk,
-    isLoading,
-  } = useGetMessagesQuery({ chatId, page });
-  const { socket } = useSocket();
+  const { data: oldMessagesChunk, isLoading } = useGetMessagesQuery({
+    chatId,
+    page,
+  });
 
   const [data, setData] = useInfiniteScrollTop(
     containerRef,
@@ -40,21 +41,32 @@ const ChatWindow = () => {
     chatId
   );
 
+
   useEffect(() => {
     return () => {
-      setData([])
-      setMessages([])
-      setPage(1)
-      dispatch(setIsSelectMessages(false));
-      dispatch(resetSelectedMessages());
+      console.log('triggered')
+      setData([]);
+      setMessages([]);
+      setPage(1);
+      setIsSelectMessages(false);
+      resetSelectedMessages();
     };
   }, [chatId]);
 
   const handleMessage = useCallback(
     async (data) => {
-
       if (data.from === selectedChat?.friend?._id) {
         setMessages((prev) => [...prev, { ...data.message, seen: true }]);
+        const re = await markMessageAsSeen(data.message._id)
+        if(re){
+          await sendNotification(
+            data.message.from,
+            SEEN_MESSAGES,
+            socket,
+            chatId,
+            data.message
+          );
+        }
         await sendNotification(
           data.message.from,
           SEEN_MESSAGES,
@@ -66,32 +78,19 @@ const ChatWindow = () => {
     },
     [chatId]
   );
-  const handleSeen = useCallback(
-    (data) => {
-      if (data.chat === chatId) {
-       
-        setMessages((prev) =>
-          prev.map((message) => {
-            if (message._id === data.message) {
-              return { ...message, seen: true };
-            }
-            return message; 
-          })
-        );
-      }
-    },
-    [chatId]
-  );
+
+
+
+
 
   const eventHandlers = {
-    [NEW_MESSAGE]: handleMessage,
-    [SEEN_MESSAGES]: handleSeen,
+    [NEW_MESSAGE]: handleMessage, 
   };
 
   useSocketEvents(socket, eventHandlers);
 
   return (
-    <div className="flex-1 bg-zinc-900 h-dvh overflow-hidden flex flex-col">
+    <div className="flex-1 dark:bg-zinc-900 h-dvh overflow-hidden flex flex-col">
       <ChatHeader otherUser={selectedChat?.friend} />
       <Messages
         ref={containerRef}
@@ -100,12 +99,14 @@ const ChatWindow = () => {
         page={page}
         messages={messages}
       />
-      <div className="bg-zinc-950 border-t-[0.5px] border-zinc-700">
+      <div className="dark:bg-zinc-950 border-t-[0.5px] border-zinc-700">
         <MessageInput
+          setData={setData}
           userId={selectedChat?.friend?._id}
           currentUserId={getCurrentUserId()}
           chatId={selectedChat?._id}
           onMessage={(message) => {
+            console.log('message send successfull')
             setMessages((prev) => [...prev, message]);
           }}
         />

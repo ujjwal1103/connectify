@@ -32,6 +32,8 @@ const ProfilePicture = ({
     );
   }
 
+  
+
   return (
     <img
       ref={imageRef}

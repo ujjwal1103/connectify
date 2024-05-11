@@ -1,6 +1,5 @@
 export const getCurrentUserId = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-
   if (!user) {
     throw new Error("User Not Logged In");
   }
@@ -18,9 +17,18 @@ export const getCurrentUsername = () => {
   return user.username;
 };
 
+export const getCurrentName = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  
+  if (!user) {
+    throw new Error("User Not Logged In");
+  }
+
+  return user.name;
+};
+
 export const getCurrentUser = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-
   if (!user) {
     throw new Error("User Not Logged In");
   }

@@ -78,10 +78,8 @@ const MentionInput = (
 
     const nextSpaceIndex = text.indexOf(" ", mentionStartIndex);
 
-    // If there is a space after mentionStartIndex, remove everything including the mention
     const insertionIndex = nextSpaceIndex !== -1 ? nextSpaceIndex : text.length;
 
-    // Replace the text from mentionStartIndex to the next space with the selected username
     const updatedText =
       text.slice(0, mentionStartIndex) +
       selectedUsername +
@@ -104,7 +102,7 @@ const MentionInput = (
         type="text"
         onChange={handleInputChange}
         value={text}
-        className="bg-transparent  p-2 border-none w-full h-full focus:outline-none resize-none "
+        className="bg-transparent cursor-se-resize p-2 border-none w-full h-full focus:outline-none resize-none "
         ref={ref}
         rows={1}
         placeholder={placeholder}
@@ -115,7 +113,7 @@ const MentionInput = (
       {mentionStartIndex !== null && users.length > 0 && (
         <div
           ref={mentionBoxRef}
-          className="p-2 absolute bottom-12 divide-y-2 z-10 w-96 mt-2 bg-zinc-950 rounded-md h-auto min-h-fit max-h-52 overflow-y-scroll"
+          className="p-2 absolute bottom-12 divide-y-2 dark:divide-gray-800 divide-gray-300 z-10 w-96 mt-2 dark:bg-zinc-950 bg-white shadow-md rounded-md h-auto min-h-fit max-h-52 overflow-y-scroll"
         >
           {users.map((u) => (
             <div

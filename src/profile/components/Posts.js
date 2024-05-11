@@ -6,12 +6,13 @@ import { reset, setPage } from "../../redux/services/postSlice";
 import { PostLoading } from "./UserLoading";
 import useInfinitePosts from "../../hooks/useInfinitePosts";
 
-const Posts = ({ userId, username, postCount }) => {
+const Posts = ({ userId, username }) => {
+
   const { posts, loading, hasNext, page } = useInfinitePosts(
     userId,
     username,
-    postCount
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const Posts = ({ userId, username, postCount }) => {
     [loading, hasNext, dispatch, page]
   );
 
-  if (!loading && postCount === 0) {
+  if (!loading && !posts.length) {
     return <NoPosts />;
   }
 
@@ -54,16 +55,14 @@ const Posts = ({ userId, username, postCount }) => {
 
   return (
     <div
-      className={`lg:overflow-y-scroll w-full ${
-        posts?.length <= 6 ? "lg:h-full xl:h-auto" : "xl:h-full h-full"
-      }`}
+      className={` w-screen px-3 pb-3 lg:p-0 h-auto `}
     >
       <div
-        className={`grid lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 gap-4  `}
+        className={`grid lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 grid-cols-2 lg:gap-4 gap-2`}
       >
         {renderPosts}
       </div>
-      {loading && <PostLoading className="h-full overflow-hidden pt-4"/>}
+      {loading && <PostLoading className="h-full overflow-hidden pt-4 "/>}
     </div>
   );
 };

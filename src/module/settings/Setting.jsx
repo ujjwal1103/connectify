@@ -1,27 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Switch from "./Switch";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../redux/services/profileSlice";
 import { makeRequest } from "../../config/api.config";
+import useGetUser from "../../api/apiHooks/useGetUser";
 
 const PrivateAccount = () => {
-  const { user } = useSelector((state) => state.profile);
+  const { user, setUser } = useGetUser();
   const [checked, setChecked] = useState(user?.isPrivate);
-  const dispatch = useDispatch();
-
-  const getUser = useCallback(async () => {
-    try {
-      const data = await makeRequest("/user");
-      dispatch(setUser(data.user));
-      setChecked(data.user.isPrivate);
-    } catch (error) {
-      console.log("error", error.message);
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
 
   const handleChange = async () => {
     const data = await makeRequest.put(
@@ -29,6 +13,7 @@ const PrivateAccount = () => {
     );
     if (data.isSuccess) {
       setChecked(!checked);
+      setUser({ ...user, isPrivate: !checked });
     }
   };
 
@@ -43,8 +28,6 @@ const PrivateAccount = () => {
 };
 
 const ThemeSwitcher = () => {
-
-
   const [darkMode, setDarkMode] = useState(() => {
     // Initialize dark mode state from localStorage, default to false if not found
     return localStorage.getItem("darkMode") === "true" ? true : false;
@@ -63,16 +46,12 @@ const ThemeSwitcher = () => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-
   return (
     <div className="py-3 flex justify-between items-center">
       <label htmlFor="private_account" className="text-[16px]">
         Dark
       </label>
-      <Switch
-        checked={darkMode}
-        onChange={handleDarkMode}
-      />
+      <Switch checked={darkMode} onChange={handleDarkMode} />
     </div>
   );
 };

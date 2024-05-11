@@ -7,32 +7,17 @@ import Modal from "../../shared/Modal";
 import Logo from "../../icons/Logo";
 import UserLoading from "../../common/loading/UserLoading";
 import { tranformUrl } from "../../utils";
+import { getCurrentUser } from "../../api";
+import useGetUser from "../../api/apiHooks/useGetUser";
 
 const Self = () => {
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
+  const {user, isLoading} = useGetUser()
   const [switchLogin, setSwitchLogin] = useState(false);
-
-  const getUser = useCallback(async () => {
-    try {
-      const response = await makeRequest("/user");
-      setUser(response.user);
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
 
 
   return (
     <div className="">
-      {!loading ? (
+      {!isLoading ? (
         <div className="flex -z-50 items-center dark:bg-zinc-900 justify-between space-x-2  duration-500 bg-slate-50 shadow-lg p-2 rounded-lg w-80 mx-auto">
           <div className="flex items-center space-x-2">
             <ProfilePicture

@@ -20,7 +20,7 @@ const Post = ({ post }, ref) => {
   const dispatch = useDispatch();
   const handleSetPost = () => {
     if (isMobile) {
-      navigate(`p/${post._id}`);
+      navigate(`comments/${post._id}`);
     } else {
       showCurrentPost();
       dispatch(setFeed(post));
@@ -39,7 +39,7 @@ const Post = ({ post }, ref) => {
     >
       <div className="lg:p-3 md:p-3 p-2 flex flex-col justify-between flex-1">
         <PostHeader post={post} />
-        <PostContent contentUrl={post?.imageUrl} onClick={handleSetPost} />
+        <PostContent contentUrl={post?.images} onClick={handleSetPost} />
         <PostActions
           post={post}
           userId={userId}

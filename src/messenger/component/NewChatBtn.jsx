@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
 import { makeRequest } from "../../config/api.config";
 import ProfilePicture from "../../common/ProfilePicture";
 import UsernameLink from "../../shared/UsernameLink";
-import { addChat } from "../../redux/services/chatSlice";
+import { useChatSlice } from "../../redux/services/chatSlice";
 import { useNavigate } from "react-router-dom";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,14 +16,6 @@ const NewChatBtn = ({ title, className = "" }) => {
       <button className={className} onClick={() => setNewUserPopup(true)}>
         {title}
       </button>
-
-      {/* <AnimatePresence>
-        {newUserPopup && (
-          <Modal onClose={() => setNewUserPopup(false)} animate={false}>
-            <AddNewUser />
-          </Modal>
-        )}
-      </AnimatePresence> */}
       <AnimatePresence>
         {newUserPopup && <Drawer onClose={() => setNewUserPopup(false)} />}
       </AnimatePresence>
@@ -39,8 +30,7 @@ const AddNewUser = ({ onClose }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const dispatch = useDispatch();
+  const {setChat} = useChatSlice()
   const navigate = useNavigate();
 
   const getAllUsers = useCallback(async (showLoader = true) => {
@@ -69,12 +59,13 @@ const AddNewUser = ({ onClose }) => {
       prevs.filter((user) => user?.username.includes(e.target.value))
     );
   };
+  
   const handleUserSelect = async (userId) => {
     try {
       setLoading(true);
       const response = await makeRequest.post("/chat", { to: userId });
       if (response.isSuccess) {
-        dispatch(addChat(response.chat));
+        setChat(response.chat);
         onClose();
         navigate(`/messenger/${response.chat._id}`);
       }

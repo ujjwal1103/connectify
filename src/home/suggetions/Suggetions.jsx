@@ -4,11 +4,12 @@ import { setSuggetions } from "../../redux/services/suggetionSlice";
 import { useFetchData } from "../../utils/useFetchData";
 import UserLoading from "../../common/loading/UserLoading";
 import { Link } from "react-router-dom";
+import { getUsersSuggetions } from "../../api";
 
 const Suggetions = () => {
   const { user } = JSON.parse(localStorage.getItem("user"));
   const { suggestedusers, loading } = useFetchData(
-    "users?limit=5",
+    ()=>getUsersSuggetions(1, 5),
     "users",
     "suggetions",
     setSuggetions

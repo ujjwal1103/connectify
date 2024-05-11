@@ -31,7 +31,6 @@ const PostInteraction = ({ post: { _id, user, like, caption } }) => {
       </span>
 
       <div className="pt-2 ">
-        
         <CommentInput postId={_id} />
       </div>
 

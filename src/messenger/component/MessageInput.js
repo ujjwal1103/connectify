@@ -17,20 +17,22 @@ import {
 } from "../../redux/services/messageApi";
 import { NEW_MESSAGE } from "../../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoTrash, IoTrashBin } from "react-icons/io5";
 import {
   reorderChat,
   resetSelectedMessages,
   setIsSelectMessages,
 } from "../../redux/services/chatSlice";
 import AudioRecorder from "./AudioRecorder";
-import { BiMicrophone } from "react-icons/bi";
+import { BiMicrophone, BiTrash } from "react-icons/bi";
+import { makeRequest } from "../../config/api.config";
+import { FaTrash } from "react-icons/fa";
 
 function blobToFile(blob, filename) {
   // Create a File object using the Blob
   const file = new File([blob], filename, {
-      type: blob.type,
-      lastModified: new Date().getTime(),
+    type: blob.type,
+    lastModified: new Date().getTime(),
   });
 
   return file;
@@ -48,7 +50,7 @@ export const Loader = () => {
   );
 };
 
-const MessageInput = ({ userId, chatId, onMessage }) => {
+const MessageInput = ({ userId, chatId, onMessage, setData }) => {
   const [messageText, setMessageText] = useState("");
   const [openDial, setOpenDial] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -74,25 +76,18 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
       messageType: "TEXT_MESSAGE",
       to: userId,
     };
+
     setMessageText("");
     // const response = await makeRequest.post(`message/${chatId}`, newMessage);
     const response = await mutate({ chatId, newMessage });
 
     if (response?.data.isSuccess) {
       onMessage(response.data.message);
-      dispatch(reorderChat(chatId))
-      await sendNotification(
-        userId,
-        NEW_MESSAGE,
-        socket,
-        chatId,
-        response.data.message
-      );
+      dispatch(reorderChat(chatId));
     }
   };
 
   const handleSendAttachement = async (e, messageType) => {
-
     const files = e.target.files;
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -103,7 +98,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
     const response = await mutateAttchements({ chatId, formData });
     if (response?.data.isSuccess) {
       onMessage(response.data.message);
-      dispatch(reorderChat(chatId))
+      dispatch(reorderChat(chatId));
       await sendNotification(
         userId,
         NEW_MESSAGE,
@@ -136,12 +131,30 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
     dispatch(setIsSelectMessages(false));
     dispatch(resetSelectedMessages());
   };
+  const handleDeleteMessages = async () => {
+    const res = await makeRequest.delete("/messages", {
+      data: selectedMessages,
+    });
+
+    if (res.isSuccess) {
+      setData((prevData) =>
+        prevData.filter((d) => !selectedMessages.includes(d._id))
+      );
+      dispatch(setIsSelectMessages(false));
+      dispatch(resetSelectedMessages());
+    }
+  };
 
   if (isRecording) {
-    return <AudioRecorder handleClose={()=>setIsRecording(false)} handleSendRecording={(recording)=>{
-       const file = blobToFile(recording, `${Date.now() + "webm"}`)
-       handleSendAttachement({target:{files:[file]}}, "VOICE_MESSAGE")
-    }}/>;
+    return (
+      <AudioRecorder
+        handleClose={() => setIsRecording(false)}
+        handleSendRecording={(recording) => {
+          const file = blobToFile(recording, `${Date.now() + "webm"}`);
+          handleSendAttachement({ target: { files: [file] } }, "VOICE_MESSAGE");
+        }}
+      />
+    );
   }
   if (isSelectMessages) {
     return (
@@ -150,6 +163,10 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
           <IoClose size={24} />
         </button>
         <span>{selectedMessages.length} selected</span>
+
+        <button onClick={handleDeleteMessages} disabled={!selectedMessages.length} className="ml-auto text-gray-400 disabled:text-gray-400 hover:text-white">
+          <FaTrash size={24} className=""/>
+        </button>
       </div>
     );
   }
@@ -161,7 +178,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
   return (
     <div className="p-2 relative flex gap-3 items-center">
       <Input
-        className="w-full bg-zinc-900  rounded-full px-12"
+        className="w-full dark:bg-zinc-900 text-gray-200  rounded-full px-12"
         value={messageText}
         onChange={handleTextChange}
         placeholder="Type..."
@@ -175,7 +192,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
             className="cursor-pointer px-3"
             onClick={() => setOpenDial((prev) => !prev)}
           >
-            <ImageFill />
+            <ImageFill className="dark:fill-white fill-black"/>
           </button>
         }
         sufix={
@@ -195,8 +212,8 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
         }
       />
       <div>
-        <button type="button" className="" onClick={()=>setIsRecording(true)}>
-          <BiMicrophone size={24}/>
+        <button type="button" className="" onClick={() => setIsRecording(true)}>
+          <BiMicrophone size={24} />
         </button>
       </div>
       <AnimatePresence>
@@ -214,7 +231,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
               htmlFor="imageFile"
               className="bg-black w-10  flex justify-center items-center cursor-pointer ring-2 ring-zinc-700 h-10 rounded-full  shadow-2xl shadow-slate-700"
             >
-              <ImageFill />
+              <ImageFill className="dark:fill-white fill-black"/>
               <input
                 type="file"
                 id="imageFile"
@@ -233,7 +250,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
               htmlFor="audioFile"
               className="bg-black w-10  flex justify-center items-center cursor-pointer ring-2 ring-zinc-700 h-10 rounded-full  shadow-2xl shadow-slate-700"
             >
-              <MusicLibrary />
+              <MusicLibrary className="dark:fill-white fill-black"/>
               <input
                 type="file"
                 id="audioFile"
@@ -252,7 +269,7 @@ const MessageInput = ({ userId, chatId, onMessage }) => {
               variants={buttonVariants3}
               className="bg-black w-10  flex justify-center items-center cursor-pointer ring-2 ring-zinc-700 h-10 rounded-full  shadow-2xl shadow-slate-700"
             >
-              <VideoLibrary />
+              <VideoLibrary className="dark:fill-white fill-black"/>
               <input
                 type="file"
                 id="videoFile"

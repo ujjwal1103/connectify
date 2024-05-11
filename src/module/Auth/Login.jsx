@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Input from "../../common/InputFields/Input";
-import { PersonFill, OutlineLoading, Google, PasswordLock } from "../../icons";
+import { PasswordLock, UsernameIcon } from "../../icons";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../../redux/services/authSlice";
+
+import { DevTool } from "@hookform/devtools";
 import getGoogleUrl from "../../config/getGoogleUri";
-import { useAuth } from "../../context/AuthProvider";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Connectify from "./components/Connectify";
@@ -14,36 +13,40 @@ import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 import ConnectifyIcon from "../../icons/Connectify";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 import { loginWithEmailAndPassword } from "../../api";
+import { SubmitButton } from "./components/SubmitButton";
+import { GoogleButton } from "./components/GoogleButton";
 
 const Login = () => {
   const navigator = useNavigate();
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const { login: loginUser } = useAuth();
   const {
     register,
     handleSubmit,
     setError,
     clearErrors,
+    control,
     formState: { errors, isValid, isSubmitting },
-  } = useForm();
+  } = useForm({
+    criteriaMode: "all",
+    mode: "onSubmit",
+  });
+
   const onSubmit = (data) => {
     if (loading) return;
     loginUserWithEmailAndPassword(data);
   };
   const loginUserWithEmailAndPassword = async ({ username, password }) => {
     setLoading(true);
-    const id = toast.loading("Login...");
+
     try {
       const res = await loginWithEmailAndPassword({ username, password });
       if (res.isSuccess) {
-        toast.dismiss(id);
         saveUserAndTokenLocalstorage(
           res.user,
           res.accessToken,
           res.refreshToken
         );
-        
+
         toast.success("Welcome Back!!", {
           icon: <ConnectifyIcon size={34} />,
           closeOnClick: true,
@@ -52,9 +55,7 @@ const Login = () => {
           hideProgressBar: false,
         });
       }
-      loginUser(res?.user);
       setLoading(false);
-      dispatch(login({ isAuthenticated: true, user: res?.user }));
       navigator("/");
     } catch (error) {
       console.log(error);
@@ -63,15 +64,6 @@ const Login = () => {
         message: error?.message,
       });
       setLoading(false);
-      toast.update(id, {
-        render: error?.message,
-        type: "warning",
-        closeOnClick: true,
-        closeButton: true,
-        autoClose: 2000,
-        hideProgressBar: false,
-      });
-
       setTimeout(() => {
         clearErrors();
       }, 3000);
@@ -102,28 +94,37 @@ const Login = () => {
             <div className="flex flex-col gap-5 dark:text-white text-xl">
               Sign In to Connectify
             </div>
+
             <Input
-              className="authInput"
+              autoFocus={true}
               type="text"
               placeholder="Enter you username"
-              prefix={<PersonFill className=" fill-violet-50  text-2xl" />}
+              prefix={<UsernameIcon size={24}/>}
               error={errors?.username}
-              {...register("username", { required: "Username is required" })}
+              {...register("username", {
+                required: "Username is Required",
+                pattern: {
+                  value: /^(?=[a-z_])[a-z0-9_]{5,20}$/,
+                  message: "Invalid Username",
+                },
+              })}
             />
 
             <Input
               {...register("password", {
-                required: "Password is required",
+                required: "Password is Required",
+                minLength: {
+                  value: 8,
+                  message: "Password should be minimum 8 char long",
+                },
               })}
               type={"password"}
               placeholder="Enter you password"
-              prefix={<PasswordLock className=" fill-violet-50 text-2xl" />}
-              className="authInput "
+              prefix={<PasswordLock size={24}/>}
               error={errors?.password}
             />
 
-            <AuthButton
-              title={"Login"}
+            <SubmitButton
               isSubmitting={isSubmitting}
               isValid={isValid}
               loading={loading}
@@ -139,40 +140,13 @@ const Login = () => {
               </Link>
             </p>
 
-            <div className="flex rounded-full justify-center  ">
-              <a href={getGoogleUrl()} className="text-white p-3 ">
-                <Google
-                  className={
-                    "text-xl bg-white rounded-full  hover:shadow-2xl hover:shadow-slate-950"
-                  }
-                />
-              </a>
-            </div>
+            <GoogleButton />
           </form>
         </FadeInAnimation>
       </div>
+      <DevTool control={control} />
     </div>
   );
 };
 
 export default Login;
-
-function AuthButton({ isValid, loading, title = "Login" }) {
-  return (
-    <div className="flex justify-between w-full items-center">
-      <button
-        type="submit"
-        disabled={!isValid}
-        className="w-full disabled:bg-slate-500 h-12 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  hover:bg-black"
-      >
-        {loading ? (
-          <span className="flex justify-center">
-            <OutlineLoading className="animate-spin" />
-          </span>
-        ) : (
-          title
-        )}
-      </button>
-    </div>
-  );
-}

@@ -4,7 +4,7 @@ import "./image-slider.css";
 import { ChevronBack, ChevronForward, CircleDot, Circle } from "../../icons";
 import { ImageComponent } from "../../profile/components/Post";
 
-export function ImageSlider({ images, height='50%' }) {
+export function ImageSlider({ images, height = "50%" }) {
   const [currentImages, setCurrentImages] = useState();
   const [imageIndex, setImageIndex] = useState(0);
   const [singleImage, setSingleImage] = useState(currentImages?.length === 1);
@@ -28,8 +28,8 @@ export function ImageSlider({ images, height='50%' }) {
     });
   }
 
-  if(!currentImages?.length){
-    return null
+  if (!currentImages?.length) {
+    return null;
   }
 
   return (
@@ -46,17 +46,27 @@ export function ImageSlider({ images, height='50%' }) {
           overflow: "hidden",
         }}
       >
-        {currentImages?.map((url, index) => (
-          <ImageComponent
-            key={url}
-            src={url}
-            alt={url}
-            loaderClassName={` bg-zinc-950 animate-pulse w-full h-[400px]`}
-            aria-hidden={imageIndex !== index}
-            className={"img-slider-img overflow-hidden"}
-            style={{ translate: `${-100 * imageIndex}%` }}
-          />
-        ))}
+        {currentImages?.map(({ url, type }, index) => {
+          if (type === "VIDEO") {
+            return (
+              <video style={{ translate: `${-100 * imageIndex}%` }} className={"img-slider-img overflow-hidden"} >
+                <source src={url} />
+              </video>
+            );
+          } else {
+            return (
+              <ImageComponent
+                key={url}
+                src={url}
+                alt={url}
+                loaderClassName={` bg-zinc-950 animate-pulse w-full h-[400px]`}
+                aria-hidden={imageIndex !== index}
+                className={"img-slider-img overflow-hidden"}
+                style={{ translate: `${-100 * imageIndex}%` }}
+              />
+            );
+          }
+        })}
       </div>
 
       {!singleImage && (

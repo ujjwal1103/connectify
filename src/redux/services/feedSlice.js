@@ -18,7 +18,7 @@ const feedSlice = createSlice({
         (post) => !state.feeds.some((feed) => feed._id === post._id)
       );
       state.feeds = [...state.feeds, ...newPosts];
-      state.totalPages = action.payload.totalPages;
+      state.totalPages = action.payload.pagination.totalPages;
     },
     setError: (state, action) => {
       state.loading = false;

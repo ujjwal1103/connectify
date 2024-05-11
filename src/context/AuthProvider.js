@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useReducer, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 
 const AuthContext = createContext();
 
@@ -7,7 +14,7 @@ export function useAuth() {
 }
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem("user"))?.user,
+  user: JSON.parse(localStorage.getItem("user")),
 };
 
 function authReducer(state, action) {

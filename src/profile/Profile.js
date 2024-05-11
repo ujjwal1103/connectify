@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import EditProfile from "./editProfile/EditProfile";
 import { makeRequest } from "../config/api.config";
 import Posts from "./components/Posts";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser, profileState } from "../redux/services/profileSlice";
+import { useDispatch } from "react-redux";
+import { useProfileSlice } from "../redux/services/profileSlice";
 
 import ProfileCard from "./components/ProfileCard";
 import LogoutBtn from "../shared/Buttons/LogoutBtn";
@@ -13,27 +13,29 @@ import Modal from "../shared/Modal";
 import { BiLogOut } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
+import { IoSettings } from "react-icons/io5";
+import { Link } from "react-router-dom";
 const Profile = () => {
   const [edit, setEdit] = useState(false);
   const dispatch = useDispatch();
-  const { user } = useSelector(profileState);
+  const { user, setUser } = useProfileSlice();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const toggleEdit = () => {
     setEdit((prev) => !prev);
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Add smooth scrolling behavior
+      behavior: "smooth",
     });
   };
   const getUser = useCallback(async () => {
     try {
       const data = await makeRequest("/user");
-      dispatch(setUser(data.user));
+      setUser(data.user);
     } catch (error) {
       console.log("error", error.message);
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     getUser();
@@ -46,7 +48,7 @@ const Profile = () => {
   return (
     <div
       className=" 
-      w-full flex lg:h-page overflow-y-scroll h-page  overflow-x-hidden bg-zinc-950 px-3 pt-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
+      w-full flex lg:h-page overflow-y-scroll h-page overflow-x-hidden bg-zinc-950 px-3 pt-3 lg:flex-row flex-col gap-4 items-center  lg:items-start "
     >
       <div className="w-full  lg:min-w-[350px] lg:max-w-[350px]   lg:sticky top-0">
         <ProfileCard toggleEdit={toggleEdit} user={user} isPrivate={false}>
@@ -68,9 +70,7 @@ const Profile = () => {
           </div>
         </ProfileCard>
       </div>
-
-      <Posts postCount={user?.posts}/>
-
+      <Posts postCount={user?.posts} />
       {edit && (
         <Modal
           onClose={() => setEdit(false)}
@@ -80,7 +80,7 @@ const Profile = () => {
           <EditProfile
             user={user}
             setUser={(data) => {
-              dispatch(setUser(data));
+              setUser(data);
             }}
           />
         </Modal>
@@ -114,6 +114,17 @@ const Drawer = ({ onClose }) => {
               <BiLogOut size={24} />
             </span>
             <LogoutBtn>Logout</LogoutBtn>
+          </li>
+          <li>
+            <Link
+              to={"/setting"}
+              className="px-2 py-1 flex items-center gap-3 text-xl "
+            >
+              <span>
+                <IoSettings size={24} />
+              </span>
+              <>Setting</>
+            </Link>
           </li>
         </ul>
       </motion.div>

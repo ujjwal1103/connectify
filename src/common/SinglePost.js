@@ -107,7 +107,7 @@ const SinglePost = ({ post, posts }) => {
           </button>
         )}
       <div className=" bg-zinc-950 flex justify-center items-center">
-        <ImageSlider images={currPost.imageUrl} className={"w-full "} />
+        <ImageSlider images={currPost.images} className={"w-full "} />
       </div>
 
       <div className="flex flex-col justify-between h-single dark:text-gray-50">

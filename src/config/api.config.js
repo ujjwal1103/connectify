@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BASE_URL } from "./constant";
 import { getCurrentUserAndAccessToken } from "../utils/getCurrentUserId";
+import { Cloudinary } from "@cloudinary/url-gen";
 
 const handleUnauthorizedAccess = () => {
   toast.error("Unauthorized Access");
@@ -47,7 +48,14 @@ makeRequest.interceptors.response.use(
   }
 );
 
-export { makeRequest };
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName:'dtzyaxndt',
+  },
+});
+
+export { makeRequest,cld };
 
 
 

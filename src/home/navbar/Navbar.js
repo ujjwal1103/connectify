@@ -1,5 +1,5 @@
 import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import CreatePost from "../create/CreatePost";
 
 import NotificationComponent from "../notification/Notification";
@@ -24,9 +24,16 @@ import LogoutBtn from "../../shared/Buttons/LogoutBtn";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
 import useSocketEvents from "../../hooks/useSocketEvents";
 import { useSocket } from "../../context/SocketContext";
-import { ACCEPT_REQUEST, LIKE_POST, NEW_MESSAGE, NEW_REQUEST } from "../../utils/constant";
+import {
+  ACCEPT_REQUEST,
+  LIKE_POST,
+  NEW_MESSAGE,
+  NEW_REQUEST,
+} from "../../utils/constant";
 import { makeRequest } from "../../config/api.config";
 import { BiPlus } from "react-icons/bi";
+import clsx from "clsx";
+import { cn } from "../../utils/helper";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +46,7 @@ const Navbar = () => {
     setIsOpenCreatePost(!isOpenCreatePost);
   };
   const toggleDropdown = () => {
-
-
-    if(isOpen) return ;
+    if (isOpen) return;
 
     !isOpen && setIsOpen(!isOpen);
   };
@@ -69,11 +74,11 @@ const Navbar = () => {
   const handleNotify = () => {
     if ("Notification" in window) {
       if (Notification.permission === "granted") {
-        new Notification('new message');
+        new Notification("new message");
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then((permission) => {
           if (permission === "granted") {
-            new Notification('New message');
+            new Notification("New message");
           }
         });
       }
@@ -82,8 +87,8 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchCount = async () => {
-      const rs = await makeRequest.get('/notification/count')
-      setBadgeCounts(b=>({
+      const rs = await makeRequest.get("/notification/count");
+      setBadgeCounts((b) => ({
         ...b,
         notification: rs.notifications,
       }));
@@ -92,7 +97,7 @@ const Navbar = () => {
   }, []);
 
   const handleNotifationCount = useCallback(() => {
-    setBadgeCounts(b=>({
+    setBadgeCounts((b) => ({
       ...b,
       notification: badgeCounts.notification + 1,
     }));
@@ -115,12 +120,21 @@ const Navbar = () => {
 
   useSocketEvents(socket, eventHandlers);
 
+  const hidden = location.pathname.includes("/p/") || location.pathname.includes("/comments/");
+
   return (
-    <header className="px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent dark:shadow-lg z-[100]  lg:sticky left-0  fixed bottom-0 right-0">
+    <header
+      className={cn(
+        `px-3 lg:pt-3 pb-3 lg:pb-0 bg-transparent dark:shadow-lg z-[100] lg:sticky left-0  fixed bottom-0 right-0`,
+        {
+          "hidden lg:block": hidden,
+        }
+      )}
+    >
       <nav className="bg-gray-200  shadow-lg backdrop-blur-lg p-2 z-30 flex justify-between gap-10 dark:bg-zinc-900  rounded-lg sticky  ">
-        <div className="hidden lg:block">
+        <Link to='/' className="hidden lg:block">
           <ConnectifyLogoText size={44} showShadow={false} />
-        </div>
+        </Link>
 
         <div className="hidden lg:flex flex-1 items-center">
           <SearchInput />
@@ -219,11 +233,13 @@ const Navbar = () => {
         </AnimatePresence>
       </nav>
 
-
       <div className="fixed lg:hidden bottom-14 right-5 shadow-2xl">
-      <button onClick={toggleCreatePost} className="rounded-full bg-blue-800 size-14 flex-center">
-              <BiPlus size={24} />
-            </button>
+        <button
+          onClick={toggleCreatePost}
+          className="rounded-full bg-blue-800 size-14 flex-center"
+        >
+          <BiPlus size={24} />
+        </button>
       </div>
     </header>
   );

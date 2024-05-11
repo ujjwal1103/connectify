@@ -24,8 +24,8 @@ const Layout = () => {
            <p className="text-center py-2">Posting</p>
            <Loader />  
       </div>}
-      <MobileHeader/>
-      <Navbar />
+     
+      <Navbar/>
       <Outlet />
 
 
@@ -41,10 +41,3 @@ const Layout = () => {
 
 export default Layout;
 
-const MobileHeader = () => (
-  <header className="w-full lg:hidden md:hidden z-50 p-2 h-fit dark:bg-black  ">
-    <div className="flex justify-center items-center sticky top-10">
-      <ConnectifyLogoText w="200" h="20" />
-    </div>
-  </header>
-);

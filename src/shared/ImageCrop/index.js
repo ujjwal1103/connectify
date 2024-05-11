@@ -5,12 +5,13 @@ import { CheckBoxBlankLine, ImagePlus, ZoomIn } from "../../icons";
 import { IoClose } from "react-icons/io5";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 
+
 const ImageCrop = ({
   onCrop,
   onClose,
   cropShape = "rect",
   scale = 1,
-  aspect: as = 3,
+  aspect: as = 400,
   profile = false,
   onImagePick = () => {},
   cropedImagesUrls = [],
@@ -29,13 +30,22 @@ const ImageCrop = ({
 
   const cropImage = async (allowNext = false) => {
     try {
-      const { file, url } = await getCroppedImage(
-        selectedImage.originalImageUrl,
-        selectedImage.originalImage.name,
-        croppedAreaPixels,
-        rotate
-      );
-      onCrop(file, url, allowNext);
+      if (selectedImage?.type === "IMAGE") {
+        const { file, url } = await getCroppedImage(
+          selectedImage.originalImageUrl,
+          selectedImage.originalImage.name,
+          croppedAreaPixels,
+          rotate
+        );
+        onCrop(file, url, allowNext);
+      } else {
+        onCrop(
+          selectedImage.originalImage,
+          selectedImage.originalImageUrl,
+          allowNext
+        );
+      }
+
       !allowNext && onClose();
     } catch (error) {
       console.log(error);
@@ -50,14 +60,19 @@ const ImageCrop = ({
   return (
     <div className="fixed inset-0 flex justify-center flex-col-reverse items-center ">
       <div className="flex gap-4 p-4">
-        { cropedImagesUrls?.map((img) => (
+        {cropedImagesUrls?.map((img) => (
           <FadeInAnimation>
-          <div className="relative">
-            <button className="absolute  text-white font-semibold bg-red-500 p-1 -top-2 -left-2  rounded-md " onClick={()=>{
-              clearImage(img.name)
-            }}><IoClose size={16}/></button>
-            <img src={img.url} className="w-32 rounded-md " alt={img.name}/>
-          </div>
+            <div className="relative">
+              <button
+                className="absolute  text-white font-semibold bg-red-500 p-1 -top-2 -left-2  rounded-md "
+                onClick={() => {
+                  clearImage(img.name);
+                }}
+              >
+                <IoClose size={16} />
+              </button>
+              <img src={img.url} className="w-32 rounded-md " alt={img.name} />
+            </div>
           </FadeInAnimation>
         ))}
       </div>
@@ -66,7 +81,7 @@ const ImageCrop = ({
           <button
             type="button"
             className="text-white text-sm  rounded-md p-2"
-            onClick={()=>onClose(selectedImage.originalImage.name)}
+            onClick={() => onClose(selectedImage.originalImage.name)}
           >
             Cancel
           </button>
@@ -78,13 +93,22 @@ const ImageCrop = ({
             Next
           </button>
         </div>
-        <div className=" relative w-full h-full  aspect-square  bg-black">
+        <div className=" relative w-[400px] h-[400px]  aspect-square  bg-black">
           <Cropper
-            image={selectedImage.originalImageUrl}
+          objectFit="cover"
+            image={
+              selectedImage?.type === "IMAGE" && selectedImage.originalImageUrl
+            }
+            video={
+              selectedImage?.type !== "IMAGE" && selectedImage.originalImageUrl
+            }
             crop={crop}
             zoom={zoom}
             rotation={rotate}
-            aspect={4 / aspect}
+            cropSize={{
+              width: 400,
+              height: aspect,
+            }}
             onZoomChange={setZoom}
             onRotationChange={setRotate}
             onCropChange={setCrop}
@@ -92,6 +116,12 @@ const ImageCrop = ({
             cropShape={cropShape}
             restrictPosition={true}
             showGrid={false}
+
+            classes={{
+              containerClassName: "h-full w-full object-cover",
+        
+              cropAreaClassName: " object-cover ",
+            }}
           />
         </div>
         {openZoom && (
@@ -113,7 +143,7 @@ const ImageCrop = ({
           <div className="absolute bottom-0 left-0 p-2 flex gap-3  w-full">
             <button
               className="bg-zinc-600 shadow-md p-1 w-12 flex-center rounded-md dark:text-white"
-              onClick={() => setAspect((prev) => (prev === 3 ? 4 : 3))}
+              onClick={() => setAspect((prev) => (prev === 400 ? 250 : 400))}
             >
               <CheckBoxBlankLine size={24} />
             </button>
@@ -123,27 +153,27 @@ const ImageCrop = ({
             >
               <ZoomIn size={24} />
             </button>
-          {cropedImagesUrls.length < 3 &&  <div className="self-center ml-auto">
-              <input
-                type="file"
-                name="imagePicker"
-                id="imagePicker"
-                hidden
-                accept="image/*"
-                onChange={handleImagePick}
-              />
-              <label
-                className="w-12 h-12 border border-dashed rounded-md cursor-pointer flex justify-center items-center text-white"
-                htmlFor="imagePicker"
-              >
-                <ImagePlus size={24}/>
-              </label>
-            </div>}
+            {cropedImagesUrls.length < 3 && (
+              <div className="self-center ml-auto">
+                <input
+                  type="file"
+                  name="imagePicker"
+                  id="imagePicker"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImagePick}
+                />
+                <label
+                  className="w-12 h-12 border border-dashed rounded-md cursor-pointer flex justify-center items-center text-white"
+                  htmlFor="imagePicker"
+                >
+                  <ImagePlus size={24} />
+                </label>
+              </div>
+            )}
           </div>
         )}
       </div>
-
-      
     </div>
   );
 };

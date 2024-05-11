@@ -5,6 +5,7 @@ import { setFeeds } from "../redux/services/feedSlice";
 
 export const getPostsPage = async (pageParam = 1, options = {}) => {
   const response = await makeRequest.get(`/posts?page=${pageParam}`, options);
+  console.log(response)
   return response;
 };
 
@@ -15,8 +16,6 @@ const usePosts = (pageNum = 1) => {
   const [error, setError] = useState({});
   const [hasNextPage, setHasNextPage] = useState(true);
   const dispatch = useDispatch();
-
-  console.count(isLoading, hasNextPage, totalPages)
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,7 +31,7 @@ const usePosts = (pageNum = 1) => {
     getPostsPage(pageNum, { signal })
       .then((data) => {       
         dispatch(setFeeds(data));
-        setHasNextPage(Boolean(data.posts.length));
+        setHasNextPage(data.pagination.hasNext);
         setIsLoading(false);
       })
       .catch((e) => {

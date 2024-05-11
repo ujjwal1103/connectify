@@ -70,10 +70,10 @@ const Notification = ({ setClose, onClose }) => {
 
   useSocketEvents(socket, eventHandlers);
 
-  return (
+  return (  
     <motion.div
       className=" bg-transparent
-      h-screen w-screen flex lg:flex justify-end"
+      h-dvh w-screen flex lg:flex justify-end"
     >
       <div className="lg:flex-1 hidden lg:block " onClick={onClose} />
       <motion.div
@@ -167,64 +167,6 @@ const Notification = ({ setClose, onClose }) => {
 
 export default Notification;
 
-export const data = [
-  {
-    type: "POST_LIKE",
-    postId: "2839820482742847387482738472",
-    following: true,
-    incomingRequest: false,
-    from: {
-      username: "ujjwal_lade",
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-    },
-    text: "ujjwal_lade liked your post",
-    postImageUrl:
-      "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-  },
-  {
-    type: "FOLLOW_RESQUEST_SENT",
-    requestId: "2839820482742847387482738472",
-    from: {
-      username: "ujjwal_lade",
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-    },
-    actionBy: "username",
-    text: "ujjwal_lade Requested to follow you",
-    following: true,
-    fromProfileUrl:
-      "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-  },
-  {
-    type: "FOLLOW_REQUEST_ACCEPTED",
-    actionBy: "username",
-    from: {
-      username: "ujjwal_lade",
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-    },
-    text: "ujjwal_lade accept your follow request",
-    following: true,
-    fromProfileUrl:
-      "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-  },
-  {
-    type: "FOLLOW_REQUEST_ACCEPTED",
-    actionBy: "username",
-    incomingRequest: true,
-    from: {
-      username: "ujjwal_lade",
-      avatar:
-        "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-    },
-    text: "ujjwal_lade accept your follow request",
-    following: true,
-    fromProfileUrl:
-      "https://firebasestorage.googleapis.com/v0/b/connectify-29152.appspot.com/o/posts%2Fimage.png?alt=media&amp;token=20351c46-4db1-44bb-b8bb-f3c6a5b8ffee",
-  },
-];
-
 const Noti = ({ n, handleAccept }) => {
   switch (n.type) {
     case "FOLLOW_REQUEST_ACCEPTED": {
@@ -273,7 +215,7 @@ const Noti = ({ n, handleAccept }) => {
           <div>
             <ImageComponent
               key={n.postId.imageUrl}
-              src={tranformUrl(n.postId.imageUrl[0])}
+              src={tranformUrl(n.postId.imageUrl[0], 50)}
               alt={n.postId.imageUrl[0]}
               loaderClassName={`bg-zinc-950 animate-pulse size-10 bg-red-400`}
               className={"size-10 object-cover"}

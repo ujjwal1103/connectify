@@ -9,13 +9,34 @@ import { setSelectedMessage } from "../../redux/services/chatSlice";
 import { useWaveProgress } from "../../hooks/useWaveProgress";
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import BubbleNotch from "../../icons/BubbleNotch";
+import ProfilePicture from "../../common/ProfilePicture";
+import UsernameLink from "../../shared/UsernameLink";
+import { Link } from "react-router-dom";
 const Message = ({
   currentUserMessage,
   seen: allSeen,
   isMessageSelected,
-  message: { text, createdAt, seen, messageType, attachments, _id },
+  message,
+  isNextMessageUsMine,
+  isLastMessagae,
 }) => {
+  const {
+    text,
+    createdAt,
+    seen,
+    messageType,
+    attachments,
+    _id,
+    username,
+    avatar,
+    caption,
+    postId,
+    postImages,
+    isUnavailable,
+  } = message;
   const { isSelectMessages } = useSelector((state) => state.chat);
+  const [showNotch, setShowNotch] = useState(false);
   const dispatch = useDispatch();
 
   const handleSelectMessage = (e) => {
@@ -23,10 +44,20 @@ const Message = ({
   };
 
   const className = clsx(
-    "w-full transition-colors duration-500 flex",
+    "w-full transition-colors duration-500 flex mb-1",
     isSelectMessages && "hover:bg-zinc-950 hover:bg-opacity-30",
     isMessageSelected && "bg-zinc-950 bg-opacity-30"
   );
+
+  useEffect(() => {
+    if (!isNextMessageUsMine || isLastMessagae) {
+      setShowNotch(true);
+    }
+
+    // }else if (!(isNextMessageUsMine && isPreviousMessageUsMine)) {
+    //   setShowNotch(true);
+    // }
+  }, []);
 
   if (messageType === "IMAGE") {
     return (
@@ -40,6 +71,28 @@ const Message = ({
         createdAt={createdAt}
         seen={seen}
         allSeen={allSeen}
+        showNotch={showNotch}
+      />
+    );
+  }
+  if (messageType === "POST_MESSAGE") {
+    return (
+      <PostMessage
+        postImages={postImages}
+        className={className}
+        isSelectMessages={isSelectMessages}
+        isMessageSelected={isMessageSelected}
+        handleSelectMessage={handleSelectMessage}
+        currentUserMessage={currentUserMessage}
+        createdAt={createdAt}
+        username={username}
+        avatar={avatar}
+        caption={caption}
+        seen={seen}
+        allSeen={allSeen}
+        postId={postId}
+        isUnavailable={isUnavailable}
+        showNotch={showNotch}
       />
     );
   }
@@ -55,6 +108,7 @@ const Message = ({
         createdAt={createdAt}
         seen={seen}
         allSeen={allSeen}
+        showNotch={showNotch}
       />
     );
   }
@@ -70,6 +124,7 @@ const Message = ({
         createdAt={createdAt}
         seen={seen}
         allSeen={allSeen}
+        showNotch={showNotch}
       />
     );
   }
@@ -85,6 +140,7 @@ const Message = ({
       createdAt={createdAt}
       seen={seen}
       allSeen={allSeen}
+      showNotch={showNotch}
     />
   );
 };
@@ -101,9 +157,11 @@ const AudioMessage = memo(
     seen,
     allSeen,
     attachments,
+    showNotch
   }) => {
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
+
     return (
       <div
         className={` w-full  ${
@@ -124,11 +182,9 @@ const AudioMessage = memo(
         )}
         <div
           className={`
-      max-w-md w-fit p-2 duration-700 transition-all rounded-xl ${
-        currentUserMessage
-          ? "self-end bg-zinc-800 rounded-br-none ml-auto"
-          : "    bg-black rounded-bl-none"
-      } text-gray-50 shadow-2xl
+      max-w-md w-fit p-2 mx-3 z-10 duration-700 transition-all rounded-xl ${
+        currentUserMessage ? "self-end bg-zinc-800  ml-auto" : "    bg-black "
+      } text-gray-50 shadow-2xl relative
     `}
         >
           <div className="overflow-hidden break-words">
@@ -155,6 +211,8 @@ const AudioMessage = memo(
                 ))}
             </span>
           </div>
+
+          {showNotch && <Notch currentUserMessage={currentUserMessage} />}
         </div>
       </div>
     );
@@ -170,6 +228,7 @@ const VideoMessage = ({
   seen,
   allSeen,
   attachments,
+  showNotch
 }) => {
   const videoRef = useRef();
   const [previewImage, setPreviewImage] = useState();
@@ -200,10 +259,8 @@ const VideoMessage = ({
       <div
         className={`
       
-      max-w-md w-fit p-2 duration-700 transition-all rounded-xl ${
-        currentUserMessage
-          ? "self-end bg-zinc-800 rounded-br-none ml-auto"
-          : "    bg-black rounded-bl-none"
+      max-w-md w-fit p-2 z-10 mx-3 duration-700 transition-all rounded-xl ${
+        currentUserMessage ? "self-end bg-zinc-800  ml-auto" : "    bg-black "
       } text-gray-50 shadow-2xl relative
     `}
       >
@@ -237,6 +294,7 @@ const VideoMessage = ({
               ))}
           </span>
         </div>
+        {showNotch && <Notch currentUserMessage={currentUserMessage} />}
       </div>
       <AnimatePresence>
         {previewImage && (
@@ -269,6 +327,7 @@ const TextMessage = ({
   seen,
   allSeen,
   className,
+  showNotch,
 }) => {
   const [showMore, setShowMore] = useState(false);
   const messageLength = text?.length;
@@ -292,11 +351,9 @@ const TextMessage = ({
       )}
       <div
         className={`
-    max-w-md w-fit p-2 duration-700 transition-all rounded-xl ${
-      currentUserMessage
-        ? "self-end bg-zinc-800 rounded-br-none ml-auto"
-        : "    bg-black rounded-bl-none"
-    } text-gray-50 shadow-2xl
+    max-w-md w-fit p-2 z-10 mx-4 duration-700 transition-all rounded-xl ${
+      currentUserMessage ? "self-end bg-zinc-800  ml-auto" : "    bg-black "
+    } text-gray-50 shadow-2xl relative
   `}
       >
         <div className="overflow-hidden break-words">
@@ -312,7 +369,7 @@ const TextMessage = ({
               {showMore ? "Read Less" : "Read More"}
             </button>
           )}
-          <span className="flex items-center gap-3 self-end">
+          <span className="flex z-[1] items-center gap-3 self-end">
             {getReadableTime(createdAt)}{" "}
             {currentUserMessage &&
               (seen || allSeen ? (
@@ -322,6 +379,8 @@ const TextMessage = ({
               ))}
           </span>
         </div>
+
+        {showNotch && <Notch currentUserMessage={currentUserMessage} />}
       </div>
     </div>
   );
@@ -336,6 +395,7 @@ const ImageMessage = ({
   allSeen,
   attachments,
   className,
+  showNotch
 }) => {
   const [previewImage, setPreviewImage] = useState();
   return (
@@ -353,14 +413,12 @@ const ImageMessage = ({
       <div
         className={`
       
-      max-w-md w-fit p-2 duration-700 transition-all rounded-xl ${
-        currentUserMessage
-          ? "self-end bg-zinc-800 rounded-br-none ml-auto"
-          : "    bg-black rounded-bl-none"
+      max-w-md w-fit p-2 z-10 mx-3 duration-700 transition-all rounded-xl ${
+        currentUserMessage ? "self-end bg-zinc-800  ml-auto" : "    bg-black "
       } text-gray-50 shadow-2xl relative
     `}
       >
-        <div className="overflow-hidden break-words">
+        <div className="overflow-hidden z-[1] ">
           <img
             className="rounded-xl "
             alt={attachments[0]}
@@ -370,7 +428,7 @@ const ImageMessage = ({
         </div>
 
         <div className="absolute bottom-3 right-3 bg-black rounded-lg p-1 flex text-[10px] justify-end items-center w-fit float-right flex-col text-right text-gray-300">
-          <span className="flex items-center gap-3 text-white">
+          <span className="flex z-[1] items-center gap-3 text-white">
             {getReadableTime(createdAt)}
             {currentUserMessage &&
               (seen || allSeen ? (
@@ -380,6 +438,104 @@ const ImageMessage = ({
               ))}
           </span>
         </div>
+
+        {showNotch && <Notch currentUserMessage={currentUserMessage} />}
+        <AnimatePresence>
+          {previewImage && (
+            <Modal onClose={() => setPreviewImage()} animate={false}>
+              <div className="w-screen h-dvh p-10">
+                <div></div>
+                <ImageComponent
+                  src={previewImage}
+                  alt={"IMAGE PREVIEW"}
+                  className="w-full h-full object-contain"
+                  loaderClassName="w-screen animate-pulse h-dvh bg-zinc-950"
+                />
+              </div>
+            </Modal>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+const PostMessage = ({
+  isSelectMessages,
+  isMessageSelected,
+  handleSelectMessage,
+  currentUserMessage,
+  createdAt,
+  seen,
+  allSeen,
+  postImages,
+  className,
+  username,
+  avatar,
+  caption,
+  postId,
+  isUnavailable,
+  showNotch
+}) => {
+  const [previewImage, setPreviewImage] = useState();
+
+  if (isUnavailable) {
+    return (
+      <div className={className}>
+        <div>Post unavailable</div>
+      </div>
+    );
+  }
+  return (
+    <div className={className}>
+      {isSelectMessages && (
+        <div className="flex-center p-4">
+          <input
+            type="checkbox"
+            className="size-4 dark:bg-black"
+            checked={isMessageSelected}
+            onChange={handleSelectMessage}
+          />
+        </div>
+      )}
+      <div
+        className={`
+      
+      max-w-md w-fit p-2 mx-3 z-10 duration-700 transition-all rounded-xl ${
+        currentUserMessage ? "self-end bg-zinc-800  ml-auto" : "    bg-black "
+      } text-gray-50 shadow-2xl relative
+    `}
+      >
+        <div className="py-2 flex gap-3 items-center">
+          <ProfilePicture src={avatar} className={"size-10 rounded-full"} />
+          <UsernameLink username={username} />
+        </div>
+        <div className="">
+          <Link to={`/p/${postId}`}>
+            <img
+              className="rounded-xl w-52"
+              alt={postImages[0]}
+              src={tranformUrl(postImages[0], 300)}
+            />
+          </Link>
+        </div>
+        {caption && (
+          <div className="py-2">
+            <span>{caption}</span>
+          </div>
+        )}
+
+        <div className="p-1  flex text-[10px] justify-end items-center w-fit float-right flex-col text-right text-gray-300">
+          <span className="flex z-[1] items-center gap-3 text-white">
+            {getReadableTime(createdAt)}
+            {currentUserMessage &&
+              (seen || allSeen ? (
+                <DoubleCheckIcon className="text-blue-500" />
+              ) : (
+                <Check />
+              ))}
+          </span>
+        </div>
+      {showNotch &&  <Notch currentUserMessage={currentUserMessage} />}
         <AnimatePresence>
           {previewImage && (
             <Modal onClose={() => setPreviewImage()} animate={false}>
@@ -416,6 +572,8 @@ const AudioPlayer = memo(({ src, getDurationAndCurrentTime }) => {
     getDurationAndCurrentTime(formatedDuration, formatedTime);
   }, [duration, currentTime, getDurationAndCurrentTime]);
 
+  
+
   return (
     <div className="p-2  w-[340px]">
       <div className="flex gap-4 items-center">
@@ -437,3 +595,22 @@ const AudioPlayer = memo(({ src, getDurationAndCurrentTime }) => {
   );
 });
 export { AudioPlayer };
+
+function Notch({ currentUserMessage }) {
+  return (
+    <div
+      className={`absolute bottom-0 z-[-1] ${
+        currentUserMessage ? "-right-2" : "-left-2"
+      }`}
+    >
+      <BubbleNotch
+        className={`${currentUserMessage ? "fill-zinc-800 " : "fill-black"}`}
+        style={{
+          transform: !currentUserMessage ? "rotateY(180deg)" : "rotate(360deg)",
+        }}
+      />
+    </div>
+  );
+}
+
+

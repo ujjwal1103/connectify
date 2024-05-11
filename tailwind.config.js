@@ -76,6 +76,7 @@ module.exports = {
         follower: "calc(100dvh - 145px)",
         single: "calc(100dvh - 100px)",
         second: "calc(100dvh - 100px)",
+        singlep: "calc(100dvh - 10.5rem)",
       },
 
       backgroundImage: {

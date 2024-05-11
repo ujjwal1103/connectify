@@ -31,7 +31,7 @@ export const sendNotification = async (userId, action, socket, chatId, message) 
           chat: chatId,
           from: getCurrentUserId(),
           message: message._id,
-          notification: `${getCurrentUsername()} send you a Message`,
+          notification: `${getCurrentUsername()} seen your Messages`,
         });
         break;
       }

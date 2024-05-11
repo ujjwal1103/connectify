@@ -13,11 +13,9 @@
   }
 
   .size-screen {
-    @apply w-dvw min-h-dvh
+    @apply w-dvw min-h-dvh;
   }
-
 }
-
 
 @layer base {
   #root {
@@ -26,7 +24,6 @@
   .authInput {
     @apply border-2 lg:w-96 w-full md:w-80  bg-transparent dark:text-white rounded-xl border-violet-50 focus:ring-1 focus:ring-violet-50 focus:shadow-md focus:outline-none focus:shadow-violet-950 px-9 placeholder:text-violet-50;
   }
-
 
   body {
     @apply bg-zinc-950;
@@ -103,4 +100,37 @@
 
     --radius: 0.5rem;
   }
+}
+
+/* Union */
+
+.union {
+  position: absolute;
+  width: 27.93px;
+  height: 28.44px;
+  background: #278eff;
+  border: 0.805851px solid #278eff;
+}
+
+/* Rectangle 3 */
+
+.reactangle3 {
+  position: absolute;
+  width: 19.65px;
+  height: 28.44px;
+
+  background: #278eff;
+  border-radius: 51.7174px 0px 0px 0px;
+  transform: matrix(1, 0, 0, -1, 0, 0);
+}
+
+/* Vector 1 */
+
+.vector1 {
+  position: absolute;
+  width: 18.36px;
+  height: 15.08px;
+
+  background: #1888fe;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
 }

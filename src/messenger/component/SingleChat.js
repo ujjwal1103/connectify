@@ -1,26 +1,27 @@
-import React, { memo, useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { removeChat, setSelectedChat } from "../../redux/services/chatSlice";
+import React, { memo, useRef, useState, useEffect, useCallback } from "react";
+import { useChatSlice } from "../../redux/services/chatSlice";
 import { DotsNine } from "../../icons";
 import ProfilePicture from "../../common/ProfilePicture";
 import { useNavigate, useParams } from "react-router-dom";
 import { isCurrentUser } from "../../utils/getCurrentUserId";
-import { makeRequest } from "../../config/api.config";
 import { AnimatePresence, motion } from "framer-motion";
 import { useClickOutside } from "@react-hookz/web";
 import { createPortal } from "react-dom";
+import { deleteConversation } from "../../api";
 
 const SingleChat = ({ chat, index }) => {
   const [options, setOptions] = useState(false);
   const [ele, setEle] = useState({});
   const { chatId } = useParams();
-  const { selectedChat } = useSelector((state) => state.chat);
-  const dispatch = useDispatch();
+  const { selectedChat, setSelectedChat, removeChat } = useChatSlice();
+
   const navigate = useNavigate();
+  
   const modalRef = useRef();
+
   const selectThisChat = () => {
     if (selectedChat?._id !== chat._id || !chatId) {
-      dispatch(setSelectedChat(chat));
+      setSelectedChat(chat);
       navigate(`/messenger/${chat._id}`);
     }
   };
@@ -29,10 +30,13 @@ const SingleChat = ({ chat, index }) => {
     setOptions((prev) => !prev);
   };
 
-
-  useEffect(()=>{
-
-  },[])
+  const handleDeleteChat = useCallback(async () => {
+    const chatId = chat?._id;
+    setOptions(false);
+    removeChat(chatId);
+    navigate("/messenger");
+    await deleteConversation(chatId);
+  });
 
   useClickOutside(modalRef, handleOptions);
 
@@ -43,24 +47,30 @@ const SingleChat = ({ chat, index }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 * index }}
         style={{ zIndex: 10 }}
-        exit={{ opacity: 0, y: "-20%", animationDirection: "forward", transition: { duration: 0.3, delay:0 } }}
+        exit={{
+          opacity: 0,
+          y: "-20%",
+          animationDirection: "forward",
+          transition: { duration: 0.3, delay: 0 },
+        }}
         onClick={selectThisChat}
         className={`w-full flex gap-4 p-2 relative animate-fade-up ${
-          selectedChat?._id === chat._id && "bg-zinc-800"
-        } hover:bg-zinc-900  items-center hover:z-10 dark:text-gray-50 border-b-[0.5px] cursor-pointer border-zinc-800 last:border-0`}
+          selectedChat?._id === chat._id && "dark:bg-zinc-800 bg-gray-300"
+        } dark:hover:bg-zinc-900 hover:bg-gray-300 items-center hover:z-10 dark:text-gray-50 border-b-[0.5px] cursor-pointer dark:border-zinc-800 border-gray-200 last:border-0`}
       >
         <ProfilePicture
           src={chat?.friend?.avatar}
           className="inline-block lg:size-10 size-8 rounded-full hover:scale-90 duration-500 object-cover"
-        
         />
-        <div className="flex-1" >
+        <div className="flex-1">
           <h4 className="font-semibold lg:text-base text-xs">
             {chat?.friend?.username}
           </h4>
-          {!isCurrentUser(chat?.lastMessage?.from) && (
-            <span className="text-sm overflow-ellipsis line-clamp-1">
-              {chat?.lastMessage?.text}
+          {chat?.lastMessage && !isCurrentUser(chat?.lastMessage?.from) && (
+            <span className="text-sm overflow-ellipsis text-gray-500 line-clamp-1">
+              {chat.lastMessage?.messageType === "TEXT_MESSAGE"
+                ? chat?.lastMessage?.text
+                : "Attchment"}
             </span>
           )}
         </div>
@@ -70,26 +80,30 @@ const SingleChat = ({ chat, index }) => {
           </div>
         )}
 
-        <div className="w-5 h-5 flex  justify-center items-center text-black" onClick={(e)=>e.stopPropagation()}>
+        <div
+          className="w-5 h-5 flex  justify-center items-center text-black"
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
             onClick={(e) => {
               setEle(e.target.getBoundingClientRect());
               setOptions(true);
-            }}>
-            <span title="More options"><DotsNine className="fill-zinc-200" /></span>
+            }}
+          >
+            <span title="More options">
+              <DotsNine className="dark:fill-zinc-200 fill-zinc-950" />
+            </span>
           </button>
         </div>
-<AnimatePresence>
-        {options && (
-          <OptionsMenu isVisible={options} buttonPosition={ele}>
-
+        <AnimatePresence>
+          {options && (
+            <OptionsMenu isVisible={options} buttonPosition={ele}>
               <motion.div
-                
-                className="dark:bg-zinc-900 x-10 shadow-2xl origin-bottom-right p-1 rounded-md z-[999] animate-fade-out "
+                className="dark:bg-zinc-900 bg-gray-50  x-10 shadow-2xl origin-bottom-right p-1 rounded-md z-[999] animate-fade-out "
                 ref={modalRef}
               >
                 <ul className="text-sm z-10 lg:w-28 w-24 text-center">
-                  <li className="dark:text-gray-50 rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
+                  <li className="dark:text-gray-50 rounded-md dark:hover:bg-zinc-800 hover:bg-gray-200 hover:shadow-md transition-colors duration-300 ease-in-out">
                     <button
                       onClick={() => {
                         setOptions(false);
@@ -99,22 +113,15 @@ const SingleChat = ({ chat, index }) => {
                       Archive
                     </button>
                   </li>
-                  <li className=" dark:text-gray-50 text-xs rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
+                  <li className="dark:text-gray-50 rounded-md dark:hover:bg-zinc-800 hover:bg-gray-200 hover:shadow-md transition-colors duration-300 ease-in-out">
                     <button
-                      onClick={async () => {
-                        dispatch(removeChat(chat?._id));
-                        navigate("/messenger");
-                        setOptions(false);
-                        await makeRequest.delete(
-                          `/chat/${chat?._id}`
-                        );
-                      }}
+                      onClick={handleDeleteChat}
                       className="lg:py-2 py-1   w-full rounded-md"
                     >
                       Delete
                     </button>
                   </li>
-                  <li className="text-xs dark:text-gray-50 rounded-md hover:bg-zinc-800 hover:shadow-md transition-colors duration-300 ease-in-out">
+                  <li className="dark:text-gray-50 rounded-md dark:hover:bg-zinc-800 hover:bg-gray-200 hover:shadow-md transition-colors duration-300 ease-in-out">
                     <button
                       onClick={() => {
                         setOptions(false);
@@ -126,17 +133,15 @@ const SingleChat = ({ chat, index }) => {
                   </li>
                 </ul>
               </motion.div>
-            
-          </OptionsMenu>
-        )}</AnimatePresence>
+            </OptionsMenu>
+          )}
+        </AnimatePresence>
       </motion.div>
     </>
   );
 };
 
 export default memo(SingleChat);
-
-
 
 const OptionsMenu = ({ isVisible, buttonPosition, children }) => {
   const menuRef = useRef(null);
@@ -146,12 +151,12 @@ const OptionsMenu = ({ isVisible, buttonPosition, children }) => {
   useEffect(() => {
     if (isVisible && buttonPosition) {
       const viewportHeight = window.innerHeight;
-   
+
       const viewportWidth = window.innerWidth;
       const menuHeight = menuRef.current.offsetHeight;
       const menuWidth = menuRef.current.offsetWidth;
       const buttonBottom = buttonPosition.top + buttonPosition.height;
-      
+
       // Check if the menu goes beyond the viewport bottom
       if (buttonBottom + menuHeight > viewportHeight) {
         // Calculate the new top position to open upwards
@@ -188,7 +193,7 @@ const OptionsMenu = ({ isVisible, buttonPosition, children }) => {
       initial={{ opacity: 0, y: "-20%" }}
       whileInView={{ opacity: 1, y: 0 }}
       // transition={{ delay: 0 }}
-    
+
       exit={{ opacity: 0, y: "-20%", animationDirection: "forward" }}
       style={style}
       onClick={(e) => e.stopPropagation()}
@@ -200,4 +205,3 @@ const OptionsMenu = ({ isVisible, buttonPosition, children }) => {
 };
 
 export { OptionsMenu };
-

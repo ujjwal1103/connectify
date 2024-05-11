@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   user: {},
@@ -9,7 +11,7 @@ const initialState = {
   error: null,
 };
 
-const profilleSlice = createSlice({
+const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
@@ -72,8 +74,46 @@ export const {
   setError,
   setLoading,
   reset,
-} = profilleSlice.actions;
-
-export default profilleSlice.reducer;
+} = profileSlice.actions;
 
 export const profileState = (state) => state.profile;
+
+const useProfileSlice = () => {
+  const dispatch = useDispatch();
+  const profile = useSelector(profileState);
+  const actions = profileSlice.actions;
+
+  const setUser = useCallback(
+    (user) => {
+      dispatch(actions.setUser(user));
+    },
+    [dispatch]
+  );
+
+  const setOtherUser = useCallback(
+    (user) => {
+      dispatch(actions.setOtherUser(user));
+    },
+    [dispatch]
+  );
+
+  const setError = useCallback(
+    (error) => {
+      dispatch(actions.setError(error));
+    },
+    [dispatch]
+  );
+
+  const setFollowing = useCallback(
+    (followings) => {
+      dispatch(actions.setFollowing(followings));
+    },
+    [dispatch]
+  );
+
+  return { ...profile, setUser, setOtherUser, setError, setFollowing };
+};
+
+export { useProfileSlice };
+
+export default profileSlice.reducer;

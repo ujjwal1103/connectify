@@ -5,7 +5,12 @@ import MentionInput from "../../../shared/MentionInput/MentionInput";
 import Picker from "emoji-picker-react";
 import { useClickOutside } from "@react-hookz/web";
 
-const CommentInput = ({ postId, onComment=null }) => {
+const CommentInput = ({
+  postId,
+  onComment = null,
+  reply = false,
+  repliedTo,
+}) => {
   const [commentText, setCommentText] = useState();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -14,19 +19,20 @@ const CommentInput = ({ postId, onComment=null }) => {
   const emojiRef = useRef();
   const inputRef = useRef();
 
-  const sendComment = async () => {
+  const sendComment = async (isReply) => {
     try {
       const data = await makeRequest.post(`/comment`, {
         post: postId,
         comment: commentText,
         mentions: mentionedUsers,
+        repliedTo: repliedTo,
       });
       if (data.isSuccess) {
         setCommentText("");
         setMentionedUsers([]);
         setShowEmojiPicker(false);
         setCursorPosition(0);
-        onComment && onComment(data.comment)
+        onComment && onComment(data.comment, reply);
       }
     } catch (error) {
       console.log(error);
@@ -63,7 +69,8 @@ const CommentInput = ({ postId, onComment=null }) => {
     inputRef.current.focus();
   };
   return (
-    <div className="flex justify-between relative gap-3 items-center bg-zinc-800 rounded-md">
+    <div className="flex justify-between relative gap-3 items-center dark:bg-zinc-800 bg-gray-200 rounded-md">
+      {reply && <span className="absolute -top-6">replied to {repliedTo}</span>}
       <MentionInput
         ref={inputRef}
         text={commentText}
@@ -80,7 +87,10 @@ const CommentInput = ({ postId, onComment=null }) => {
           Post
         </button>
       )}
-      <button className="pr-2 hidden lg:block" onClick={() => setShowEmojiPicker(true)}>
+      <button
+        className="pr-2 hidden lg:block"
+        onClick={() => setShowEmojiPicker(true)}
+      >
         <EmojiSmile />
       </button>
 

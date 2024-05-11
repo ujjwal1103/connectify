@@ -1,4 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useProfileSlice } from "./profileSlice";
 
 const initialState = {
   post: {},
@@ -104,8 +107,8 @@ const postSlice = createSlice({
       }
     },
     setUploadingPost: (state, action) => {
-      state.uploadingPost.loading = action.payload.loading
-      state.uploadingPost.post = action.payload.post
+      state.uploadingPost.loading = action.payload.loading;
+      state.uploadingPost.post = action.payload.post;
     },
     reset: () => {
       return initialState;
@@ -126,9 +129,28 @@ export const {
   reset,
   setHasNext,
   updateLike,
-  setUploadingPost
+  setUploadingPost,
 } = postSlice.actions;
 
 export default postSlice.reducer;
 
-export const state = (state) => state.auth;
+export const usePostSlice = () => {
+  const postState = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+  const actions = postSlice.actions;
+  const { setUser, user } = useProfileSlice();
+
+  const addPost = useCallback(
+    (post) => {
+      dispatch(actions.addPost(post));
+      setUser({ ...user, postCount: user.postCount + 1 });
+    },
+    [dispatch]
+  );
+
+  const setUploadingPost = useCallback((data) => {
+    dispatch(actions.setUploadingPost(data));
+  }, []);
+
+  return { ...postState, addPost, setUploadingPost };
+};

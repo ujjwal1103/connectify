@@ -42,7 +42,17 @@ export const messageApi = createApi({
         body: formData,
       }),
     }),
+    isUserOnline: builder.query({
+      query: (userId) => `isOnline/${userId}`,
+      pollingInterval: 5000,
+      keepUnusedDataFor:true
+    }),
   }),
 });
 
-export const { useGetMessagesQuery, useSendMessageMutation, useSendAttachmentsMutation } = messageApi;
+export const {
+  useGetMessagesQuery,
+  useSendMessageMutation,
+  useSendAttachmentsMutation,
+  useIsUserOnlineQuery,
+} = messageApi;

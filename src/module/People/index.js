@@ -3,7 +3,7 @@ import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 import UsernameLink from "../../shared/UsernameLink";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { makeRequest } from "../../config/api.config";
+import { getUsersSuggetions } from "../../api";
 
 const Peoples = () => {
   const [peoples, setPeoples] = useState([]);
@@ -15,9 +15,9 @@ const Peoples = () => {
       if (page === 1) {
         setLoading(true);
       }
-      const res = await makeRequest.get(`/users?page=${p}`);
+      const res = await getUsersSuggetions(p);
       setPeoples(people=>[...people, ...res?.users]);
-      setHasMore(res?.pagination?.hasMore);
+      setHasMore(res?.pagination?.hasNext);
       setLoading(false);
     },
     [page]

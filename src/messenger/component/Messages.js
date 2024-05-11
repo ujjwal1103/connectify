@@ -13,11 +13,15 @@ const Messages = ({ isLoading, allMessages = {}, page, messages }, ref) => {
   const [seenMessagesIds, setSeenMessagesIds] = useState([]);
   const { socket } = useSocket();
   const { selectedMessages } = useSelector((state) => state.chat);
-  
+
   const handleSeen = useCallback(
     (data) => {
       if (data.chat === chatId) {
-        setSeenMessagesIds(data.idsOnly);
+        if (data.message) {
+          setSeenMessagesIds((prev) => [...prev, data.message]);
+        } else {
+          setSeenMessagesIds(data.idsOnly || []);
+        }
       }
     },
     [chatId]
@@ -45,7 +49,7 @@ const Messages = ({ isLoading, allMessages = {}, page, messages }, ref) => {
       </div>
     );
   }
-  
+
   if (
     !Object.keys(allMessages) ||
     (Object.keys(allMessages)?.length === 0 && !isLoading)
@@ -63,11 +67,11 @@ const Messages = ({ isLoading, allMessages = {}, page, messages }, ref) => {
     >
       <div>
         {Object.keys(allMessages).map((date, index) => (
-          <div className="flex flex-col gap-3" key={Date.now() + index}>
-            <h3 className="text-center text-[10px]  text-gray-200 w-fit self-center py-1 px-2 mt-2 rounded-xl bg-neutral-950">
+          <div className="flex flex-col" key={Date.now() + index}>
+            <h3 className="text-center text-[10px] my-2 text-gray-200 w-fit self-center py-1 px-2 mt-2 rounded-xl bg-neutral-950">
               {date}
             </h3>
-            {allMessages[date].map((message) => (
+            {allMessages[date].map((message, index) => (
               <Message
                 seen={seenMessagesIds?.some((id) => id === message._id)}
                 key={message._id}
@@ -76,6 +80,10 @@ const Messages = ({ isLoading, allMessages = {}, page, messages }, ref) => {
                 isMessageSelected={selectedMessages?.some(
                   (m) => m === message._id
                 )}
+                isLastMessagae={allMessages[date][index + 1] ? false : true}
+                isNextMessageUsMine={
+                  allMessages[date][index + 1]?.from === message.from
+                }
               />
             ))}
           </div>

@@ -44,10 +44,16 @@ import {
   IoChevronForwardCircle as ChevronForwardCircle,
   IoChevronBackCircle as ChevronBackCircle,
 } from "react-icons/io5";
-import { RiCheckDoubleLine as DoubleCheckIcon,RiCheckLine  as Check } from "react-icons/ri";
+import {
+  RiCheckDoubleLine as DoubleCheckIcon,
+  RiCheckLine as Check,
+} from "react-icons/ri";
 
 import { IoIosLock as PasswordLock, IoMdList as MdList } from "react-icons/io";
-import { RiMessengerLine as MessengerLine,  RiCheckboxBlankLine as CheckBoxBlankLine  } from "react-icons/ri";
+import {
+  RiMessengerLine as MessengerLine,
+  RiCheckboxBlankLine as CheckBoxBlankLine,
+} from "react-icons/ri";
 import { FiEdit as Edit } from "react-icons/fi";
 import {
   IoChevronForward as ChevronForward,
@@ -58,10 +64,38 @@ import {
   FaRegCircle as Circle,
 } from "react-icons/fa6";
 import { AiOutlineMenuFold as OutlineMenuFold } from "react-icons/ai";
-import { MdOutlineAudioFile as AudioFileIcon,MdVideoLibrary as VideoLibrary, MdOutlineVideoFile as VideoFileIcon,MdHeadset as HeadSet } from "react-icons/md";
-import { MdLibraryMusic as MusicLibrary } from "react-icons/md";
-import { FaPlay , FaPause} from "react-icons/fa";
+import {
+  MdOutlineAudioFile as AudioFileIcon,
+  MdVideoLibrary as VideoLibrary,
+  MdOutlineVideoFile as VideoFileIcon,
+  MdHeadset as HeadSet,
+  MdLibraryMusic as MusicLibrary,
+  MdOutlineAlternateEmail as UsernameIcon,
+} from "react-icons/md";
+
+import { FaPlay, FaPause } from "react-icons/fa";
 import { LuImagePlus as ImagePlus } from "react-icons/lu";
+import { MdOutlineMail as Mail } from "react-icons/md";
+import React from 'react';
+
+const CommentIcon = ({ size = 24, color = 'currentColor', ...rest }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label="Comment"
+    className="x1lliihq x1n2onr6 x5n08af"
+    fill={color}
+    height={size}
+    viewBox="0 0 24 24"
+    width={size}
+    {...rest}
+  >
+    <title>Comment</title>
+    <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" />
+  </svg>
+);
+
+
+
 export {
   AngleLeft,
   ArrowRight,
@@ -77,6 +111,7 @@ export {
   ChevronBack,
   ChevronForward,
   Cog,
+  CommentIcon,
   Check,
   DarkMode,
   DotsNine,
@@ -114,5 +149,13 @@ export {
   ThreeDots,
   CheckBoxBlankLine,
   ZoomIn,
-  AudioFileIcon,VideoFileIcon,VideoLibrary,MusicLibrary, FaPause,FaPlay,ImagePlus
+  AudioFileIcon,
+  VideoFileIcon,
+  VideoLibrary,
+  MusicLibrary,
+  FaPause,
+  FaPlay,
+  ImagePlus,
+  Mail,
+  UsernameIcon,
 };

@@ -7,25 +7,23 @@ import { ErrorPage } from "../App";
 import SuggetionContainer from "../common/suggetions";
 import { Link } from "react-router-dom";
 import { ImageComponent } from "../profile/components/Post";
-import { BiLoaderAlt } from "react-icons/bi";
-import { useSelector } from 'react-redux';
+import { BiLoader, BiLoaderAlt } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import ConnectifyLogoText from "../icons/ConnectifyLogoText";
 const HomePage = () => {
   const [pageNum, setPageNum] = useState(1);
   const { isLoading, isError, feeds, hasNextPage } = usePosts(pageNum);
   const intObserver = useRef();
-  const {uploadingPost} = useSelector(state=>state.post)
+  const { uploadingPost } = useSelector((state) => state.post);
   const lastPostRef = useCallback(
     (post) => {
       if (isLoading) return;
-
       if (intObserver.current) intObserver.current.disconnect();
-
       intObserver.current = new IntersectionObserver((posts) => {
         if (posts[0].isIntersecting && hasNextPage) {
           setPageNum((prev) => prev + 1);
         }
       });
-
       if (post) intObserver.current.observe(post);
     },
     [hasNextPage, isLoading]
@@ -33,54 +31,56 @@ const HomePage = () => {
 
   if (isError) return <ErrorPage />;
 
-  const content = feeds.map((post, i) => {
-    if (feeds.length === i + 1) {
-      return <Post ref={lastPostRef} key={post._id} post={post} />;
-    }
-    return <Post key={post._id} post={post} />;
-  });
-
   return (
-    <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">
-      {/* <div className="hidden justify-start px-2">
-        <Story />
-      </div> */}
-      <div className="flex lg:gap-3">
-        {/* <div className="hidden md:hidden lg:block lg:w-fit">
-          <Sidebar />
-        </div> */}
-        <section
-          className="flex lg:m-auto gap-3 lg:w-[80%] w-full justify-between"
-          id="scrollableDiv"
-        >
-          <div className="grid grid-cols-1 flex-1 flex-col gap-5">
-        {uploadingPost.loading &&  <section className="bg-gray-50 flex gap-5 items-center dark:border-zinc-500/30 rounded-lg w-full shadow-md dark:bg-zinc-900 relative p-3">
-            <ImageComponent src={uploadingPost.post.imageUrls[0].url} className="size-10"/>
-            <span>Posting</span>
-            <BiLoaderAlt className="animate-spin ml-auto"/>
-          </section>}
-            {content}
+    <>
+      <MobileHeader />
+      <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">
+        <div className="flex lg:gap-3">
+          <section
+            className="flex lg:m-auto gap-3 lg:w-[80%] w-full justify-between"
+            id="scrollableDiv"
+          >
+            <div className="grid grid-cols-1 flex-1 flex-col gap-5">
+              {uploadingPost.loading && (
+                <section className="bg-gray-50 flex gap-5 items-center dark:border-zinc-500/30 rounded-lg w-full shadow-md dark:bg-zinc-900 relative p-3">
+                  <ImageComponent
+                    src={uploadingPost.post.images[0].url}
+                    className="size-10"
+                  />
+                  <span>Posting</span>
+                  <BiLoaderAlt className="animate-spin ml-auto" />
+                </section>
+              )}
+              {feeds.map((post) => {
+                return <Post key={post._id} post={post} />;
+              })}
+              {isLoading && (
+                <h1>
+                  <BiLoader className="animate-spin" />
+                </h1>
+              )}
+              {/* {isLoading && <FeedLoading />} */}
 
-            {isLoading && <FeedLoading />}
-           
-            {feeds.length === 0 && !isLoading && (
-              <div className=" lg:h-auto lg:w-auto">
-                <div className="dark:bg-zinc-800 rounded-lg h-36 lg:h-auto">
-                  <NoPosts />
+              {feeds.length === 0 && !isLoading && (
+                <div className=" lg:h-auto lg:w-auto">
+                  <div className="dark:bg-zinc-800 rounded-lg h-36 lg:h-auto">
+                    <NoPosts />
+                  </div>
+                  <div className="p-2 flex  justify-between">
+                    <span>Suggetions</span>{" "}
+                    <Link to="/expore/people">View More</Link>
+                  </div>
+                  <SuggetionContainer />
                 </div>
-                <div className="p-2 flex  justify-between">
-                  <span>Suggetions</span>{" "}
-                  <Link to="/expore/people">View More</Link>
-                </div>
-                <SuggetionContainer />
-              </div>
-            )}
-            <section className="invisible relative overflow-hidden bg-white lg:py-0 py-4 dark:bg-transparent dark:text-white"/>
-          </div>
-          <Suggetions />
-        </section>
-      </div>
-    </main>
+              )}
+              {!isLoading && hasNextPage && <div ref={lastPostRef} />}
+              <section className="invisible relative overflow-hidden bg-white lg:py-0 py-4 dark:bg-transparent dark:text-white" />
+            </div>
+            <Suggetions />
+          </section>
+        </div>
+      </main>
+    </>
   );
 };
 
@@ -112,3 +112,11 @@ const FeedLoading = () => {
     </div>
   );
 };
+
+const MobileHeader = () => (
+  <header className="w-full sticky top-0 lg:hidden md:hidden z-50 p-2 h-fit dark:bg-black  ">
+    <div className="flex justify-center items-center sticky top-10">
+      <ConnectifyLogoText w="200" h="20" />
+    </div>
+  </header>
+);

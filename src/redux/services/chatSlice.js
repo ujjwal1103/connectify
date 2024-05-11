@@ -1,4 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useCallback } from "react";
+import { BsChatSquare } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   chats: [],
@@ -8,7 +11,7 @@ const initialState = {
   messages: [],
   messageChatId: "",
   selectedMessages: [],
-  isSelectMessages : false,
+  isSelectMessages: false,
 };
 
 const chatSlice = createSlice({
@@ -48,19 +51,19 @@ const chatSlice = createSlice({
         state.selectedMessages.push(action.payload);
       }
     },
-    resetSelectedMessages: (state, action)=>{
-      state.selectedMessages = []
+    resetSelectedMessages: (state, action) => {
+      state.selectedMessages = [];
     },
-    setIsSelectMessages : (state, action) =>{
+    setIsSelectMessages: (state, action) => {
       state.isSelectMessages = action.payload;
     },
-    removeChat: (state, action) =>{
-      state.chats = state.chats.filter((chat)=>chat._id !== action.payload)
+    removeChat: (state, action) => {
+      state.chats = state.chats.filter((chat) => chat._id !== action.payload);
     },
     reorderChat: (state, action) => {
       const chatId = action.payload;
       // Find the index of the chat with the specified chatId
-      const chatIndex = state.chats.findIndex(chat => chat._id === chatId);
+      const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
       if (chatIndex > 0) {
         // Remove the chat from its current position
         const [chat] = state.chats.splice(chatIndex, 1);
@@ -84,7 +87,65 @@ export const {
   setSelectedMessage,
   setIsSelectMessages,
   resetSelectedMessages,
-  removeChat,reorderChat
+  removeChat,
+  reorderChat,
 } = chatSlice.actions;
+
+const useChatSlice = () => {
+  const dispatch = useDispatch();
+  const chat = useSelector((state) => state.chat);
+  const actions = chatSlice.actions;
+
+  const setChats = useCallback(
+    (chats) => {
+      dispatch(actions.setChats(chats));
+    },
+    [dispatch]
+  );
+
+  const setChat = useCallback(
+    (chat) => {
+      dispatch(actions.addChat(chat));
+    },
+    [dispatch]
+  );
+
+  const setSelectedChat = useCallback(
+    (chat) => {
+      dispatch(actions.setSelectedChat(chat));
+    },
+    [dispatch]
+  );
+
+  const removeChat = useCallback(
+    (chat) => {
+      dispatch(actions.removeChat(chat));
+    },
+    [dispatch]
+  );
+
+  const setIsSelectMessages = useCallback(
+    (isSelectedMessage) => {
+      dispatch(actions.setIsSelectMessages(isSelectedMessage));
+    },
+    [dispatch]
+  );
+
+  const resetSelectedMessages = useCallback(() => {
+    dispatch(actions.resetSelectedMessages());
+  }, [dispatch]);
+
+  return {
+    ...chat,
+    setChats,
+    setSelectedChat,
+    removeChat,
+    setChat,
+    setIsSelectMessages,
+    resetSelectedMessages,
+  };
+};
+
+export { useChatSlice };
 
 export default chatSlice.reducer;

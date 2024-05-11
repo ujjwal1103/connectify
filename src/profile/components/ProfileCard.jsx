@@ -3,8 +3,10 @@ import Following from "./Following";
 import Followers from "./Followers";
 import ProfilePicture from "../../common/ProfilePicture";
 import Modal from "../../shared/Modal";
+import { getCurrentUsername, getCurrentName } from "../../utils/getCurrentUserId";
 
 const ProfileCard = ({ user, children, canOpen }) => {
+  
   const [show, setShow] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
 

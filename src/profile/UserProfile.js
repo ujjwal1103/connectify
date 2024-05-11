@@ -10,14 +10,9 @@ import {
 
 import { useEffect, useCallback } from "react";
 import ProfileCard from "./components/ProfileCard";
-import { useDispatch, useSelector } from "react-redux";
-import { addChat } from "../redux/services/chatSlice";
+import { useChatSlice } from "../redux/services/chatSlice";
 import UserLoading from "./components/UserLoading";
-import {
-  profileState,
-  setError,
-  setOtherUser,
-} from "../redux/services/profileSlice";
+import { useProfileSlice } from "../redux/services/profileSlice";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import useAleart from "../utils/hooks/useAleart";
 import { ACCEPT_REQUEST } from "../utils/constant";
@@ -26,41 +21,38 @@ import { useSocket } from "../context/SocketContext";
 
 const UserProfile = () => {
   const { username } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { otherUser: user, loading, error } = useSelector(profileState);
+  const { otherUser: user, loading, error, setOtherUser, setError } = useProfileSlice();
   const { alert } = useAleart();
   const { socket } = useSocket();
+  const { setChat } = useChatSlice();
   const getUser = useCallback(async () => {
     try {
       const response = await makeRequest(`/user/${username}`);
-      if (response.isSuccess) dispatch(setOtherUser(response.user));
+      if (response.isSuccess) setOtherUser(response.user);
     } catch (error) {
-      dispatch(setError(error));
+      setError(error);
     }
-  }, [dispatch, username]);
+  }, [username]);
 
   const handleFollowRequest = async () => {
     if (user?.isPrivate && !user?.isFollow) {
-      dispatch(
-        setOtherUser({
-          ...user,
-          isRequested: true,
-        })
-      );
+      setOtherUser({
+        ...user,
+        isRequested: true,
+      });
       const res = await sentFriendRequest(user?._id);
       if (res.requested) {
         alert("Friend Request Sent Successfully");
       }
       return;
     }
-    dispatch(
-      setOtherUser({
-        ...user,
-        isFollow: true,
-        followers: Number(user.followers) + 1,
-      })
-    );
+    setOtherUser({
+      ...user,
+      isFollow: true,
+      followers: Number(user.followers) + 1,
+    });
+
     const data = await followUser(user?._id);
     if (data.follow) {
       getUser();
@@ -69,13 +61,12 @@ const UserProfile = () => {
   };
 
   const handleUnfollow = async () => {
-    dispatch(
-      setOtherUser({
-        ...user,
-        isFollow: false,
-        followers: Number(user.followers) - 1,
-      })
-    );
+    setOtherUser({
+      ...user,
+      isFollow: false,
+      followers: Number(user.followers) - 1,
+    });
+
     const data = await unfollowUser(user?._id);
     if (data.unfollow) {
       getUser();
@@ -86,7 +77,7 @@ const UserProfile = () => {
     try {
       const response = await makeRequest.post("/chat", { to: user._id });
       if (response.isSuccess) {
-        dispatch(addChat(response.chat));
+        setChat(response.chat);
         navigate(`/messenger/${response.chat._id}`);
       }
     } catch (error) {
@@ -96,12 +87,11 @@ const UserProfile = () => {
 
   const deleteSentFriendRequest = async (e) => {
     await cancelFollowRequest(user?._id);
-    dispatch(
-      setOtherUser({
-        ...user,
-        isRequested: false,
-      })
-    );
+
+    setOtherUser({
+      ...user,
+      isRequested: false,
+    });
   };
 
   useEffect(() => {

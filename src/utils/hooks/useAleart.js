@@ -1,4 +1,5 @@
 import { toast, Zoom } from "react-toastify";
+import Swal from "sweetalert2";
 
 const toastOption = {
   position: "bottom-left",
@@ -15,7 +16,15 @@ const useAleart = () => {
     toast.success(message, { ...toastOption, ...options });
   };
 
-  return {alert};
+  const confirmModal = async (alertInfo) => {
+    const result = await Swal.fire({
+      ...alertInfo,
+      background: "black",
+    });
+    return result;
+  };
+
+  return { alert, confirmModal };
 };
 
 export default useAleart;

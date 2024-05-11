@@ -3,8 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "../../icons";
 import Input from "../../common/InputFields/Input";
-import { useDispatch, useSelector } from "react-redux";
-import { profileState, setFollowing } from "../../redux/services/profileSlice";
+import { useDispatch } from "react-redux";
+import {
+  setFollowing,
+  useProfileSlice,
+} from "../../redux/services/profileSlice";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 
 import Loading from "./Loading";
@@ -12,11 +15,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 import { useDebounce } from "../../utils/hooks/useDebounce";
+import { getCurrentUsername } from "../../utils/getCurrentUserId";
 
 const Following = ({ userId, onClose }) => {
-  const currentUser = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const { followings } = useSelector(profileState);
+  const { followings, setFollowing } = useProfileSlice();
   const dispatch = useDispatch();
   const [query, setQuery] = useState();
   const [page, setPage] = useState(1);
@@ -37,24 +40,23 @@ const Following = ({ userId, onClose }) => {
       if (data.isSuccess) {
         setHasMore(data.hasMore);
         if (page === 1) {
-          dispatch(setFollowing(data.followings));
+          setFollowing(data.followings);
         } else {
-          dispatch(setFollowing([...followings, ...data.followings]));
+          setFollowing([...followings, ...data.followings]);
         }
       }
     } catch (error) {
-      
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
-  }, [userId, page, debouncedQuery,dispatch ]);
+  }, [userId, page, debouncedQuery, ]);
 
   useEffect(() => {
     getFollowing();
   }, [getFollowing]);
 
   const navigateToUser = (username) => {
-    if (username === currentUser?.username) {
+    if (username === getCurrentUsername()) {
       onClose();
       navigate(`/profile`);
     } else {
@@ -65,14 +67,14 @@ const Following = ({ userId, onClose }) => {
 
   useEffect(() => {
     return () => {
-      dispatch(setFollowing([]));
+      setFollowing([]);
     };
-  }, [dispatch]);
+  }, []);
 
   return (
     <FadeInAnimation>
       <div className="flex md:min-h-64 md:h-follow h-dvh items-center w-screen justify-center">
-        <div className="md:w-96 w-screen bg-white dark:bg-zinc-950 md:border rounded-lg ">
+        <div className="md:w-96 size-full bg-white dark:bg-zinc-950 md:border lg:rounded-lg ">
           <div className=" text-black dark:text-white text-center w-full p-3 ">
             <h2 className="text-xl">Following</h2>
           </div>
@@ -129,10 +131,9 @@ const Following = ({ userId, onClose }) => {
                             </span>
                           </button>
                         </div>
-                        {user?.username !== currentUser.username && (
+                        {user?.username !== getCurrentUsername() && (
                           <FollowBtn
-                            callBack={() => {
-                            }}
+                            callBack={() => {}}
                             userId={user?._id}
                             isFollow={user?.isFollow}
                             isRequested={user?.isRequested}

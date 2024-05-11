@@ -2,13 +2,13 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { makeRequest } from "../config/api.config";
 
-export const useFetchData = (endpoint, key, stateName, setAction, setError) => {
+export const useFetchData = (fn, key, stateName, setAction, setError) => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state[stateName]);
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await makeRequest.get(endpoint);
+      const res = await fn();
       if (res?.isSuccess) {
         dispatch(setAction(res[key]));
       }
@@ -17,7 +17,7 @@ export const useFetchData = (endpoint, key, stateName, setAction, setError) => {
         dispatch(setError(error?.message || "something went wrong"));
       }
     }
-  }, [dispatch, endpoint, key, setAction, setError]);
+  }, [dispatch, key, setAction, setError]);
 
   useEffect(() => {
     fetchPosts();

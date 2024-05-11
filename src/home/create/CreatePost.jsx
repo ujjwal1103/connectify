@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import { toast } from "react-toastify";
+
 import imageIcon from "../../assets/gallery.png";
 import MultiLineInput from "../../common/InputFields/MultiLineInput";
-import { makeRequest } from "../../config/api.config";
-
-import { motion } from "framer-motion";
-// import { EmojiSmile } from "../../icons";
 import ImageCrop from "../../shared/ImageCrop";
-import { useDispatch } from "react-redux";
-import { addPost, setUploadingPost } from "../../redux/services/postSlice";
-import { useLocation } from "react-router-dom";
+import { usePostSlice } from "../../redux/services/postSlice";
 import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
-import { IoClose } from "react-icons/io5";
+import { readFileAsDataURL } from "../../utils/helper";
+import { uploadPosts } from "../../api";
 
 function extractCroppedImageUrls(data) {
   const croppedImageUrls = [];
@@ -20,11 +20,11 @@ function extractCroppedImageUrls(data) {
         url: data[key].croppedImageUrl,
         name: data[key].originalImage.name,
         file: data[key].croppedImage,
+        type: data[key].type,
       };
       croppedImageUrls.push(croppedImageUrl);
     }
   }
-
   return croppedImageUrls;
 }
 
@@ -36,34 +36,42 @@ const CreatePost = ({ onClose }) => {
   const [openC, setOpenC] = useState(false);
   const [editCaption, setEditCaption] = useState(false);
   const [imageData, setImageData] = useState({});
-  const dispatch = useDispatch();
   const location = useLocation();
+  const { addPost, setUploadingPost } = usePostSlice();
+
+  useEffect(() => {
+    setCropedImagesUrls(extractCroppedImageUrls(imageData));
+  }, [imageData]);
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
+    console.log(typeof e.target.files)
     const file = e.target.files[0];
     const dataURL = await readFileAsDataURL(file);
+
+    const isImageFile = file.type.includes("image");
+    const isVideoFile = file.type.includes("video");
+
+    console.log(file, isImageFile, isVideoFile);
+
+    if (!isImageFile && !isVideoFile) {
+      setIsLoading(false);
+      setOpenC(true);
+      return;
+    }
 
     const newImageData = {
       originalImage: file,
       originalImageUrl: dataURL,
       croppedImage: file,
       croppedImageUrl: "",
+      type: isImageFile ? "IMAGE" : "VIDEO",
     };
 
     setSelectedImage(newImageData);
     setImageData((prev) => ({ ...prev, [file.name]: newImageData }));
     setIsLoading(false);
     setOpenC(true);
-  };
-
-  const readFileAsDataURL = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
   };
 
   const handlePost = async () => {
@@ -87,30 +95,35 @@ const CreatePost = ({ onClose }) => {
         },
       };
 
-      dispatch(setUploadingPost(uploadPost));
+      console.log(cropedImagesUrls.map(c=>c.file))
 
+      // const formData = {
+      //   postImage: cropedImagesUrls.map(c=>c.file),
+      //   caption: caption || "",
+      // };
+
+      setUploadingPost(uploadPost);
       onClose();
-      const data = await makeRequest.post("/post", formData);
-      if (data?.isSuccess) {
-        location.pathname === "/profile" && dispatch(addPost(data.post));
-        dispatch(setUploadingPost({ loading: false, post: null }));
-        setIsLoading(false);
+      const data = await uploadPosts(formData);
+
+      if (data?.isSuccess && location.pathname === "/profile") {
+        addPost(data.post);
       }
     } catch (error) {
+      console.log("ERROR UPLOADING POST", error);
+      toast.error("Error Uploading Post");
+    } finally {
       setIsLoading(false);
-      console.log(error);
+      setUploadingPost({ loading: false, post: null });
     }
   };
-
-  useEffect(() => {
-    setCropedImagesUrls(extractCroppedImageUrls(imageData));
-  }, [imageData]);
 
   const deleteAndSet = (name) => {
     const data = imageData;
     delete data[name];
     setImageData(data);
   };
+
   return (
     <motion.div
       transition={{ duration: 1 }}
@@ -142,7 +155,7 @@ const CreatePost = ({ onClose }) => {
             name="imagePicker"
             id="imagePicker"
             hidden
-            accept="image/*"
+            accept="image/*, video/*"
             onChange={handleImagePick}
           />
         </motion.div>
@@ -162,8 +175,8 @@ const CreatePost = ({ onClose }) => {
                 const name = selectedImage.originalImage.name;
                 setEditCaption(false);
                 setCropedImagesUrls((prev) =>
-                prev.filter((img) => img.name !== name)
-              );
+                  prev.filter((img) => img.name !== name)
+                );
                 setOpenC(true);
               }}
               disabled={!cropedImagesUrls.length}
@@ -190,10 +203,7 @@ const CreatePost = ({ onClose }) => {
           </div>
           <div className="flex relative h-fit flex-col lg:flex-row">
             <div className="flex justify-center items-center lg:w-96 gap-5">
-              <ImageSlider
-                images={cropedImagesUrls?.map((img) => img.url)}
-                height="100%"
-              />
+              <ImageSlider images={cropedImagesUrls} height="100%" />
             </div>
             <div className="lg:w-96 w-auto lg:h-80">
               <MultiLineInput
@@ -214,6 +224,7 @@ const CreatePost = ({ onClose }) => {
           cropedImagesUrls={cropedImagesUrls}
           imageData={imageData}
           onCrop={(file, imageUrl, allowNext) => {
+            console.log(imageUrl);
             const setImage = () => {
               const image = imageData[file.name];
               if (image) {

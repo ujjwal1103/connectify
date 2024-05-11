@@ -12,7 +12,7 @@ const useHealthCheck = () => {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        setError(true);
+        // setError(true);
       }
     };
 

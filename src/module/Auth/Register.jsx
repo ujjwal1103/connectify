@@ -1,47 +1,76 @@
-import Input from "../../common/InputFields/Input";
 
+import Input from "../../common/InputFields/Input";
+import { DevTool } from "@hookform/devtools";
 import { useForm } from "react-hook-form";
-import { PersonFill, OutlineLoading, PasswordLock, Google } from "../../icons";
+import {
+  PersonFill,
+  OutlineLoading,
+  PasswordLock,
+  Google,
+  Mail,
+  UsernameIcon,
+} from "../../icons";
 import { Link, useNavigate } from "react-router-dom";
-import { makeRequest } from "../../config/api.config";
 import { toast } from "react-toastify";
-import getGoogleUrl from "../../config/getGoogleUri";
 
 import { useEffect, useState } from "react";
 import Connectify from "./components/Connectify";
 import FadeInAnimation from "../../utils/Animation/FadeInAnimation";
 import ConnectifyLogoText from "../../icons/ConnectifyLogoText";
+import { registerWithEmailAndPassword } from "../../api";
+import { saveUserAndTokenLocalstorage } from "../../utils/getCurrentUserId";
+import ConnectifyIcon from "../../icons/Connectify";
+import { useAuth } from "../../context/AuthProvider";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/services/authSlice";
+import { SubmitButton } from "./components/SubmitButton";
+import { GoogleButton } from "./components/GoogleButton";
 
 const Register = () => {
   const navigator = useNavigate();
   const [loading, setLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    setError,
-    clearErrors,
-    formState: { errors, isValid, isSubmitting },
-  } = useForm({
-    criteriaMode: "all",
-    mode: "onBlur" // or onChange if you want real-time validation
-  });
+  const { login: loginUser } = useAuth();
+  const dispatch = useDispatch();
+  const { register, handleSubmit, setError, clearErrors, control, formState } =
+    useForm({
+      criteriaMode: "all",
+      mode: "onBlur",
+    });
+  const { errors, isValid, isSubmitting, isLoading } = formState;
   const onSubmit = (data) => {
     userSignUp(data);
   };
 
+  // const username = watch("username");
+
+  // const debouncedUsername = useDebounce(username, 400);
+
+  // useEffect(() => {
+
+  // }, [debouncedUsername]);
+
   const userSignUp = async (data) => {
     setLoading(true);
     try {
-      const res = await makeRequest.post("/register", {
-        username: data.username,
-        password: data.password,
-        email: data.email,
-      });
+      const res = await registerWithEmailAndPassword(data);
 
       if (res.isSuccess) {
         setLoading(false);
-        toast.success(res.message);
-        navigator("/login");
+        saveUserAndTokenLocalstorage(
+          res.user,
+          res.accessToken,
+          res.refreshToken
+        );
+        toast.success(res.message, {
+          icon: <ConnectifyIcon size={34} />,
+          closeOnClick: true,
+          closeButton: true,
+          autoClose: 2000,
+          hideProgressBar: false,
+        });
+        loginUser(res?.user);
+        dispatch(login({ isAuthenticated: true, user: res?.user }));
+        navigator("/");
       }
     } catch (error) {
       setLoading(false);
@@ -60,6 +89,8 @@ const Register = () => {
     document.title = "connectify-register";
   }, []);
 
+  console.log(isLoading, loading, isSubmitting);
+
   return (
     <div className="h-screen relative bg-white flex lg:flex-row flex-col  items-center overflow-hidden">
       <div className="w-screen h-[400px] bg-black absolute top-0 lg:block hidden" />
@@ -68,6 +99,7 @@ const Register = () => {
       <div className=" lg:flex-1 flex justify-center items-center h-screen w-screen  bg-[#470047] border-violet-950 p-8 backdrop-blur-sm  lg:rounded-tl-[200px]">
         <FadeInAnimation>
           <form
+           noValidate
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center items-center gap-5 "
           >
@@ -81,59 +113,67 @@ const Register = () => {
               Register To Connectify
             </div>
             <Input
-              className="authInput"
+            autoFocus={true}
+              
               type="text"
-              placeholder="Enter you username"
-              prefix={<PersonFill className=" fill-violet-50  text-2xl" />}
+              placeholder="Enter you Username"
+              prefix={<UsernameIcon size={24} />}
               error={errors?.username}
-              {...register("username", { required: true,pattern: {
-                value: /^(?=[a-z_])[a-z0-9_]{5,20}$/,
-                message: "Invalid username format"
-              } })}
+              {...register("username", {
+                required: "Username is Required",
+                pattern: {
+                  value: /^(?=[a-z_])[a-z0-9_]{5,20}$/,
+                  message: "Invalid Username",
+                },
+                validate: (val)=>{
+                  return val !== "ujjwallade" || 'Value should be ujjwal lade'
+                }
+              })}
+            />
+
+            <Input
+              type="text"
+              placeholder="Enter you Name"
+              prefix={<PersonFill size={24} />}
+              error={errors?.name}
+              {...register("name", { required: "Name is Required" })}
               required={true}
             />
             <Input
-              className="authInput"
               type="text"
               placeholder="Enter you email"
-              prefix={<PersonFill className=" fill-violet-50  text-2xl" />}
+              prefix={<Mail size={24} />}
               error={errors?.email}
-              {...register("email", { required: "Email is required" })}
+              {...register("email", {
+                required: "Email is Required",
+                pattern: {
+                  value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                  message: "Invalid Email",
+                },
+              })}
             />
 
             <Input
               {...register("password", {
-                required: "Password is required",
+                required: "Password is Required",
+                minLength: {
+                  value: 8,
+                  message: "Password should be minimum 8 char long",
+                },
               })}
               type={"password"}
               placeholder="Enter you password"
-              prefix={<PasswordLock className=" fill-violet-50 text-2xl" />}
-              className="authInput "
+              prefix={<PasswordLock size={24} />}
+             
               error={errors?.password}
             />
 
-            <div className="flex justify-between w-full items-center">
-              {loading ? (
-                <button
-                  disabled
-                  className="w-full flex justify-center items-center disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white  "
-                >
-                  <OutlineLoading className="animate-spin" size={22} />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !isValid}
-                  className="w-full disabled:bg-slate-500 disabled:text-gray-400 disabled:cursor-not-allowed bg-slate-950 rounded-xl p-3 text-white text-2x hover:bg-black"
-                >
-                  {isSubmitting ? (
-                    <OutlineLoading className="animate-spin" />
-                  ) : (
-                    "Register"
-                  )}
-                </button>
-              )}
-            </div>
+            <SubmitButton
+              title={"Register"}
+              isSubmitting={isSubmitting}
+              isValid={isValid}
+              loading={loading}
+            />
 
             <p className="text-white">
               Already have an account
@@ -145,18 +185,11 @@ const Register = () => {
               </Link>
             </p>
 
-            <div className="flex rounded-full justify-center  ">
-              <a href={getGoogleUrl()} className="text-white p-3 ">
-                <Google
-                  className={
-                    "text-xl bg-white rounded-full  hover:shadow-2xl hover:shadow-slate-950"
-                  }
-                />
-              </a>
-            </div>
+            <GoogleButton />
           </form>
         </FadeInAnimation>
       </div>
+      <DevTool control={control} />
     </div>
   );
 };

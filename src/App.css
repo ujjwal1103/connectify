@@ -94,17 +94,34 @@ input:autofill {
   box-shadow: none !important ;
 }
 
+.overlay {
+  color: #601f55eb;
+  box-shadow: 200px -107px 5px 200px rgba(0,0,0,1),-16px 200px 5px 200px rgba(0,0,0,1),-32px -37px 5px 200px rgba(0,0,0,1);
+}
 
 /* .slick-arrow{
   background-color: red !important;
 } */
 .slick-next{
   right: 5px !important;
+  z-index: 100;
 }
 .slick-prev{
   left: 5px !important;
   z-index: 100;
   
+}
+
+.reactEasyCrop_CropArea {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+  box-shadow: 0 0 0 9999em black !important;
+  color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 
