@@ -18,6 +18,7 @@ import { getCommentsByPostId, getPostById } from "../../api";
 import { isMobileOnly } from "react-device-detect";
 import { useGetQuery } from "../../utils/hooks/useGetQuery";
 import { cn } from "../../utils/helper";
+import { makeRequest } from "../../config/api.config";
 
 const Post = () => {
   const { postId } = useParams();
@@ -73,7 +74,7 @@ const Post = () => {
                 </div>
               </div>
               <ImageSlider
-                images={data?.post?.imageurlsPublicIds || []}
+                images={data?.post?.images || []}
                 className={"w-full "}
                 height="100%"
               />
@@ -158,30 +159,25 @@ const Post = () => {
                         className="cursor-pointer text-xs"
                       />
                       <span className="text-[12px] overflow-ellipsis">
-                        {data?.post?.caption} Lorem ipsum dolor sit amet
-                        consectetur, adipisicing elit. Nam reprehenderit
-                        explicabo repellat assumenda numquam dolores at ipsum
-                        eius aliquam, ea placeat debitis tempora officiis!
-                        Aspernatur ab, odio, debitis eligendi voluptas adipisci
-                        possimus incidunt earum esse delectus accusantium
-                        expedita quod perspiciatis?
+                        {data?.post?.caption}
                       </span>
                     </div>
-
-                    {comments?.map((comment) => {
-                      return <Comment comment={comment} setReply={setReply} />;
-                    })}
                   </div>
                 )}
+                <CommentList comments={comments} setReply={setReply} />
               </div>
 
               <CommentInput
                 reply={reply.isReply}
                 repliedTo={reply.commentId}
                 postId={postId}
+                setReply={setReply}
                 onComment={(comment, isReply) => {
                   if (isReply) {
-                   
+                    setReply({
+                      isReply: false,
+                      commentId: null,
+                    });
                   } else {
                     setComments((prev) => [comment, ...prev]);
                   }
@@ -217,6 +213,21 @@ export const MobileViewWrapper = ({ closeIcon, title, children }) => {
 
 export const Comment = ({ comment, setReply }) => {
   const [currentComment, setCurrentComment] = useState(comment);
+  const [showHiddenReply, setShowHiddenReply] = useState(false);
+
+  const handleGetComments = async () => {
+    try {
+      const res = await getCommentsByPostId(
+        currentComment?.post?._id,
+        currentComment._id
+      );
+      console.log(res);
+      setCurrentComment((prev) => ({ ...prev, childComments: res?.comments }));
+      setShowHiddenReply(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -226,14 +237,14 @@ export const Comment = ({ comment, setReply }) => {
       <div className="flex gap-4 items-start">
         <div className=" ">
           <ProfilePicture
-            src={currentComment.user.avatar}
+            src={currentComment?.user?.avatar}
             className="size-8 object-cover  rounded-full"
           />
         </div>
 
         <div className="flex-1 text-sm">
           <UsernameLink
-            username={currentComment.user.username}
+            username={currentComment?.user?.username}
             className="font-semibold"
           />
           <span className="pl-2">
@@ -244,7 +255,7 @@ export const Comment = ({ comment, setReply }) => {
           </span>
           <div className="flex gap-5 text-[10px] text-gray-500">
             <span>{moment(currentComment.updatedAt).fromNow(true)}</span>
-            <span>{currentComment.like} likes</span>
+            <span>{currentComment?.like} likes</span>
             <button
               onClick={() => {
                 setReply({ isReply: true, commentId: currentComment._id });
@@ -254,18 +265,10 @@ export const Comment = ({ comment, setReply }) => {
             </button>
           </div>
         </div>
-        {currentComment.replies && currentComment.replies.length > 0 && (
-          <div className="replies">
-            {currentComment.replies.map((reply) => (
-              <Comment key={reply.id} comment={reply} />
-            ))}
-          </div>
-        )}
-
         <LikeButton
           size={15}
-          isLiked={currentComment.isLiked}
-          postUserId={currentComment.post.userId}
+          isLiked={currentComment?.isLiked}
+          postUserId={currentComment?.post?.userId}
           commentId={currentComment?._id}
           onLikeClick={(like, error) => {
             setCurrentComment((prev) => ({
@@ -276,6 +279,34 @@ export const Comment = ({ comment, setReply }) => {
           }}
         />
       </div>
+
+      <div className="ml-20">
+        {currentComment?.childComments?.length > 0 && (
+          <>
+            {showHiddenReply && (
+              <CommentList
+                comments={currentComment?.childComments}
+                setReply={setReply}
+              />
+            )}
+            {!showHiddenReply ? (
+              <button className="text-xs" onClick={() => handleGetComments()}>
+                show {currentComment?.childComments?.length} replies
+              </button>
+            ) : (
+              <button className="text-xs" onClick={() => setShowHiddenReply(false)}>
+                Hide {currentComment?.childComments?.length} replies
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
+};
+
+const CommentList = ({ comments, setReply }) => {
+  return comments?.map((comment) => {
+    return <Comment comment={comment} setReply={setReply} key={comment._id} />;
+  });
 };

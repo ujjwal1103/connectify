@@ -10,6 +10,7 @@ const CommentInput = ({
   onComment = null,
   reply = false,
   repliedTo,
+  setReply,
 }) => {
   const [commentText, setCommentText] = useState();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -25,7 +26,7 @@ const CommentInput = ({
         post: postId,
         comment: commentText,
         mentions: mentionedUsers,
-        repliedTo: repliedTo,
+        parrentComment: repliedTo,
       });
       if (data.isSuccess) {
         setCommentText("");
@@ -33,6 +34,10 @@ const CommentInput = ({
         setShowEmojiPicker(false);
         setCursorPosition(0);
         onComment && onComment(data.comment, reply);
+        setReply({
+          isReply: false,
+          commentId: null,
+        })
       }
     } catch (error) {
       console.log(error);
@@ -70,7 +75,21 @@ const CommentInput = ({
   };
   return (
     <div className="flex justify-between relative gap-3 items-center dark:bg-zinc-800 bg-gray-200 rounded-md">
-      {reply && <span className="absolute -top-6">replied to {repliedTo}</span>}
+      {reply && (
+        <span className="absolute -top-6">
+          replied to {repliedTo}{" "}
+          <button
+            onClick={() =>
+              setReply({
+                isReply: false,
+                commentId: null,
+              })
+            }
+          >
+            clear
+          </button>
+        </span>
+      )}
       <MentionInput
         ref={inputRef}
         text={commentText}

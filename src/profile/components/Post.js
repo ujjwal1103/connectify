@@ -35,6 +35,7 @@ const Post = ({ post }, ref) => {
     slidesToScroll: 1,
     autoplay: false,
     autoplaySpeed: 2000,
+    
   };
 
   const deleteCurrentPost = async (postId) => {
@@ -72,11 +73,11 @@ const Post = ({ post }, ref) => {
         className="  object-cover bg-zinc-950 overflow-clip"
         onClick
       >
-        {post.imageUrl.map((imageUrl, index) => (
+        {post.images.map((image, index) => (
           <div key={index} className="">
-            {post.imageurlsPublicIds[index].type === "VIDEO" ? (
+            {image.type === "VIDEO" ? (
               <video className="object-cover overflow-hidden rounded group-hover:opacity-80 ">
-                <source src={imageUrl} />
+                <source src={image.url} />
               </video>
             ) : (
               <ImageComponent
@@ -85,7 +86,7 @@ const Post = ({ post }, ref) => {
                     navigate(`/p/${post._id}`);
                   }
                 }}
-                src={imageUrl}
+                src={image.url}
                 alt=""
                 loaderClassName={`flex justify-center items-center bg-zinc-900 animate-pulse md:w-96 w-full h-full rounded-lg `}
                 className="object-cover overflow-hidden  rounded group-hover:opacity-80 "

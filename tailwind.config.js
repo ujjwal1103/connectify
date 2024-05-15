@@ -1,9 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     container: {
       center: true,
@@ -14,6 +12,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        link: "rgb(0, 149, 246)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -67,7 +66,9 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-
+      textColor: {
+        link: "rgb(0, 149, 246)",
+      },
       height: {
         page: "calc(100dvh - 5.5rem)",
         like: "calc(100dvh - 3rem)",
@@ -77,6 +78,10 @@ module.exports = {
         single: "calc(100dvh - 100px)",
         second: "calc(100dvh - 100px)",
         singlep: "calc(100dvh - 10.5rem)",
+        500: "500px",
+      },
+      width: {
+        500: "500px",
       },
 
       backgroundImage: {
@@ -93,5 +98,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),require('tailwind-scrollbar'),],
 };

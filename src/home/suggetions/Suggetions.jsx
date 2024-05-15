@@ -21,7 +21,7 @@ const Suggetions = () => {
       {suggestedusers?.length > 0 && (
         <div className="p-2 mx-2 flex justify-between dark:text-gray-100">
           <span>Suggested for you</span>
-          <Link to="/expore/people">see all</Link>
+          <Link to="/expore/people" className="text-link text-sm">see all</Link>
         </div>
       )}
       {loading && (

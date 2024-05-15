@@ -39,8 +39,12 @@ const markMessageAsSeen = async (messageId) => {
 
 // comments apis
 
-const getCommentsByPostId = async (postId) => {
-  return await makeRequest(`/comments/${postId}`);
+const getCommentsByPostId = async (postId,pcId=null) => {
+  let url = `/comments/${postId}`
+  if(pcId){
+   url = url + `?parrentCommentId=${pcId}`
+  }
+  return await makeRequest(url);
 };
 
 // post apis

@@ -11,15 +11,13 @@ import { usePostSlice } from "../../redux/services/postSlice";
 import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
 import { readFileAsDataURL } from "../../utils/helper";
 import { uploadPosts } from "../../api";
-import ImageCropper from "../../exp/ImageCropper";
-import RichTextEditor from "../../shared/Components/RichTextEditor";
 
 function extractCroppedImageUrls(data) {
   const croppedImageUrls = [];
   for (const key in data) {
-    if (data.hasOwnProperty(key) && data[key].originalImageUrl) {
+    if (data.hasOwnProperty(key) && data[key].croppedImageUrl) {
       const croppedImageUrl = {
-        url: data[key].originalImageUrl,
+        url: data[key].croppedImageUrl,
         name: data[key].originalImage.name,
         file: data[key].croppedImage,
         type: data[key].type,
@@ -39,7 +37,6 @@ const CreatePost = ({ onClose }) => {
   const [editCaption, setEditCaption] = useState(false);
   const [imageData, setImageData] = useState({});
   const location = useLocation();
-  const [aspectRatio, setAspectRation] = useState(1 / 1);
   const { addPost, setUploadingPost } = usePostSlice();
 
   useEffect(() => {
@@ -48,12 +45,14 @@ const CreatePost = ({ onClose }) => {
 
   const handleImagePick = async (e) => {
     setIsLoading(true);
-
+    console.log(typeof e.target.files)
     const file = e.target.files[0];
     const dataURL = await readFileAsDataURL(file);
 
     const isImageFile = file.type.includes("image");
     const isVideoFile = file.type.includes("video");
+
+    console.log(file, isImageFile, isVideoFile);
 
     if (!isImageFile && !isVideoFile) {
       setIsLoading(false);
@@ -88,14 +87,15 @@ const CreatePost = ({ onClose }) => {
         formData.append("postImage", cropedImagesUrls[i].file);
       }
       formData.append("caption", caption || "");
-      formData.append('aspectRatio',aspectRatio)
 
       const uploadPost = {
         loading: true,
         post: {
-          images: cropedImagesUrls,
+          imageUrls: cropedImagesUrls,
         },
       };
+
+      console.log(cropedImagesUrls.map(c=>c.file))
 
       // const formData = {
       //   postImage: cropedImagesUrls.map(c=>c.file),
@@ -119,34 +119,9 @@ const CreatePost = ({ onClose }) => {
   };
 
   const deleteAndSet = (name) => {
-    const data = { ...imageData };
-    const filenames = Object.keys(data) || [];
-    if (filenames.length <= 1) {
-      reset();
-      return;
-    }
-
-    const currentIndex = filenames.indexOf(name);
-    let nextIndex;
-
-    if (currentIndex === filenames.length - 1) {
-      nextIndex = currentIndex - 1;
-    } else {
-      nextIndex = currentIndex;
-    }
-
+    const data = imageData;
     delete data[name];
     setImageData(data);
-    const image = data[filenames[nextIndex]];
-    image && setSelectedImage(image);
-  };
-
-  const reset = () => {
-    setCropedImagesUrls([]);
-    setSelectedImage({});
-    setImageData({});
-    setOpenC(false);
-    setEditCaption(false);
   };
 
   return (
@@ -197,7 +172,11 @@ const CreatePost = ({ onClose }) => {
               className="middle  none center rounded-lg bg-slate-800 py-2 px-4 font-sans text-xs font-bold uppercase text-white shadow-md shadow-slate-900/20 transition-all hover:shadow-lg hover:shadow-slate-900/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"
               onClick={() => {
+                const name = selectedImage.originalImage.name;
                 setEditCaption(false);
+                setCropedImagesUrls((prev) =>
+                  prev.filter((img) => img.name !== name)
+                );
                 setOpenC(true);
               }}
               disabled={!cropedImagesUrls.length}
@@ -227,28 +206,25 @@ const CreatePost = ({ onClose }) => {
               <ImageSlider images={cropedImagesUrls} height="100%" />
             </div>
             <div className="lg:w-96 w-auto lg:h-80">
-              <RichTextEditor value={caption} onChange={setCaption}
-              className="bg-red-400 w-full h-full overflow-y-scroll scrollbar-none"
-              />
-              {/* <MultiLineInput
+              <MultiLineInput
                 text={caption}
-                onChange={(e) => setCaption(e.target.value)}
+                onChange={(value) => setCaption(value)}
                 className={
                   "!ring-0 resize-none border outline-none border-none w-full h-full dark:bg-neutral-800 p-2 dark:text-gray-100"
                 }
-              /> */}
+              />
             </div>
           </div>
         </motion.div>
       )}
 
       {openC && (
-        <ImageCropper
+        <ImageCrop
+          selectedImage={selectedImage}
           cropedImagesUrls={cropedImagesUrls}
-          setCropedImagesUrls={setCropedImagesUrls}
           imageData={imageData}
-          image={selectedImage}
           onCrop={(file, imageUrl, allowNext) => {
+            console.log(imageUrl);
             const setImage = () => {
               const image = imageData[file.name];
               if (image) {
@@ -261,65 +237,24 @@ const CreatePost = ({ onClose }) => {
               setImage();
             } else {
               setImage();
+              setEditCaption(true);
               setCropedImagesUrls((prev) =>
                 prev.filter((img) => img.name !== file.name)
               );
-              setEditCaption(true);
               setOpenC(false);
             }
           }}
           onImagePick={handleImagePick}
+          onClose={(name) => {
+            setOpenC(false);
+          }}
           clearImage={(name) => {
             deleteAndSet(name);
             setCropedImagesUrls((prev) =>
               prev.filter((img) => img.name !== name)
             );
           }}
-          selectImage={(name) => {
-            const image = imageData[name];
-            setSelectedImage(image);
-          }}
-          onResetAndClose={reset}
-          aspectRatio={aspectRatio}
-          setAspectRation={setAspectRation}
         />
-
-        // <ImageCrop
-        //   selectedImage={selectedImage}
-        //   cropedImagesUrls={cropedImagesUrls}
-        //   imageData={imageData}
-        //   onCrop={(file, imageUrl, allowNext) => {
-        //     console.log(imageUrl);
-        //     const setImage = () => {
-        //       const image = imageData[file.name];
-        //       if (image) {
-        //         image.croppedImage = file;
-        //         image.croppedImageUrl = imageUrl;
-        //         setImageData((prev) => ({ ...prev, [file.name]: image }));
-        //       }
-        //     };
-        //     if (allowNext) {
-        //       setImage();
-        //     } else {
-        //       setImage();
-        //       setEditCaption(true);
-        //       setCropedImagesUrls((prev) =>
-        //         prev.filter((img) => img.name !== file.name)
-        //       );
-        //       setOpenC(false);
-        //     }
-        //   }}
-        //   onImagePick={handleImagePick}
-        //   onClose={(name) => {
-        //     setOpenC(false);
-        //   }}
-        //   clearImage={(name) => {
-        //     deleteAndSet(name);
-        //     setCropedImagesUrls((prev) =>
-        //       prev.filter((img) => img.name !== name)
-        //     );
-        //   }}
-        // />
       )}
     </motion.div>
   );

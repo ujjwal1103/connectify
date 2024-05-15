@@ -214,9 +214,9 @@ const Noti = ({ n, handleAccept }) => {
 
           <div>
             <ImageComponent
-              key={n.postId.imageUrl}
-              src={tranformUrl(n.postId.imageUrl[0], 50)}
-              alt={n.postId.imageUrl[0]}
+              key={n.postId.images}
+              src={tranformUrl(n.postId.images[0].url, 50)}
+              alt={n.postId.images[0].url}
               loaderClassName={`bg-zinc-950 animate-pulse size-10 bg-red-400`}
               className={"size-10 object-cover"}
             />

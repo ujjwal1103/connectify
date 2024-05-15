@@ -37,14 +37,14 @@ const HomePage = () => {
       <main className=" flex w-full z-0 p-3 lg:gap-4 flex-col  h-post md:h-screen lg:h-page overflow-y-scroll">
         <div className="flex lg:gap-3">
           <section
-            className="flex lg:m-auto gap-3 lg:w-[80%] w-full justify-between"
+            className="flex lg:m-auto gap-3 lg:w-[60%] w-full justify-between"
             id="scrollableDiv"
           >
             <div className="grid grid-cols-1 flex-1 flex-col gap-5">
               {uploadingPost.loading && (
                 <section className="bg-gray-50 flex gap-5 items-center dark:border-zinc-500/30 rounded-lg w-full shadow-md dark:bg-zinc-900 relative p-3">
                   <ImageComponent
-                    src={uploadingPost.post.images[0].url}
+                    src={uploadingPost?.post?.images[0]?.url}
                     className="size-10"
                   />
                   <span>Posting</span>
@@ -67,8 +67,8 @@ const HomePage = () => {
                     <NoPosts />
                   </div>
                   <div className="p-2 flex  justify-between">
-                    <span>Suggetions</span>{" "}
-                    <Link to="/expore/people">View More</Link>
+                    <span>Suggetions</span>
+                    <Link to="/expore/people" className="text-link text-sm">View More</Link>
                   </div>
                   <SuggetionContainer />
                 </div>

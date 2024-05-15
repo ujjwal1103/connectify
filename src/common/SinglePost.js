@@ -181,7 +181,7 @@ const SinglePost = ({ post, posts }) => {
                   <div className="flex gap-4 items-start">
                     <div className=" ">
                       <ProfilePicture
-                        src={comment.from.avatar}
+                        src={comment?.from?.avatar}
                         className="size-8 object-cover  rounded-full"
                       />
                     </div>

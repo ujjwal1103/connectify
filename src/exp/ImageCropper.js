@@ -1,88 +1,228 @@
-import React, { useRef, useState } from "react";
-import bgImage from "../assets/bg.jpg";
-import { IoCropOutline } from "react-icons/io5";
+import React, { useEffect, useRef, useState } from "react";
+import { IoClose, IoCropOutline } from "react-icons/io5";
 import {
   FixedCropper,
   ImageRestriction,
   Priority,
   RectangleStencil,
-  CircleStencil
 } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { TbRectangle } from "react-icons/tb";
 import { FiSquare } from "react-icons/fi";
 import { blobToFile } from "../utils/blobToFile";
-const ImageCropper = ({name}) => {
-  const [image, setImage] = useState(
-    "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg"
-  );
+import { ImagePlus, ZoomIn } from "../icons";
+import FadeInAnimation from "../utils/Animation/FadeInAnimation";
+import { HiOutlineSquare2Stack } from "react-icons/hi2";
+import { ReactSortable } from "react-sortablejs";
+import {
+  getAbsoluteZoom,
+  getZoomFactor,
+} from "advanced-cropper/extensions/absolute-zoom";
+
+const emptyFn = () => {};
+
+const sortableOptions = {
+  animation: 150,
+  fallbackOnBody: true,
+  swapThreshold: 0.65,
+  ghostClass: "ghost",
+  group: "shared",
+  forceFallback: true,
+};
+
+const ImageCropper = ({
+  image,
+  onCrop = emptyFn,
+  onImagePick = emptyFn,
+  clearImage = emptyFn,
+  cropedImagesUrls = [],
+  setCropedImagesUrls,
+  onResetAndClose,
+  selectImage,
+  aspectRatio,
+  setAspectRation,
+}) => {
   const cropperRef = useRef(null);
-  const [aspectRatio, setAspectRation] = useState(1 / 1);
+
   const [openCropOptions, setOpenCropOptions] = useState(false);
+  const [openImages, setOpenImages] = useState(false);
 
-  const base64StringToFile = (base64String) => {
-    const byteCharacters = atob(base64String);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "application/octet-stream" });
-    const file = new File([blob], "filename");
-    return file;
-  };
+  const [openZoom, setOpenZoom] = useState(false);
 
-  const onCrop = () => {
+  const onCropImage = async (allNextImageCrop = false) => {
     if (cropperRef.current) {
-      cropperRef.current.getCanvas().toBlob((blob) => {
-        const file = blobToFile(blob, name, blob.type);
-        console.log(file);
+      const url = await cropperRef.current.getCanvas().toDataURL();
+      await cropperRef.current.getCanvas().toBlob((blob) => {
+        const file = blobToFile(blob, image.originalImage.name, blob.type);
+        onCrop(file, url, allNextImageCrop);
       }, "image/jpeg");
     }
-
-    console.dir( cropperRef.current.getCanvas())
+    if (image.type === "VIDEO") {
+      onCrop(image.originalImage, image.originalImageUrl, allNextImageCrop);
+    }
   };
+
+  const handleImagePick = async (e) => {
+    await onCropImage(true);
+    onImagePick(e);
+  };
+
+  const cropper = cropperRef.current;
+  const state = cropper?.getState();
+  const settings = cropper?.getSettings();
+  const absoluteZoom = getAbsoluteZoom(state, settings);
+  const [zoom, setZoom] = useState(absoluteZoom);
+
+  useEffect(() => {
+    if (cropper) {
+      const z = getZoomFactor(state, settings, zoom);
+      cropper.zoomImage(z);
+    }
+  }, [zoom, cropper]);
 
   return (
     <div className="bg-zinc-900 h-dvh w-dvw flex-center flex-col ">
-      <div className="w-[500px] rounded-lg h-[500px] relative">
-        <FixedCropper
-          ref={cropperRef}
-          backgroundWrapperClassName="bg-red-800 w-full h-[500px]"
-          priority={Priority.visibleArea}
-          stencilProps={{
-            aspectRatio: aspectRatio,
-            handlers: false,
-            lines: false,
-            movable: false,
-            resizable: false,
-            className: "overlay ",
-          }}
-          stencilSize={{
-            width: 500,
-            height: 500,
-          }}
-          src={image}
-          className={"croppe w-[500px] h-[500px] cursor-move rounded-lg"}
-          stencilComponent={CircleStencil}
-          imageRestriction={ImageRestriction.fillArea}
-        />
-        <div className="absolute bottom-2 left-2">
-          <button
-            onClick={() => setOpenCropOptions(!openCropOptions)}
-            className="size-10 rounded-full bg-black bg-opacity-65 flex-center"
-          >
-            <IoCropOutline size={24} />
-          </button>
-          <button
-            onClick={onCrop}
-            className="size-10 rounded-full bg-black bg-opacity-65 flex-center"
-          >
-            <IoCropOutline size={24} />
+      <div className="w-500 rounded-lg rounded-t-none h-500 relative  bg-[#000000]">
+        <div className="bg-[#000000] absolute -top-10 w-full left-0 flex justify-between p-2 rounded-lg rounded-b-none">
+          <button onClick={onResetAndClose} className=" text-white ">
+            Back
           </button>
 
+          <button onClick={() => onCropImage(false)} className=" text-white ">
+            Next
+          </button>
+        </div>
+        {image.type === "IMAGE" ? (
+          <FixedCropper
+            ref={cropperRef}
+            backgroundWrapperClassName=" w-full h-500"
+            priority={Priority.visibleArea}
+            stencilProps={{
+              aspectRatio: aspectRatio,
+              handlers: false,
+              lines: false,
+              movable: false,
+              resizable: false,
+              className: "overlay transition-all ease-in-out",
+            }}
+            stencilSize={{
+              width: 500,
+              height: 500,
+            }}
+            src={image.originalImageUrl}
+            className={"croppe w-500 h-500 cursor-move rounded-b-lg"}
+            stencilComponent={RectangleStencil}
+            imageRestriction={ImageRestriction.fillArea}
+          />
+        ) : (
+          <div
+            className={
+              "w-500 h-500 object-cover aspect-video flex-center "
+            }
+          > 
+            <video
+              className={"w-500 h-500 object-cover aspect-video "}
+              style={{ height: aspectRatio == 1 / 1 ? "500px" : "333px" }}
+            >
+              <source src={image.originalImageUrl} />
+            </video>
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0   w-full flex  text-white">
+          <button
+            onClick={() => setOpenCropOptions(!openCropOptions)}
+            className="size-10 rounded-full m-2 bg-black bg-opacity-65 flex-center"
+          >
+            <IoCropOutline size={24} />
+          </button>
+          <button
+            onClick={() => setOpenZoom(!openZoom)}
+            className="size-10 rounded-full m-2 bg-black bg-opacity-65 flex-center"
+          >
+            <ZoomIn size={24} />
+          </button>
+          <button
+            onClick={() => setOpenImages(!openImages)}
+            className="size-10 rounded-full m-2 ml-auto bg-black bg-opacity-65 flex-center"
+          >
+            <HiOutlineSquare2Stack size={24} />
+          </button>
+
+          {openZoom && (
+            <div className="absolute bottom-12 bg-zinc-900 bg-opacity-55  rounded-md shadow-md p-2 flex gap-3">
+              <input
+                type="range"
+                name="zoom"
+                id=""
+                min={0}
+                max={0.5}
+                step={0.05}
+                className=" bg-zinc-950 h-1 p-0 "
+                value={zoom}
+                onChange={(e) => setZoom(e.target.value)}
+              />
+            </div>
+          )}
+
+          {openImages && (
+            <div className="flex gap-4 p-4 bg-zinc-950 absolute bg-opacity-85 rounded-md right-0 bottom-12 mr-2 mb-2">
+              <ReactSortable
+                list={cropedImagesUrls}
+                setList={setCropedImagesUrls}
+                {...sortableOptions}
+                className="flex gap-3 "
+              >
+                {cropedImagesUrls?.map((img) => (
+                  <FadeInAnimation>
+                    <div className="relative">
+                      <button
+                        className="absolute text-white font-semibold bg-red-500 p-1 -top-2 -right-2  rounded-md "
+                        onClick={() => {
+                          clearImage(img.name);
+                        }}
+                      >
+                        <IoClose size={16} />
+                      </button>
+                      {img.type === "VIDEO" ? (
+                        <video
+                          className="w-16 rounded-md h-16 object-cover"
+                          onClick={() => selectImage(img.name)}
+                        >
+                          <source src={img.url} />
+                        </video>
+                      ) : (
+                        <img
+                          src={img.url}
+                          className="w-16 rounded-md h-16 object-cover"
+                          alt={img.name}
+                          onClick={() => selectImage(img.name)}
+                        />
+                      )}
+                    </div>
+                  </FadeInAnimation>
+                ))}
+              </ReactSortable>
+              <div className="size-10 m-2 border border-dashed bg-black rounded-md flex-center">
+                <input
+                  type="file"
+                  name="imagePicker"
+                  id="imagePicker"
+                  hidden
+                  accept="image/*"
+                  onChange={handleImagePick}
+                />
+                <label
+                  className="w-12 h-12 cursor-pointer flex justify-center items-center text-white"
+                  htmlFor="imagePicker"
+                >
+                  <ImagePlus size={24} />
+                </label>
+              </div>
+            </div>
+          )}
+
           {openCropOptions && (
-            <div className="absolute bottom-12 flex flex-col justify-center bg-black bg-opacity-80 w-20 rounded-lg">
+            <div className="absolute text-white bottom-12 ml-2 mb-2 flex flex-col justify-center bg-black bg-opacity-80 w-20 rounded-lg">
               <button
                 disabled={aspectRatio === 1 / 1}
                 onClick={() => setAspectRation(1 / 1)}

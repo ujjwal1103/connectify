@@ -6,25 +6,19 @@ import {
 } from "../../../redux/services/feedSlice";
 import {
   BookMark,
-  BookMarkFill,
-  Chat,
-  Circle,
-  CircleDot,
-  CommentIcon,
+  BookMarkFill, CommentIcon,
   Heart,
   HeartFill,
-  Send,
+  Send
 } from "../../../icons";
 
 import { useCallback, useEffect, useState } from "react";
 import { updateLike } from "../../../redux/services/postSlice";
-import { IoAtCircle, IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import Modal from "../../../shared/Modal";
 import { motion } from "framer-motion";
 import ProfilePicture from "../../../common/ProfilePicture";
-import { BsCheck, BsCheckCircleFill, BsCircleFill } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
-import { sendNotification } from "../../notification/Services";
 import { useDebounce } from "../../../utils/hooks/useDebounce";
 
 const PostActions = ({ post, userId, showCurrentPost, size = 24, onLike }) => {

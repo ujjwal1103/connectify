@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   feed: {},
@@ -63,6 +65,24 @@ const feedSlice = createSlice({
 
 export const { setFeeds, setError, likePost, unlikePost, reset, setFeed } =
   feedSlice.actions;
+
+const useChatSlice = () => {
+  const dispatch = useDispatch();
+  const feed = useSelector((state) => state.chat);
+  const actions = feedSlice.actions;
+
+  const setFeeds = useCallback(
+    (data) => {
+      dispatch(actions.setFeeds(data));
+    },
+    [dispatch]
+  );
+
+  return {
+    ...feed,
+    setFeeds,
+  };
+};
 
 export default feedSlice.reducer;
 

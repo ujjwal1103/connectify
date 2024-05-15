@@ -2,28 +2,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import ProfilePicture from "../../common/ProfilePicture";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
 import UsernameLink from "../../shared/UsernameLink";
-import { makeRequest } from "../../config/api.config";
+import { getUsersSuggetions } from "../../api";
+import { useGetQuery } from "../../utils/hooks/useGetQuery";
 
 const SuggetionContainer = () => {
-  const [peoples, setPeoples] = useState([]);
+  const { data, isLoading } = useGetQuery({
+    fn: getUsersSuggetions(1, 10),
+  });
 
-  const [loading, setLoading] = useState(false);
-
-  const fetchPeoples = useCallback(
-    async () => {
-      setLoading(true);
-      const res = await makeRequest.get(`/users?page=${1}&limit=10`);
-      setPeoples(res?.users);
-      setLoading(false);
-    },
-    []
-  );
-
-  useEffect(() => {
-    fetchPeoples();
-  }, [fetchPeoples]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-post bg-[#0D0D0D]">
         <div className=" w-[50%]  m-auto flex  flex-col items-center">
@@ -50,8 +37,8 @@ const SuggetionContainer = () => {
   return (
     <div className="overflow-x-scroll overflow-hidden suggetionBox ">
       <div className="inline-flex h-44 max-h-44">
-        {peoples?.map((people) => {
-          return <People key={people._id} people={people} />;
+        {data?.users?.map((people) => {
+          return <People key={people._id} {...people} />;
         })}
       </div>
     </div>
@@ -60,21 +47,15 @@ const SuggetionContainer = () => {
 
 export default SuggetionContainer;
 
-const People = ({ people }) => {
-  const { avatar, username, name } = people;
-  return (
-    <div className=" w-36 p-2 rounded-lg border dark:border-zinc-500/30  flex items-center justify-between flex-col mx-2 mb-2">
-      <ProfilePicture src={avatar} className={"w-14 h-14 rounded-full"} />
-      <div className="flex flex-col justify-center">
-        <span className="text-[14px]">{name}</span>
-        <UsernameLink
-          username={username}
-          className="text-gray-400 text-[12px]"
-        />
-      </div>
-      <div className="flex justify-center">
-        <FollowBtn size="medium" isFollow={false} />
-      </div>
+const People = ({ avatar, username, name, _id }) => (
+  <div className=" w-36 p-2 rounded-lg border dark:border-zinc-500/30  flex items-center justify-between flex-col mx-2 mb-2">
+    <ProfilePicture src={avatar} className={"w-14 h-14 rounded-full"} />
+    <div className="flex flex-col justify-center">
+      <span className="text-[14px]">{name}</span>
+      <UsernameLink username={username} className="text-gray-400 text-[12px]" />
     </div>
-  );
-};
+    <div className="flex justify-center">
+      <FollowBtn size="medium" isFollow={false} userId={_id}/>
+    </div>
+  </div>
+);
