@@ -5,8 +5,6 @@ import { IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 
 import imageIcon from "../../assets/gallery.png";
-import MultiLineInput from "../../common/InputFields/MultiLineInput";
-import ImageCrop from "../../shared/ImageCrop";
 import { usePostSlice } from "../../redux/services/postSlice";
 import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
 import { readFileAsDataURL } from "../../utils/helper";
@@ -96,11 +94,6 @@ const CreatePost = ({ onClose }) => {
           images: cropedImagesUrls,
         },
       };
-
-      // const formData = {
-      //   postImage: cropedImagesUrls.map(c=>c.file),
-      //   caption: caption || "",
-      // };
 
       setUploadingPost(uploadPost);
       onClose();

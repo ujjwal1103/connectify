@@ -66,11 +66,13 @@ const AddNewUser = ({ onClose }) => {
       const response = await makeRequest.post("/chat", { to: userId });
       if (response.isSuccess) {
         setChat(response.chat);
-        onClose();
         navigate(`/messenger/${response.chat._id}`);
+
       }
     } catch (error) {
       console.log(error);
+    } finally{
+      setLoading(false);
     }
   };
 

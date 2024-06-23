@@ -29,7 +29,7 @@ const Post = ({ post }, ref) => {
   const settings = {
     dots: false,
     infinite: false,
-    arrows: false,
+    arrows: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -65,18 +65,18 @@ const Post = ({ post }, ref) => {
   return (
     <div
       ref={ref && ref}
-      className="relative group overflow-clip aspect-[1/0.7] rounded-lg shadow-xl"
+      className="relative group overflow-clip aspect-[1/1] rounded-lg shadow-xl"
     >
       <Slider
         {...settings}
         ref={sliderRef}
-        className="  object-cover bg-zinc-950 overflow-clip"
-        onClick
+        className="h-full w-full  object-cover bg-zinc-950 overflow-clip"
+   
       >
         {post.images.map((image, index) => (
           <div key={index} className="">
             {image.type === "VIDEO" ? (
-              <video className="object-cover overflow-hidden rounded group-hover:opacity-80 ">
+            <video className="object-cover overflow-hidden w-full h-full rounded group-hover:opacity-80 ">
                 <source src={image.url} />
               </video>
             ) : (
@@ -89,7 +89,7 @@ const Post = ({ post }, ref) => {
                 src={image.url}
                 alt=""
                 loaderClassName={`flex justify-center items-center bg-zinc-900 animate-pulse md:w-96 w-full h-full rounded-lg `}
-                className="object-cover overflow-hidden  rounded group-hover:opacity-80 "
+                className="object-cover overflow-hidden w-full h-full rounded group-hover:opacity-80 "
               />
             )}
           </div>

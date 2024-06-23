@@ -22,7 +22,7 @@ const getConversations = async (searchTerm) => {
   if (searchTerm) {
     url = url + `?search=${searchTerm}`;
   }
-  return await makeRequest.get(url);
+  return await makeRequest.get(url);  
 };
 
 const deleteConversation = async (chatId) => {

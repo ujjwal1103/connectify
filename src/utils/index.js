@@ -11,7 +11,9 @@ export const group = (inp, groupLength=3) => {
 
 
 export const tranformUrl = (url = '', width=100)=>{
-  if(!url) return null;
-  const newUrl = url.replace("upload/", `upload/dpr_auto/w_${width}/`)
+  console.log(url)
+  if(!url || typeof url !== "string") return null;
+  const newUrl = url?.replace("upload/", `upload/dpr_auto/w_${width}/`)
   return newUrl
 }
+

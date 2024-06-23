@@ -18,7 +18,7 @@ const ProfilePicture = ({
       <div className="relative flex justify-center items-center">
         <img
           ref={imageRef}
-          src={(useSmall ? tranformUrl(src): src) || avatar}
+          src={(useSmall ? tranformUrl(src.url): src.url) || avatar}
           onError={() => {
             imageRef.current.src = avatar;
           }}

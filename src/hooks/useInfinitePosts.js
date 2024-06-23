@@ -13,7 +13,7 @@ const useInfinitePosts = (userId) => {
       const res = await getPostsPage(page, userId);
       dispatch(setPosts(res.posts));
       dispatch(setLoading(false));
-      setHasMore(res.hasNext && res.totalPages !== page);
+      setHasMore(res.pagination.hasNext);
       dispatch(setLoading(false));
   }, [page, userId, dispatch]);
 

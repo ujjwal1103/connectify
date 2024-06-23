@@ -10,7 +10,7 @@ import { ImageSlider } from "../../common/ImageSlider/ImageSlider";
 import moment from "moment";
 import UsernameLink from "../../shared/UsernameLink";
 import FollowBtn from "../../shared/Buttons/FollowBtn";
-import { ChevronBack, Heart } from "../../icons";
+import { ChevronBack } from "../../icons";
 import { useSelector } from "react-redux";
 import { CommentText } from "../../common/SinglePost";
 import CommentInput from "../../home/post/components/CommentInput";
@@ -18,7 +18,6 @@ import { getCommentsByPostId, getPostById } from "../../api";
 import { isMobileOnly } from "react-device-detect";
 import { useGetQuery } from "../../utils/hooks/useGetQuery";
 import { cn } from "../../utils/helper";
-import { makeRequest } from "../../config/api.config";
 
 const Post = () => {
   const { postId } = useParams();
@@ -294,7 +293,10 @@ export const Comment = ({ comment, setReply }) => {
                 show {currentComment?.childComments?.length} replies
               </button>
             ) : (
-              <button className="text-xs" onClick={() => setShowHiddenReply(false)}>
+              <button
+                className="text-xs"
+                onClick={() => setShowHiddenReply(false)}
+              >
                 Hide {currentComment?.childComments?.length} replies
               </button>
             )}

@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { makeRequest } from "../config/api.config";
 
 export const useFetchData = (fn, key, stateName, setAction, setError) => {
   const dispatch = useDispatch();

@@ -28,6 +28,7 @@ export const sentFriendRequest = async (userId) => {
     return err;
   }
 };
+
 export const cancelFollowRequest = async (userId) => {
   try {
     const res = await makeRequest.delete(`/cancelFollow/${userId}`);

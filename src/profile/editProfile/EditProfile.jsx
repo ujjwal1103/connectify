@@ -12,7 +12,7 @@ const EditProfile = ({ user, onClose, setUser }) => {
     gender: user?.gender,
     avatar: user?.avatar,
   });
-
+  
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const [uploadingProfile, setSetUploadingProfile] = useState(false);
   const [image, setImage] = useState(user?.avatar);
@@ -73,7 +73,6 @@ const EditProfile = ({ user, onClose, setUser }) => {
         return;
       }
     }
-
     const formData = new FormData();
     formData.append("avatar", image ?? "");
     const result = await makeRequest.patchForm("/profilePicture", formData);
